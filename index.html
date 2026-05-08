@@ -1024,7 +1024,7 @@ function DispatchRail({news,assets,setRoute,setCurrentNews}){
               <button key={n.id} className="dispatch-card" onClick={()=>{setCurrentNews(n);setRoute('newsArticle');}}>
                 <div className="dispatch-card-img">
                   {src
-                    ?<img src={src} alt={assetAlt(n.portfolio,assets)||n.title||''}/>
+                    ?<img src={src} alt={assetAlt(n.profile,assets)||n.title||''}/>
                     :<div className="dispatch-card-img-placeholder">
                       <span style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:40,color:'rgba(245,242,234,0.08)'}}>∅</span>
                     </div>
@@ -1076,7 +1076,7 @@ function FeaturedGrid({articles,about,assets,setRoute,setCurrentArticle}){
           <div className="feat-card" onClick={()=>{setCurrentArticle(main);setRoute('article');}}>
             <div className="feat-card-img">
               {mainSrc
-                ?<img src={mainSrc} alt={assetAlt(main.portfolio,assets)||main.title}/>
+                ?<img src={mainSrc} alt={assetAlt(main.profile,assets)||main.title}/>
                 :<div className="feat-card-img-ph" style={{background:'var(--bg-deep)'}}>
                   <span style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:64,color:'var(--ink)',opacity:0.08}}>{main.glyph||'§'}</span>
                 </div>
@@ -1102,12 +1102,12 @@ function FeaturedGrid({articles,about,assets,setRoute,setCurrentArticle}){
           {secondaries.length>0&&(
             <div className="secondary-cards">
               {secondaries.map(a=>{
-                const sSrc=assetUrl(a.portfolio,assets,600);
+                const sSrc=assetUrl(a.profile,assets,600);
                 return(
                   <div key={a.id} className="sec-card" onClick={()=>{setCurrentArticle(a);setRoute('article');}}>
                     <div className="sec-card-img">
                       {sSrc
-                        ?<img src={sSrc} alt={assetAlt(a.portfolio,assets)||a.title}/>
+                        ?<img src={sSrc} alt={assetAlt(a.profile,assets)||a.title}/>
                         :<div className="sec-card-img-ph" style={{background:'var(--bg-deep)'}}>
                           <span style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:40,color:'var(--ink)',opacity:0.08}}>{a.glyph||'§'}</span>
                         </div>
