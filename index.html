@@ -1327,7 +1327,7 @@ function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle})
   if(!article)return null;
   const html=rt(article.body);
   const related=(articles||[]).filter(a=>a.id!==article.id).slice(0,3);
-  const coverSrc=assetUrl(article.portfolio,assets,1600);
+  const coverSrc=assetUrl(article.profile,assets,1600);
   const authorPortrait=assetUrl(about?.profile,assets,160);
   return(
     <article className="article-wrap">
@@ -1365,7 +1365,7 @@ function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle})
         <div className="wrap">
           {coverSrc
             ?<div style={{width:'100%',aspectRatio:'16/7',borderRadius:4,overflow:'hidden',background:'var(--bg-deep)',minHeight:240}}>
-              <img src={coverSrc} alt={assetAlt(article.portfolio,assets)||article.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+              <img src={coverSrc} alt={assetAlt(article.profile,assets)||article.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
             </div>
             :<div className="cover-placeholder">
               <div className="cover-glyph">{article.glyph||'§'}</div>
@@ -1394,7 +1394,7 @@ function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle})
             <div className="label label-accent" style={{marginBottom:20}}>Read next</div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:1,background:'var(--rule)',border:'1px solid var(--rule)',borderRadius:4,overflow:'hidden'}}>
               {related.map(a=>{
-                const thumb=assetUrl(a.portfolio,assets,600);
+                const thumb=assetUrl(a.profile,assets,600);
                 return(
                   <button key={a.id} onClick={()=>{setCurrentArticle(a);setRoute('article');window.scrollTo(0,0);}} style={{textAlign:'left',background:'var(--bg-warm)',display:'flex',flexDirection:'column',transition:'background 200ms',overflow:'hidden'}} onMouseEnter={e=>e.currentTarget.style.background='var(--bg-deep)'} onMouseLeave={e=>e.currentTarget.style.background='var(--bg-warm)'}>
                     <div style={{width:'100%',aspectRatio:'3/2',overflow:'hidden',background:'var(--bg-deep)'}}>
@@ -1511,12 +1511,12 @@ function NewsView({news,about,assets,setRoute,setCurrentNews}){
         ):(
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:1,background:'var(--rule)',border:'1px solid var(--rule)',borderRadius:4,overflow:'hidden',marginTop:32}}>
             {filtered.map(it=>{
-              const src=assetUrl(it.portfolio,assets,640);
+              const src=assetUrl(it.profile,assets,640);
               return(
                 <button key={it.id} onClick={()=>{setCurrentNews(it);setRoute('newsArticle');}} style={{textAlign:'left',background:'var(--bg)',display:'flex',flexDirection:'column',transition:'background 200ms',overflow:'hidden'}} onMouseEnter={e=>e.currentTarget.style.background='var(--bg-warm)'} onMouseLeave={e=>e.currentTarget.style.background='var(--bg)'}>
                   {src&&(
                     <div style={{width:'100%',aspectRatio:'16/9',overflow:'hidden',background:'var(--bg-deep)',flexShrink:0}}>
-                      <img src={src} alt={assetAlt(it.portfolio,assets)||it.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform 400ms var(--ease)'}}/>
+                      <img src={src} alt={assetAlt(it.profile,assets)||it.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform 400ms var(--ease)'}}/>
                     </div>
                   )}
                   <div style={{padding:28,display:'flex',flexDirection:'column',gap:10,flex:1}}>
@@ -1545,7 +1545,7 @@ function NewsView({news,about,assets,setRoute,setCurrentNews}){
 function NewsArticleView({item,about,assets,setRoute}){
   if(!item)return null;
   const html=rt(item.body);
-  const coverSrc=assetUrl(item.portfolio,assets,1400);
+  const coverSrc=assetUrl(item.profile,assets,1400);
   return(
     <article className="article-wrap">
       <ReadingProgress/>
