@@ -854,8 +854,8 @@ function matchesCategory(item, filter){
 
 /* ── PHOTO COMPONENT ── resolves `portfolio` field */
 function Photo({item, assets, w=1200, style={}, className='', alt=''}){
-  const src=assetUrl(item?.portfolio, assets, w);
-  const altText=assetAlt(item?.portfolio, assets)||alt||item?.title||'';
+  const src=assetUrl(item?.profile, assets, w);
+  const altText=assetAlt(item?.profile, assets)||alt||item?.title||'';
   if(!src)return null;
   return <img src={src} alt={altText} style={style} className={className}/>;
 }
@@ -1019,7 +1019,7 @@ function DispatchRail({news,assets,setRoute,setCurrentNews}){
       <div className="dispatch-rail-fade-right">
         <div className="dispatch-rail-scroll" style={{paddingTop:24}}>
           {filtered.map(n=>{
-            const src=assetUrl(n.portfolio,assets,560);
+            const src=assetUrl(n.profile,assets,560);
             return(
               <button key={n.id} className="dispatch-card" onClick={()=>{setCurrentNews(n);setRoute('newsArticle');}}>
                 <div className="dispatch-card-img">
@@ -1062,7 +1062,7 @@ function FeaturedGrid({articles,about,assets,setRoute,setCurrentArticle}){
   if(!articles||articles.length===0)return null;
   const[main,...rest]=articles;
   const secondaries=rest.slice(0,2);
-  const mainSrc=assetUrl(main.portfolio,assets,1200);
+  const mainSrc=assetUrl(main.profile,assets,1200);
   return(
     <section className="featured-section">
       <div className="wrap">
