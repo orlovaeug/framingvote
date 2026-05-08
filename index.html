@@ -49,6 +49,12 @@ button{font-family:inherit;cursor:pointer;}
 .art-title{font-family:var(--font-display);font-size:22px;line-height:1.2;letter-spacing:-0.01em;color:var(--ink);margin:0 0 8px;font-weight:400;transition:color 140ms;}
 .art-thumb{background:var(--ink-bg);height:96px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-style:italic;color:rgba(244,237,224,0.7);font-size:28px;}
 .reading-progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:100;transition:transform 80ms linear;}
+.news-card{cursor:pointer;padding:18px 0;border-top:1px solid var(--paper-edge);transition:opacity 140ms;}
+.news-card:hover .news-title{color:var(--accent);}
+.news-title{font-family:var(--font-sans);font-size:16px;font-weight:600;line-height:1.3;color:var(--ink);margin:0 0 6px;transition:color 140ms;}
+.news-category{display:inline-block;font-family:var(--font-sans);font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:2px 8px;margin-bottom:8px;}
+.news-summary{font-family:var(--font-serif);font-style:italic;font-size:14px;line-height:1.5;color:var(--ink-2);margin:0 0 8px;}
+.news-meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-4);letter-spacing:0.04em;}
 .fade-in{animation:fadeUp 320ms cubic-bezier(0.2,0.6,0.2,1) both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 
@@ -153,6 +159,7 @@ function Masthead({ route, setRoute, settings, scrolled }) {
   const nav = [
     { id: 'home', label: 'The Argument' },
     { id: 'archive', label: 'Archive' },
+    { id: 'news', label: 'News' },
     { id: 'about', label: 'About' },
     { id: 'submit', label: 'Submit' },
   ];
@@ -249,7 +256,7 @@ function Footer({ setRoute, settings, about }) {
 }
 
 // ── HOME VIEW ─────────────────────────────────────────────────
-function HomeView({ articles, settings, about, setRoute, setCurrentArticle }) {
+function HomeView({ articles, news, settings, about, setRoute, setCurrentArticle, setCurrentNews }) {
   const hasArticles = articles && articles.length > 0;
   const featured = hasArticles ? articles[0] : null;
 
@@ -347,6 +354,7 @@ function HomeView({ articles, settings, about, setRoute, setCurrentArticle }) {
           </div>
         </section>
       )}
+      <NewsStrip news={news} setRoute={setRoute} setCurrentNews={setCurrentNews} />
     </>
   );
 }
@@ -403,7 +411,146 @@ function ArticleView({ article, about, setRoute }) {
   );
 }
 
-// ── ARCHIVE VIEW ──────────────────────────────────────────────
+// ── NEWS STRIP (homepage) ─────────────────────────────────────
+function NewsStrip({ news, setRoute, setCurrentNews }) {
+  if (!news || news.length === 0) return null;
+  return (
+    <section style={{ background: 'var(--paper-deep)', borderTop: '1px solid var(--paper-edge)', borderBottom: '1px solid var(--paper-edge)', padding: '40px 0' }}>
+      <div className="fv-container">
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div className="kicker">This Week</div>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }}/>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-4)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>News & dispatches</div>
+          </div>
+          <a href="#" onClick={e => { e.preventDefault(); setRoute('news'); }} style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 500 }}>All news →</a>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          {news.slice(0, 3).map(n => (
+            <div key={n.id} className="news-card" onClick={() => { setCurrentNews(n); setRoute('newsArticle'); }} style={{ borderTop: '2px solid var(--ink)', paddingTop: 16 }}>
+              {n.category && <div className="news-category">{n.category}</div>}
+              <h3 className="news-title">{n.title}</h3>
+              {n.summary && <p className="news-summary">{n.summary}</p>}
+              <div className="news-meta">
+                {n.author && <span>{n.author}</span>}
+                {n.author && n.publishDate && <span> · </span>}
+                {n.publishDate && <span>{formatDate(n.publishDate)}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── NEWS PAGE ─────────────────────────────────────────────────
+function NewsView({ news, setRoute, setCurrentNews }) {
+  const [filter, setFilter] = useState('All');
+  const categories = ['All', ...Array.from(new Set((news || []).map(n => n.category).filter(Boolean)))];
+  const filtered = filter === 'All' ? news : news.filter(n => n.category === filter);
+
+  return (
+    <section className="fade-in" style={{ padding: '56px 0 96px' }}>
+      <div className="fv-container">
+        <div className="kicker" style={{ color: 'var(--accent)', marginBottom: 16 }}>News & Dispatches</div>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px,5vw,56px)', lineHeight: 1.05, letterSpacing: '-0.02em', color: 'var(--ink)', margin: '0 0 16px', fontWeight: 400 }}>
+          Deliberate. <em>Once a week or two.</em>
+        </h1>
+        <p style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 18, lineHeight: 1.5, color: 'var(--ink-2)', maxWidth: 600, margin: '0 0 32px' }}>
+          Short pieces on elections and democratic institutions — not breaking news, but news worth thinking about.
+        </p>
+
+        {categories.length > 1 && (
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 32 }}>
+            {categories.map(c => (
+              <button key={c} onClick={() => setFilter(c)}
+                style={{ background: filter === c ? 'var(--ink)' : 'transparent', color: filter === c ? 'var(--paper)' : 'var(--ink-2)', border: '1px solid', borderColor: filter === c ? 'var(--ink)' : 'var(--paper-edge)', fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '5px 14px', borderRadius: 999, cursor: 'pointer', transition: 'all 140ms' }}>
+                {c}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <hr className="hr-strong" />
+
+        {filtered.length === 0 ? (
+          <div style={{ padding: '80px 0', textAlign: 'center' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 18, color: 'var(--ink-3)' }}>No news pieces yet. Check back soon.</p>
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 56 }}>
+            {filtered.map(n => (
+              <div key={n.id} className="news-card" onClick={() => { setCurrentNews(n); setRoute('newsArticle'); }}>
+                {n.category && <div className="news-category">{n.category}</div>}
+                <h3 className="news-title">{n.title}</h3>
+                {n.summary && <p className="news-summary">{n.summary}</p>}
+                <div className="news-meta">
+                  {n.author && <span style={{ fontWeight: 600, color: 'var(--ink-3)' }}>{n.author}</span>}
+                  {n.author && n.publishDate && <span> · </span>}
+                  {n.publishDate && <span>{formatDate(n.publishDate)}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// ── SINGLE NEWS ARTICLE ───────────────────────────────────────
+function NewsArticleView({ item, about, setRoute }) {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      setProgress(max > 0 ? Math.min(1, h.scrollTop / max) : 0);
+    };
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  if (!item) return null;
+  const html = renderRichText(item.body);
+  return (
+    <article className="fade-in">
+      <div className="reading-progress" style={{ transform: `scaleX(${progress})` }}/>
+      <div style={{ padding: '40px 0 20px' }}>
+        <div className="fv-reading">
+          <a href="#" onClick={e => { e.preventDefault(); setRoute('news'); }} style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--ink-3)', textDecoration: 'none' }}>← Back to News</a>
+        </div>
+      </div>
+      <header style={{ paddingBottom: 40 }}>
+        <div className="fv-reading" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {item.category && <div className="news-category" style={{ alignSelf: 'flex-start' }}>{item.category}</div>}
+          <h1 style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(24px,3vw,40px)', lineHeight: 1.15, letterSpacing: '-0.01em', margin: 0, fontWeight: 700, color: 'var(--ink)' }}>{item.title}</h1>
+          {item.summary && <p style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 20, lineHeight: 1.45, color: 'var(--ink-2)', margin: 0 }}>{item.summary}</p>}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 16, borderTop: '1px solid var(--paper-edge)' }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--paper-deep)', border: '1px solid var(--paper-edge)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--ink-2)', flexShrink: 0 }}>
+              {(item.author || about?.editorName || 'E')[0]}
+            </div>
+            <div>
+              <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--ink-2)' }}>{item.author || about?.editorName}</div>
+              {item.publishDate && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-4)' }}>{formatDate(item.publishDate)}</div>}
+            </div>
+          </div>
+        </div>
+      </header>
+      <div className="fv-reading post-body" style={{ paddingBottom: 80 }} dangerouslySetInnerHTML={{ __html: html }}/>
+      <div style={{ borderTop: '1px solid var(--paper-edge)', padding: '32px 0' }}>
+        <div className="fv-reading">
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button className="btn btn-ghost" onClick={() => setRoute('news')}>← All news</button>
+            <button className="btn btn-ghost" onClick={() => setRoute('home')}>Homepage</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+
 function ArchiveView({ articles, settings, about, setRoute, setCurrentArticle }) {
   return (
     <section className="fade-in" style={{ padding: '56px 0 96px' }}>
@@ -496,9 +643,11 @@ function App() {
   const [route, setRoute] = useState('home');
   const [scrolled, setScrolled] = useState(false);
   const [articles, setArticles] = useState([]);
+  const [news, setNews] = useState([]);
   const [settings, setSettings] = useState(null);
   const [about, setAbout] = useState(null);
   const [currentArticle, setCurrentArticle] = useState(null);
+  const [currentNews, setCurrentNews] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -512,17 +661,18 @@ function App() {
   useEffect(() => {
     async function load() {
       try {
-        const [artRes, settingsRes, aboutRes] = await Promise.all([
+        const [artRes, settingsRes, aboutRes, newsRes] = await Promise.all([
           getEntries('articlePost', '&order=-fields.publishDate'),
           getEntries('settings'),
           getEntries('about'),
+          getEntries('news', '&order=-fields.publishDate'),
         ]);
 
-        const arts = (artRes.items || []).map(item => ({
-          id: item.sys.id,
-          ...item.fields,
-        }));
+        const arts = (artRes.items || []).map(item => ({ id: item.sys.id, ...item.fields }));
         setArticles(arts);
+
+        const newsItems = (newsRes.items || []).map(item => ({ id: item.sys.id, ...item.fields }));
+        setNews(newsItems);
 
         if (settingsRes.items?.length) setSettings(settingsRes.items[0].fields);
         if (aboutRes.items?.length) setAbout(aboutRes.items[0].fields);
@@ -550,11 +700,13 @@ function App() {
     <div className="fv-page">
       <Masthead route={route} setRoute={setRoute} settings={settings} scrolled={scrolled} />
       <main style={{ flex: 1 }}>
-        {route === 'home'    && <HomeView articles={articles} settings={settings} about={about} setRoute={setRoute} setCurrentArticle={setCurrentArticle} />}
-        {route === 'article' && <ArticleView article={currentArticle} about={about} setRoute={setRoute} />}
-        {route === 'archive' && <ArchiveView articles={articles} settings={settings} about={about} setRoute={setRoute} setCurrentArticle={setCurrentArticle} />}
-        {route === 'about'   && <AboutView about={about} />}
-        {route === 'submit'  && <SubmitView about={about} />}
+        {route === 'home'        && <HomeView articles={articles} news={news} settings={settings} about={about} setRoute={setRoute} setCurrentArticle={setCurrentArticle} setCurrentNews={setCurrentNews} />}
+        {route === 'article'     && <ArticleView article={currentArticle} about={about} setRoute={setRoute} />}
+        {route === 'archive'     && <ArchiveView articles={articles} settings={settings} about={about} setRoute={setRoute} setCurrentArticle={setCurrentArticle} />}
+        {route === 'news'        && <NewsView news={news} setRoute={setRoute} setCurrentNews={setCurrentNews} />}
+        {route === 'newsArticle' && <NewsArticleView item={currentNews} about={about} setRoute={setRoute} />}
+        {route === 'about'       && <AboutView about={about} />}
+        {route === 'submit'      && <SubmitView about={about} />}
       </main>
       <Newsletter />
       <Footer setRoute={setRoute} settings={settings} about={about} />
