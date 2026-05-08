@@ -1815,8 +1815,8 @@ function App(){
         const mappedArticles=(aR.items||[]).map(i=>({id:i.sys.id,...i.fields}));
         const mappedNews=(nR.items||[]).map(i=>({id:i.sys.id,...i.fields}));
         // Debug: log first item fields so we can confirm field names + asset shape
-        if(mappedArticles[0]) console.log('[FV] article[0] fields:', Object.keys(mappedArticles[0]), '| portfolio:', mappedArticles[0].portfolio);
-        if(mappedNews[0]) console.log('[FV] news[0] fields:', Object.keys(mappedNews[0]), '| portfolio:', mappedNews[0].portfolio);
+        if(mappedArticles[0]) console.log('[FV] article[0] fields:', Object.keys(mappedArticles[0]), '| profile:', mappedArticles[0].profile);
+        if(mappedNews[0]) console.log('[FV] news[0] fields:', Object.keys(mappedNews[0]), '| profile:', mappedNews[0].profile);
         console.log('[FV] total assets in includes:', allAssets.length, allAssets[0]);
         setArticles(mappedArticles);
         setNews(mappedNews);
