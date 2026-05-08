@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Framing Vote — A quarterly journal on elections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper:        #F6F2EA;
+      --paper-deep:   #EAE3D5;
+      --paper-soft:   #FEFDF8;
+      --paper-edge:   #D9CFB8;
+      --ink:          #1B1A17;
+      --ink-2:        #3C3A33;
+      --ink-3:        #6B6759;
+      --ink-4:        #9A9382;
+      --accent:       #7A1F1F;
+      --accent-deep:  #5A1414;
+      --accent-soft:  #B85B5B;
+      --ink-bg:       #1B1A17;
+      --ink-bg-2:     #2A2823;
+      --font-display: "Fraunces", "GT Sectra", "Times New Roman", serif;
+      --font-serif:   "Bodoni Moda", "Didot", "Georgia", serif;
+      --font-sans:    "Inter Tight", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      --font-mono:    "JetBrains Mono", "Menlo", monospace;
+      --t-xs:   12px; --t-sm: 14px; --t-base: 18px; --t-md: 20px;
+      --t-lg:   24px; --t-xl: 32px; --t-2xl:  44px; --t-3xl: 64px; --t-4xl: 92px;
+      --lh-tight: 1.05; --lh-snug: 1.2; --lh-normal: 1.45; --lh-reading: 1.6;
+      --ls-display: -0.02em; --ls-headline: -0.01em; --ls-eyebrow: 0.14em;
+      --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body, #root { margin: 0; padding: 0; background: var(--paper-soft); color: var(--ink); font-family: var(--font-serif); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.18em; text-decoration-thickness: 1px; transition: color 140ms var(--ease-standard); }
+    a:hover { color: var(--accent-deep); text-decoration-thickness: 2px; }
+    button { font-family: inherit; cursor: pointer; }
+    ::selection { background: rgba(122, 31, 31, 0.18); color: var(--ink); }
+
+    .fv-page { min-height: 100vh; display: flex; flex-direction: column; }
+    .fv-container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 32px; box-sizing: border-box; }
+    .fv-reading { width: 100%; max-width: 680px; margin: 0 auto; }
+
+    .hr { border: 0; border-top: 1px solid var(--paper-edge); margin: 0; }
+    .hr-strong { border: 0; border-top: 2px solid var(--ink); margin: 0; }
+
+    .kicker { font-family: var(--font-sans); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+
+    .fade-in { animation: fade 220ms var(--ease-standard) both; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    .reading-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); z-index: 100; transition: transform 80ms linear; }
+
+    .btn { display:inline-flex;align-items:center;gap:8px;padding:11px 20px;font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;border-radius:0;transition:all 140ms var(--ease-standard); }
+    .btn:hover { background:#2A2823; }
+    .btn:active { transform: scale(0.98); }
+    .btn-paper { background:var(--paper);color:var(--ink);border:1px solid var(--ink); }
+    .btn-paper:hover { background:var(--paper-deep); }
+    .btn-ghost { background:transparent;color:var(--ink);border:1px solid var(--paper-edge); }
+    .btn-ghost:hover { border-color:var(--ink); }
+    .btn-accent { background:var(--accent);border-color:var(--accent);color:var(--paper); }
+    .btn-accent:hover { background:var(--accent-deep);border-color:var(--accent-deep); }
+    .btn-on-dark { background:transparent;color:var(--paper);border:1px solid var(--paper); }
+    .btn-on-dark:hover { background:var(--paper);color:var(--ink); }
+
+    .input { display:block;width:100%;box-sizing:border-box;padding:13px 16px;border:1px solid var(--paper-edge);background:var(--paper-soft);font-family:var(--font-serif);font-size:16px;color:var(--ink);border-radius:4px;outline:none;transition:border-color 140ms; }
+    .input::placeholder { color:var(--ink-4);font-style:italic; }
+    .input:focus { border-color:var(--ink);box-shadow:0 0 0 3px rgba(27,26,23,0.06); }
+    .input.on-dark { background:rgba(244,237,224,0.06);border-color:rgba(244,237,224,0.18);color:var(--paper); }
+    .input.on-dark::placeholder { color:rgba(244,237,224,0.4); }
+    .input.on-dark:focus { border-color:var(--paper);box-shadow:0 0 0 3px rgba(244,237,224,0.08); }
+
+    .art-card { cursor:pointer;padding:18px 0;border-top:1px solid var(--paper-edge);transition:opacity 140ms; }
+    .art-card:hover .art-title { color:var(--accent); }
+    .art-title { transition:color 140ms; }
+
+    .tag-pill { display:inline-flex;align-items:center;padding:5px 14px;border:1px solid var(--paper-edge);background:transparent;font-family:var(--font-sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-2);border-radius:999px;cursor:pointer;transition:all 140ms; }
+    .tag-pill:hover { border-color:var(--ink);color:var(--ink); }
+    .tag-pill.active { background:var(--ink);color:var(--paper);border-color:var(--ink); }
+
+    .compo { position:relative;overflow:hidden;background:var(--ink-bg); }
+    .compo .compo-num { position:absolute;left:18px;bottom:14px;font-family:var(--font-display);color:var(--paper);opacity:0.85;font-style:italic;line-height:0.9; }
+    .compo .compo-mark { position:absolute;color:var(--paper);opacity:0.35; }
+
+    .fv-dropcap::first-letter { font-family:var(--font-display);font-weight:400;float:left;font-size:5.4em;line-height:0.85;margin:0.05em 0.08em 0 0;color:var(--accent); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    /* ── WORDMARK ── */
+    function Wordmark({ size = 22, onClick }) {
+      return (
+        <div onClick={onClick} style={{ cursor: onClick ? "pointer" : "default", fontFamily: "var(--font-display)", fontSize: size, letterSpacing: "-0.02em", color: "var(--ink)", lineHeight: 1, userSelect: "none" }}>
+          Framing<span style={{ color: "var(--accent)", margin: "0 0.05em" }}>·</span><em>Vote</em>
+        </div>
+      );
+    }
+
+    /* ── MASTHEAD ── */
+    function Masthead({ route, setRoute, scrolled }) {
+      const links = [
+        { id: "home",    label: "The Argument" },
+        { id: "field",   label: "From the Field" },
+        { id: "data",    label: "Data" },
+        { id: "archive", label: "Archive" },
+        { id: "about",   label: "About" },
+      ];
+      return (
+        <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(254,253,248,0.88)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: "1px solid var(--paper-edge)", transition: "all 220ms var(--ease-standard)" }}>
+          {!scrolled && (
+            <div style={{ background: "var(--paper-deep)", borderBottom: "1px solid var(--paper-edge)" }}>
+              <div className="fv-container" style={{ display: "flex", justifyContent: "space-between", padding: "7px 32px", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em", color: "var(--ink-3)", textTransform: "uppercase" }}>
+                <span>Quarterly · Issue N°14</span>
+                <span>Thursday · 7 May 2026</span>
+                <span>Warsaw · London · New York</span>
+              </div>
+            </div>
+          )}
+          <div className="fv-container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: scrolled ? "12px 32px" : "20px 32px", transition: "padding 220ms var(--ease-standard)" }}>
+            <Wordmark size={scrolled ? 20 : 26} onClick={() => setRoute("home")} />
+            <nav style={{ display: "flex", gap: 28 }}>
+              {links.map(l => (
+                <a key={l.id} href="#" onClick={e => { e.preventDefault(); setRoute(l.id === "field" || l.id === "data" ? "home" : l.id); }}
+                  style={{ textDecoration: "none", color: route === l.id ? "var(--ink)" : "var(--ink-2)", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, letterSpacing: "0.02em", borderBottom: route === l.id ? "2px solid var(--ink)" : "2px solid transparent", paddingBottom: 4 }}>
+                  {l.label}
+                </a>
+              ))}
+            </nav>
+            <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+              <button style={{ background: "none", border: "none", color: "var(--ink-2)", padding: 0, fontSize: 12, fontFamily: "var(--font-sans)" }}>Search</button>
+              <span style={{ width: 1, height: 14, background: "var(--paper-edge)", display: "inline-block" }}></span>
+              <button style={{ background: "none", border: "none", color: "var(--ink-2)", padding: 0, fontSize: 12, fontFamily: "var(--font-sans)" }}>Sign in</button>
+              <button className="btn btn-paper" style={{ padding: "8px 14px", fontSize: 11 }}>Subscribe</button>
+            </div>
+          </div>
+        </header>
+      );
+    }
+
+    /* ── COMPOSITION ART (editorial image placeholder) ── */
+    function CompoArt({ glyph = "9", marks = [], style = {} }) {
+      const { numSize, ...divStyle } = style;
+      return (
+        <div className="compo" style={divStyle}>
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, #3C3A33 0%, #1B1A17 60%, #2A2823 100%)" }} />
+          {marks.map((m, i) => (
+            <div key={i} className="compo-mark" style={m.style}>{m.text}</div>
+          ))}
+          <div className="compo-num" style={{ fontSize: numSize || 120 }}>{glyph}</div>
+        </div>
+      );
+    }
+
+    /* ── ROSETTE SVG ── */
+    function Rosette() {
+      return (
+        <svg viewBox="0 0 100 100" width="100" height="100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="46" stroke="#1B1A17" strokeWidth="0.75" opacity="0.25"/>
+          <circle cx="50" cy="50" r="36" stroke="#1B1A17" strokeWidth="0.75" opacity="0.18"/>
+          <circle cx="50" cy="50" r="26" stroke="#7A1F1F" strokeWidth="0.5" opacity="0.4"/>
+          {[...Array(12)].map((_, i) => (
+            <line key={i}
+              x1="50" y1="14" x2="50" y2="8"
+              stroke="#1B1A17" strokeWidth="0.5" opacity="0.3"
+              transform={`rotate(${i * 30} 50 50)`}
+            />
+          ))}
+          <text x="50" y="55" textAnchor="middle" fontFamily="Fraunces, serif" fontSize="16" fill="#1B1A17" fontStyle="italic" opacity="0.75">N°14</text>
+        </svg>
+      );
+    }
+
+    /* ── HERO ── */
+    function Hero({ setRoute }) {
+      return (
+        <section style={{ padding: "56px 0 64px", borderBottom: "1px solid var(--paper-edge)" }}>
+          <div className="fv-container" style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 56, alignItems: "stretch" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20, alignSelf: "center" }}>
+              <div className="kicker" style={{ color: "var(--accent)" }}>The Argument · Issue 14</div>
+              <h1 style={{ fontFamily: "var(--font-display)", fontSize: 64, lineHeight: 1.02, letterSpacing: "-0.02em", color: "var(--ink)", margin: 0, textWrap: "balance", fontWeight: 400 }}>
+                The fragile arithmetic <em>of compulsory voting</em>
+              </h1>
+              <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 20, lineHeight: 1.5, color: "var(--ink-2)", margin: 0, maxWidth: 560 }}>
+                Across nine countries that compel turnout, the penalty for staying home has quietly drifted from civic obligation to administrative footnote. The change matters more than the headline numbers suggest.
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 6, fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--ink-3)" }}>
+                <span style={{ fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--ink-2)" }}>By Jane Orlova</span>
+                <span style={{ color: "var(--paper-edge)" }}>·</span>
+                <span>4 May 2026</span>
+                <span style={{ color: "var(--paper-edge)" }}>·</span>
+                <span>18 min read</span>
+              </div>
+              <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+                <button className="btn" onClick={() => setRoute("article")}>Read the essay</button>
+                <button className="btn btn-ghost" onClick={() => setRoute("archive")}>Browse Issue 14</button>
+              </div>
+            </div>
+
+            <div style={{ position: "relative", minHeight: 480 }}>
+              <CompoArt glyph="9" style={{ position: "absolute", inset: 0, numSize: 120 }} marks={[
+                { text: "§", style: { fontFamily: "var(--font-display)", fontSize: 240, fontStyle: "italic", color: "rgba(244,237,224,0.06)", top: -40, right: -20 } },
+                { text: "Compulsory turnout in nine democracies", style: { fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", top: 24, left: 24 } },
+                { text: "—", style: { fontFamily: "var(--font-display)", fontSize: 56, color: "var(--accent-soft)", top: 56, left: 24 } },
+              ]} />
+              <div style={{ position: "absolute", right: -36, bottom: -36, background: "var(--paper)", borderRadius: "50%", padding: 8, boxShadow: "0 12px 32px -12px rgba(27,26,23,0.18)" }}>
+                <Rosette />
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── ARTICLE DATA ── */
+    const ARTICLES = [
+      { id: "a1", kicker: "From the Field · Budapest", title: "A second runoff, and the question Hungary will not answer", lede: "The constitutional court ruled in March; the parliament has yet to draft the implementing legislation.", author: "Katalin Szabó", date: "2 May 2026", read: 9, glyph: "II" },
+      { id: "a2", kicker: "Comparative", title: "Three theories of why turnout fell in São Paulo", lede: "City-level data complicates each of the national accounts now circulating.", author: "Diego Marques", date: "29 April 2026", read: 14, glyph: "%" },
+      { id: "a3", kicker: "Electoral Law", title: "What the German <em>Wahlrechtsreform</em> actually changed", lede: "A reading of the 2023 reform two cycles in, and what other parliamentary systems are watching.", author: "Lukas Brandt", date: "26 April 2026", read: 22, glyph: "§" },
+      { id: "a4", kicker: "Long Read", title: "The poll workers of Sangamon County", lede: "An eight-month account of how an American county recruits, trains, and pays the people who count.", author: "Joanna Reed", date: "20 April 2026", read: 36, glyph: "VII" },
+      { id: "a5", kicker: "Data", title: "Mapping rejected ballots, 2008–2024", lede: "A new dataset of rejected mail-in ballots across 41 American states.", author: "Marcus Lin", date: "18 April 2026", read: 11, glyph: "41" },
+      { id: "a6", kicker: "Dispatch · Tunis", title: "Two parties, three weeks, one ballot", lede: "Notes from the press desk during a snap legislative election.", author: "Yasmine Ben Salah", date: "14 April 2026", read: 7, glyph: "III" },
+    ];
+
+    function ArticleListItem({ a, onClick }) {
+      return (
+        <article className="art-card" onClick={onClick} style={{ display: "grid", gridTemplateColumns: "1fr 96px", gap: 18, alignItems: "flex-start" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div className="kicker" dangerouslySetInnerHTML={{ __html: a.kicker }} />
+            <h3 className="art-title" style={{ fontFamily: "var(--font-display)", fontSize: 22, lineHeight: 1.2, letterSpacing: "-0.01em", color: "var(--ink)", margin: 0, fontWeight: 400, textWrap: "balance" }} dangerouslySetInnerHTML={{ __html: a.title }} />
+            <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 15, lineHeight: 1.5, color: "var(--ink-2)", margin: 0 }}>{a.lede}</p>
+            <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--ink-3)", marginTop: 4 }}>
+              <span style={{ fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--ink-2)" }}>By {a.author}</span>
+              {" "}· {a.date} · {a.read} min
+            </div>
+          </div>
+          <CompoArt glyph={a.glyph} style={{ height: 96, numSize: 32 }} />
+        </article>
+      );
+    }
+
+    /* ── ARTICLE GRID ── */
+    function ArticleGrid({ setRoute }) {
+      return (
+        <section style={{ padding: "64px 0" }}>
+          <div className="fv-container">
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 32 }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: 32, lineHeight: 1.1, letterSpacing: "-0.01em", color: "var(--ink)", margin: 0, fontWeight: 400 }}>Latest in Issue 14</h2>
+              <a href="#" onClick={e => { e.preventDefault(); setRoute("archive"); }} style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500 }}>The full table of contents →</a>
+            </div>
+            <hr className="hr-strong" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 56, rowGap: 0 }}>
+              {ARTICLES.map(a => (
+                <ArticleListItem key={a.id} a={a} onClick={() => setRoute("article")} />
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── READING VIEW ── */
+    function ReadingProgress() {
+      const [p, setP] = useState(0);
+      useEffect(() => {
+        const onScroll = () => {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          setP(max > 0 ? Math.min(1, h.scrollTop / max) : 0);
+        };
+        window.addEventListener("scroll", onScroll);
+        onScroll();
+        return () => window.removeEventListener("scroll", onScroll);
+      }, []);
+      return <div className="reading-progress" style={{ transform: `scaleX(${p})` }} />;
+    }
+
+    function ReadingView({ setRoute }) {
+      return (
+        <article className="fade-in">
+          <ReadingProgress />
+          <div style={{ padding: "56px 0 24px" }}>
+            <div className="fv-reading">
+              <a href="#" onClick={e => { e.preventDefault(); setRoute("home"); }} style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--ink-3)", textDecoration: "none" }}>← Back to Issue 14</a>
+            </div>
+          </div>
+
+          <header style={{ paddingBottom: 40 }}>
+            <div className="fv-reading" style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              <div className="kicker" style={{ color: "var(--accent)" }}>The Argument · Issue 14</div>
+              <h1 style={{ fontFamily: "var(--font-display)", fontSize: 56, lineHeight: 1.05, letterSpacing: "-0.02em", margin: 0, fontWeight: 400, color: "var(--ink)", textWrap: "balance" }}>
+                The fragile arithmetic <em>of compulsory voting</em>
+              </h1>
+              <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 22, lineHeight: 1.45, color: "var(--ink-2)", margin: 0 }}>
+                Across nine countries that compel turnout, the penalty for staying home has quietly drifted from civic obligation to administrative footnote — and the change matters more than the headline numbers suggest.
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8, paddingTop: 16, borderTop: "1px solid var(--paper-edge)" }}>
+                <div style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--ink-bg)", color: "var(--paper)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 20, flexShrink: 0 }}>J</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--ink-2)" }}>By Jane Orlova</span>
+                  <span style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--ink-3)" }}>Founder & editor · 4 May 2026 · 18 min read</span>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <div style={{ paddingBottom: 48 }}>
+            <div className="fv-container">
+              <CompoArt glyph="9" style={{ height: 420, position: "relative", numSize: 120 }} marks={[
+                { text: "Compulsory turnout · 1995–2026", style: { fontFamily: "var(--font-sans)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(244,237,224,0.5)", top: 24, left: 24 } },
+                { text: "—", style: { fontFamily: "var(--font-display)", fontSize: 56, color: "var(--accent-soft)", top: 60, left: 24 } },
+              ]} />
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--ink-3)", marginTop: 10 }}>
+                Cumulative non-voting penalties in compulsory-turnout democracies, 1995–2026. Composition for Framing Vote.
+              </p>
+            </div>
+          </div>
+
+          <div className="fv-reading" style={{ display: "flex", flexDirection: "column", gap: 24, paddingBottom: 64 }}>
+            <p className="fv-dropcap" style={{ fontFamily: "var(--font-serif)", fontSize: 18, lineHeight: 1.6, color: "var(--ink)", margin: 0 }}>
+              A century ago, when Belgium and Australia were among the first parliamentary democracies to require their citizens to turn up at the polls, the penalty for refusing was meant to <em>matter</em>. A small fine, certainly, but also a public letter from the registrar; sometimes a marginal note on one's electoral file; in a few cantons, a forfeiture of certain civic rights for the duration of the cycle. The argument was straightforward and, by the standards of the moment, defensible: a healthy democracy required its citizens at the ballot box.
+            </p>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: 18, lineHeight: 1.6, color: "var(--ink)", margin: 0 }}>
+              The penalty has, in most of these countries, withered. In Australia today the fine is twenty dollars and is rarely pursued past the second notice. In Belgium the punishment for habitual non-voting was last enforced in any meaningful number in 2003. The <em>laws</em> remain on the books in nine countries; the apparatus that gave them weight does not.
+            </p>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, padding: "12px 0" }}>
+              <div style={{ height: 1, background: "var(--paper-edge)", flex: 1 }} />
+              <span style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 22, color: "var(--accent)" }}>§</span>
+              <div style={{ height: 1, background: "var(--paper-edge)", flex: 1 }} />
+            </div>
+
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 32, lineHeight: 1.2, letterSpacing: "-0.01em", color: "var(--ink)", margin: "12px 0 0", fontWeight: 400 }}>What an unenforced rule does</h2>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: 18, lineHeight: 1.6, color: "var(--ink)", margin: 0 }}>
+              The conventional wisdom is that an unenforced obligation is, in practice, no obligation at all. The data from the past three decades complicate that account in two interesting ways.<sup style={{ color: "var(--accent)" }}><a href="#fn1" style={{ textDecoration: "none" }}>†</a></sup>
+            </p>
+
+            <blockquote style={{ margin: "20px -40px", padding: "32px 40px", background: "var(--ink-bg)", color: "var(--paper)" }}>
+              <div className="kicker" style={{ color: "var(--accent-soft)", marginBottom: 12 }}>Pull quote</div>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: 28, fontStyle: "italic", lineHeight: 1.25, color: "var(--paper)", margin: 0, textWrap: "balance" }}>
+                "The penalty for staying home has quietly drifted from civic obligation to administrative footnote."
+              </p>
+            </blockquote>
+
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: 18, lineHeight: 1.6, color: "var(--ink)", margin: 0 }}>
+              First: turnout in compulsory-vote countries has declined more slowly than in the comparison set, even after enforcement effectively ended. Whether that reflects habit, civic norm, or the residual signaling power of the law itself is a question the data cannot, on its own, settle.
+            </p>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: 18, lineHeight: 1.6, color: "var(--ink)", margin: 0 }}>
+              Second: the demographic <em>shape</em> of the turnout decline is inverted. In voluntary systems, non-voting concentrates among the young and the economically marginal. In compulsory systems with lapsed enforcement, it concentrates instead among the affluent middle-aged — voters who, knowing the penalty is symbolic, calculate that their day is better spent elsewhere.
+            </p>
+
+            <div id="fn1" style={{ marginTop: 32, paddingTop: 20, borderTop: "1px solid var(--paper-edge)" }}>
+              <div className="kicker" style={{ marginBottom: 10 }}>Notes</div>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: 14, lineHeight: 1.55, color: "var(--ink-2)", margin: 0 }}>
+                <sup style={{ color: "var(--accent)" }}>†</sup> Data assembled from the IDEA Voter Turnout Database (1995–2024) and country-level supplements collected by the journal. Methodology and replication files are available in the data appendix.
+              </p>
+            </div>
+          </div>
+        </article>
+      );
+    }
+
+    /* ── ARCHIVE VIEW ── */
+    const TOPICS = ["All", "Comparative", "Field reports", "Electoral law", "Long reads", "Data", "Dispatches"];
+    const ISSUES = [
+      { n: "14", date: "Spring 2026", theme: "The Counting" },
+      { n: "13", date: "Winter 2026", theme: "The Margin" },
+      { n: "12", date: "Autumn 2025", theme: "The Boundary" },
+      { n: "11", date: "Summer 2025", theme: "The Threshold" },
+      { n: "10", date: "Spring 2025", theme: "The Quorum" },
+      { n: "09", date: "Winter 2025", theme: "The Recount" },
+    ];
+
+    function ArchiveView({ setRoute }) {
+      const [topic, setTopic] = useState("All");
+      return (
+        <section className="fade-in" style={{ padding: "56px 0 96px" }}>
+          <div className="fv-container">
+            <div className="kicker" style={{ marginBottom: 16, color: "var(--accent)" }}>The Archive</div>
+            <h1 style={{ fontFamily: "var(--font-display)", fontSize: 56, lineHeight: 1.05, letterSpacing: "-0.02em", color: "var(--ink)", margin: 0, fontWeight: 400, maxWidth: 800, textWrap: "balance" }}>
+              Fourteen issues, three hundred and twelve essays, <em>seventy contributors.</em>
+            </h1>
+            <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 20, lineHeight: 1.5, color: "var(--ink-2)", marginTop: 18, maxWidth: 640 }}>
+              Browse the journal by topic, country, contributor, or issue. Every piece is open to subscribers; the data appendix to each piece is open to all.
+            </p>
+
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 32, paddingBottom: 24, borderBottom: "1px solid var(--paper-edge)" }}>
+              {TOPICS.map(t => (
+                <button key={t} onClick={() => setTopic(t)} className={`tag-pill${topic === t ? " active" : ""}`}>{t}</button>
+              ))}
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 56, marginTop: 40 }}>
+              <aside>
+                <div className="kicker" style={{ marginBottom: 14 }}>Issues</div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  {ISSUES.map((iss, i) => (
+                    <div key={iss.n} style={{ display: "flex", alignItems: "baseline", gap: 12, padding: "12px 0", borderTop: "1px solid var(--paper-edge)", cursor: "pointer" }}>
+                      <span style={{ fontFamily: "var(--font-display)", fontSize: 24, color: i === 0 ? "var(--accent)" : "var(--ink)", lineHeight: 1, minWidth: 36 }}>N°{iss.n}</span>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <span style={{ fontFamily: "var(--font-display)", fontSize: 16, fontStyle: "italic", color: "var(--ink-2)" }}>{iss.theme}</span>
+                        <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "var(--ink-3)", letterSpacing: "0.04em" }}>{iss.date}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </aside>
+
+              <div>
+                <div className="kicker" style={{ marginBottom: 14 }}>Issue 14 · {topic}</div>
+                <hr className="hr-strong" />
+                {ARTICLES.map(a => (
+                  <ArticleListItem key={a.id} a={a} onClick={() => setRoute("article")} />
+                ))}
+                <div style={{ paddingTop: 24, display: "flex", justifyContent: "center" }}>
+                  <button className="btn btn-ghost">Load earlier issues</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── NEWSLETTER CTA ── */
+    function NewsletterCTA() {
+      return (
+        <section style={{ background: "var(--ink-bg)", color: "var(--paper)", padding: "80px 0" }}>
+          <div className="fv-container" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div className="kicker" style={{ color: "var(--accent-soft)" }}>The Dispatch · Sundays</div>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1.1, letterSpacing: "-0.02em", color: "var(--paper)", margin: 0, fontWeight: 400, textWrap: "balance" }}>
+                One letter a week, written by the editor. <em>No more.</em>
+              </h2>
+              <p style={{ fontFamily: "var(--font-serif)", fontSize: 17, lineHeight: 1.6, color: "rgba(244,237,224,0.75)", margin: 0, maxWidth: 460 }}>
+                What we are reading, what we are commissioning, and the elections we will be watching in the week ahead. Free. Opens in a serif you can read.
+              </p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <label style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(244,237,224,0.55)" }}>Email address</label>
+              <div style={{ display: "flex", gap: 12 }}>
+                <input className="input on-dark" placeholder="reader@example.org" style={{ flex: 1 }} />
+                <button className="btn btn-on-dark">Subscribe</button>
+              </div>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "rgba(244,237,224,0.5)", margin: "8px 0 0", lineHeight: 1.5 }}>
+                We do not share addresses. Unsubscribe at the foot of any letter. Read the <a href="#" style={{ color: "var(--accent-soft)" }}>publishing principles</a>.
+              </p>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── FOOTER ── */
+    function Footer({ setRoute }) {
+      const cols = [
+        { h: "The Journal", links: ["About", "The editor", "Publishing principles", "Contact"] },
+        { h: "Read",        links: ["Latest issue", "Archive", "Topics", "Contributors"] },
+        { h: "Contribute",  links: ["Pitch an essay", "Submission guidelines", "Style book", "Editor portal"] },
+        { h: "Subscribe",   links: ["Print quarterly", "Digital", "Institutional access", "Gift a subscription"] },
+      ];
+      return (
+        <footer style={{ background: "var(--paper-deep)", borderTop: "2px solid var(--ink)", marginTop: "auto" }}>
+          <div className="fv-container" style={{ padding: "64px 32px 24px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1.4fr repeat(4, 1fr)", gap: 48 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <Wordmark size={26} onClick={() => setRoute("home")} />
+                <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, lineHeight: 1.5, color: "var(--ink-2)", margin: 0, maxWidth: 280 }}>
+                  A quarterly journal on elections, electoral systems, and the institutions of democracy worldwide.
+                </p>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--ink-3)", letterSpacing: "0.06em", textTransform: "uppercase" }}>EST. 2026 · WARSAW · LONDON · NEW YORK</div>
+              </div>
+              {cols.map(col => (
+                <div key={col.h} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div className="kicker">{col.h}</div>
+                  {col.links.map(l => (
+                    <a key={l} href="#"
+                      style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--ink-2)", textDecoration: "none" }}
+                      onMouseEnter={e => e.currentTarget.style.color = "var(--accent)"}
+                      onMouseLeave={e => e.currentTarget.style.color = "var(--ink-2)"}>{l}</a>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <hr className="hr" style={{ margin: "40px 0 18px" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--ink-3)" }}>
+              <div>© Framing Vote 2026 · ISSN 2997-0142</div>
+              <div style={{ display: "flex", gap: 18 }}>
+                {["Privacy", "Terms", "RSS", "Mastodon"].map(l => (
+                  <a key={l} href="#" style={{ color: "var(--ink-3)", textDecoration: "none" }}>{l}</a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    /* ── EDITOR PORTAL ── */
+    function EditorPortal() {
+      const [tab, setTab] = useState("pitches");
+      const tabs = [
+        { id: "pitches",  label: "Pitches" },
+        { id: "drafts",   label: "In edit" },
+        { id: "schedule", label: "Schedule" },
+      ];
+      const pitches = [
+        { author: "K. Szabó",     title: "A second runoff, and the question Hungary will not answer", state: "Accepted",             date: "2 May",  words: 2400 },
+        { author: "D. Marques",   title: "Three theories of why turnout fell in São Paulo",           state: "In review",             date: "29 Apr", words: 3800 },
+        { author: "L. Brandt",    title: "What the German Wahlrechtsreform actually changed",         state: "In review",             date: "26 Apr", words: 5400 },
+        { author: "J. Reed",      title: "The poll workers of Sangamon County",                       state: "Commissioned",          date: "20 Apr", words: 9200 },
+        { author: "Y. Ben Salah", title: "Two parties, three weeks, one ballot",                      state: "Returned for revision", date: "14 Apr", words: 1800 },
+      ];
+      const stateColor = s => s === "Accepted" ? "var(--accent)" : s === "Commissioned" ? "var(--ink)" : s.startsWith("Returned") ? "#9A7A2A" : "var(--ink-3)";
+      return (
+        <section className="fade-in" style={{ padding: "56px 0 96px" }}>
+          <div className="fv-container">
+            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
+              <div>
+                <div className="kicker" style={{ color: "var(--accent)", marginBottom: 8 }}>Editor portal · Jane Orlova</div>
+                <h1 style={{ fontFamily: "var(--font-display)", fontSize: 44, lineHeight: 1.1, letterSpacing: "-0.02em", margin: 0, fontWeight: 400 }}>Issue 14 · pitches & drafts</h1>
+              </div>
+              <button className="btn">Commission a piece</button>
+            </div>
+
+            <div style={{ display: "flex", gap: 28, marginTop: 32, borderBottom: "1px solid var(--paper-edge)" }}>
+              {tabs.map(t => (
+                <button key={t.id} onClick={() => setTab(t.id)}
+                  style={{ background: "none", border: "none", padding: "14px 0", fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500, color: tab === t.id ? "var(--ink)" : "var(--ink-3)", borderBottom: tab === t.id ? "2px solid var(--ink)" : "2px solid transparent", marginBottom: -1, cursor: "pointer", letterSpacing: "0.02em" }}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 24 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "60px 1fr 160px 160px 80px 100px", gap: 16, padding: "10px 0", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.06em", color: "var(--ink-3)", textTransform: "uppercase", borderBottom: "1px solid var(--paper-edge)" }}>
+                <div>#</div><div>Title</div><div>Author</div><div>State</div><div>Words</div><div>Updated</div>
+              </div>
+              {pitches.map((p, i) => (
+                <div key={i}
+                  style={{ display: "grid", gridTemplateColumns: "60px 1fr 160px 160px 80px 100px", gap: 16, padding: "16px 0", borderBottom: "1px solid var(--paper-edge)", alignItems: "center", cursor: "pointer", transition: "background 140ms" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "var(--paper-soft)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--ink-3)" }}>{String(i + 1).padStart(2, "0")}</div>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: 17, color: "var(--ink)", lineHeight: 1.3 }}>{p.title}</div>
+                  <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--ink-2)" }}>{p.author}</div>
+                  <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 500, color: stateColor(p.state) }}>{p.state}</div>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-2)" }}>{p.words.toLocaleString()}</div>
+                  <div style={{ fontFamily: "var(--font-sans)", fontSize: 12, color: "var(--ink-3)" }}>{p.date}</div>
+                </div>
+              ))}
+            </div>
+
+            <p style={{ marginTop: 32, padding: "14px 18px", background: "var(--paper-deep)", borderLeft: "2px solid var(--accent)", fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "var(--ink-2)", lineHeight: 1.5 }}>
+              Note · this portal is sketched at low fidelity. A real editor flow needs draft views, revision history, comments, and a status pipeline.
+            </p>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── ABOUT VIEW ── */
+    function AboutView() {
+      return (
+        <section className="fade-in" style={{ padding: "64px 0 96px" }}>
+          <div className="fv-reading" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <div className="kicker" style={{ color: "var(--accent)" }}>About the journal</div>
+            <h1 style={{ fontFamily: "var(--font-display)", fontSize: 56, lineHeight: 1.05, letterSpacing: "-0.02em", margin: 0, fontWeight: 400, textWrap: "balance" }}>
+              A quarterly on elections, in <em>nine languages.</em>
+            </h1>
+            <p className="fv-dropcap" style={{ fontFamily: "var(--font-serif)", fontSize: 19, lineHeight: 1.6, color: "var(--ink)", margin: 0 }}>
+              Framing Vote was founded in 2026 by Jane Orlova — a political scientist and editor who believed the existing publishing landscape served two audiences poorly: the scholar who wanted a careful argument and the citizen who wanted to read one. The journal sits between them. Every essay is bylined, edited, and meant to last beyond its news cycle.
+            </p>
+            <p style={{ fontFamily: "var(--font-serif)", fontSize: 18, lineHeight: 1.6, color: "var(--ink)", margin: 0 }}>
+              The journal publishes four print issues a year and a continuous web edition. Its beat is wide — campaigns, electoral law, comparative institutions, the administrative machinery of voting, and the changing demography of turnout — and its standard is straightforward: an essay should leave the reader with a sharper question than they arrived with.
+            </p>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18, padding: "8px 0" }}>
+              <div style={{ height: 1, background: "var(--paper-edge)", flex: 1 }} />
+              <span style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 22, color: "var(--accent)" }}>§</span>
+              <div style={{ height: 1, background: "var(--paper-edge)", flex: 1 }} />
+            </div>
+
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: 28, lineHeight: 1.2, letterSpacing: "-0.01em", margin: "8px 0 0", fontWeight: 400 }}>The editor</h2>
+            <div style={{ marginTop: 8 }}>
+              <div style={{ borderTop: "1px solid var(--paper-edge)", paddingTop: 12, display: "flex", flexDirection: "column", gap: 4, maxWidth: 460 }}>
+                <div style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--ink)" }}>Jane Orlova</div>
+                <div style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: 14, color: "var(--ink-3)" }}>Founder & editor · contact@framingvote.org</div>
+              </div>
+              <p style={{ marginTop: 18, fontFamily: "var(--font-serif)", fontSize: 15, fontStyle: "italic", lineHeight: 1.55, color: "var(--ink-3)", maxWidth: 460 }}>
+                Framing Vote is, for now, a one-person publication. Contributing editors will be added as the journal grows.
+              </p>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ── APP ── */
+    function App() {
+      const [route, setRoute] = useState("home");
+      const [scrolled, setScrolled] = useState(false);
+
+      useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 80);
+        window.addEventListener("scroll", onScroll);
+        return () => window.removeEventListener("scroll", onScroll);
+      }, []);
+
+      useEffect(() => { window.scrollTo(0, 0); }, [route]);
+
+      return (
+        <div className="fv-page">
+          <Masthead route={route} setRoute={setRoute} scrolled={scrolled} />
+          <main style={{ flex: 1 }}>
+            {route === "home" && <>
+              <Hero setRoute={setRoute} />
+              <ArticleGrid setRoute={setRoute} />
+              <NewsletterCTA />
+            </>}
+            {route === "article" && <ReadingView setRoute={setRoute} />}
+            {route === "archive" && <ArchiveView setRoute={setRoute} />}
+            {route === "about"   && <AboutView />}
+            {route === "editor"  && <EditorPortal />}
+          </main>
+          <Footer setRoute={setRoute} />
+
+          {/* Dev route switcher */}
+          <div style={{ position: "fixed", bottom: 16, left: 16, display: "flex", gap: 6, padding: 6, background: "var(--ink-bg)", borderRadius: 4, boxShadow: "0 12px 32px -12px rgba(27,26,23,0.4)", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.06em", textTransform: "uppercase", zIndex: 90 }}>
+            {["home", "article", "archive", "about", "editor"].map(r => (
+              <button key={r} onClick={() => setRoute(r)}
+                style={{ background: route === r ? "var(--accent)" : "transparent", color: "var(--paper)", border: "none", padding: "6px 10px", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", textTransform: "inherit", cursor: "pointer", borderRadius: 2 }}>
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
