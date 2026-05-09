@@ -1,0 +1,1915 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Framing Vote — A journal on elections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #F5F2EA;
+      --bg-warm: #EDE9DE;
+      --bg-deep: #E3DED1;
+      --ink: #0F0E0B;
+      --ink-2: #2A2924;
+      --ink-3: #6B6860;
+      --ink-4: #ABA89F;
+      --rule: #C8C3B6;
+      --accent: #C1440E;
+      --accent-pale: #F5E8E2;
+      --night: #0F0E0B;
+      --night-2: #1E1D19;
+      --ff-display: 'Playfair Display', Georgia, serif;
+      --ff-sans: 'DM Sans', system-ui, sans-serif;
+      --ff-mono: 'DM Mono', ui-monospace, monospace;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--ff-sans);
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: 0; background: none; color: inherit; padding: 0; }
+    img { max-width: 100%; display: block; }
+    ::selection { background: var(--accent); color: #fff; }
+
+    .page { min-height: 100vh; display: flex; flex-direction: column; }
+    .wrap { width: 100%; max-width: 1320px; margin: 0 auto; padding: 0 48px; }
+    .read { width: 100%; max-width: 700px; margin: 0 auto; padding: 0 40px; }
+
+    .label {
+      font-family: var(--ff-mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .label-accent { color: var(--accent); }
+
+    hr { border: 0; border-top: 1px solid var(--rule); }
+
+    #progress {
+      position: fixed; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--accent); transform-origin: 0 50%;
+      transform: scaleX(0); z-index: 200; transition: transform 80ms linear;
+    }
+
+    /* ── HEADER ── */
+    .page > header {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid transparent;
+      transition: border-color 200ms, background 200ms;
+      background: rgba(245,242,234,0);
+      backdrop-filter: blur(0);
+    }
+    .page > header.scrolled {
+      background: rgba(245,242,234,0.94);
+      border-bottom-color: var(--rule);
+      backdrop-filter: saturate(160%) blur(16px);
+    }
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+    }
+    .wordmark {
+      font-family: var(--ff-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .wordmark-mark {
+      width: 26px; height: 26px; background: var(--accent); border-radius: 4px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    nav { display: flex; align-items: center; gap: 2px; }
+    .nav-btn {
+      padding: 7px 13px;
+      font-family: var(--ff-sans);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink-3);
+      border-radius: 6px;
+      transition: color 140ms, background 140ms;
+    }
+    .nav-btn:hover { color: var(--ink); background: rgba(15,14,11,0.05); }
+    .nav-btn.active { color: var(--ink); font-weight: 500; }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 18px;
+      font-family: var(--ff-sans);
+      font-size: 13px; font-weight: 500;
+      background: var(--ink); color: var(--bg);
+      border-radius: 6px;
+      transition: background 160ms var(--ease), transform 140ms;
+    }
+    .btn-cta:hover { background: var(--accent); }
+    .btn-cta:active { transform: translateY(1px); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 12px 22px;
+      font-family: var(--ff-sans); font-size: 13.5px; font-weight: 500;
+      background: var(--ink); color: var(--bg); border-radius: 6px;
+      transition: background 160ms var(--ease), transform 120ms;
+    }
+    .btn:hover { background: var(--accent); }
+    .btn:active { transform: translateY(1px); }
+    .btn-outline {
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--ink);
+    }
+    .btn-outline:hover { background: var(--ink); color: var(--bg); }
+    .btn-outline-ghost {
+      background: transparent; color: var(--ink-3);
+      border: 1px solid var(--rule);
+    }
+    .btn-outline-ghost:hover { border-color: var(--ink); color: var(--ink); background: transparent; }
+
+    .mono-arrow { font-family: var(--ff-mono); font-size: 13px; }
+
+    /* ── CATEGORY CHIP ── */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; font-family: var(--ff-mono);
+      font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); background: var(--accent-pale); border-radius: 999px;
+      border: 1px solid transparent;
+      transition: background 140ms, border-color 140ms;
+      cursor: default;
+    }
+    .chip-btn {
+      cursor: pointer;
+    }
+    .chip-btn:hover { background: var(--accent); color: #fff; }
+    .chip-btn.active { background: var(--accent); color: #fff; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 0;
+    }
+    .filter-label {
+      font-family: var(--ff-mono); font-size: 9.5px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
+      margin-right: 4px; flex-shrink: 0;
+    }
+    .filter-pill {
+      padding: 5px 12px;
+      font-family: var(--ff-mono); font-size: 9.5px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      color: var(--ink-3);
+      background: transparent;
+      cursor: pointer;
+      transition: all 140ms;
+    }
+    .filter-pill:hover { border-color: var(--ink); color: var(--ink); }
+    .filter-pill.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 0 0 88px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+    }
+    .hero-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0; border-bottom: 1px solid var(--rule);
+      flex-wrap: wrap; gap: 16px;
+    }
+    .hero-bar-left { display: flex; align-items: center; gap: 16px; }
+    .issue-num {
+      font-family: var(--ff-mono); font-size: 11px;
+      letter-spacing: 0.1em; color: var(--ink-3);
+    }
+    .dot-sep {
+      width: 3px; height: 3px; border-radius: 50%;
+      background: var(--ink-4); flex-shrink: 0;
+    }
+    .issue-theme {
+      font-family: var(--ff-display); font-style: italic;
+      font-size: 16px; color: var(--ink-2);
+    }
+    .live-badge {
+      display: flex; align-items: center; gap: 7px;
+      font-family: var(--ff-mono); font-size: 10.5px; color: var(--ink-3);
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    .hero-head {
+      padding: 80px 0 64px;
+      display: grid; grid-template-columns: 1fr; gap: 40px;
+    }
+    .hero-h1 {
+      font-family: var(--ff-display);
+      font-size: clamp(64px, 11vw, 168px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 0.91;
+      color: var(--ink);
+    }
+    .hero-h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+    .hero-sub {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 40px; align-items: flex-end;
+    }
+    .hero-tagline {
+      font-family: var(--ff-display);
+      font-style: italic; font-size: 22px; line-height: 1.4;
+      color: var(--ink-2); max-width: 540px;
+    }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+    /* ── DISPATCH RAIL ── */
+    .dispatch-rail-section {
+      padding: 64px 0 0;
+      background: var(--night);
+      border-top: 1px solid var(--rule);
+    }
+    .dispatch-rail-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 48px 24px;
+      max-width: 1320px; margin: 0 auto;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .dispatch-rail-scroll {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 48px 48px;
+      scrollbar-width: none;
+    }
+    .dispatch-rail-scroll::-webkit-scrollbar { display: none; }
+    .dispatch-card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      cursor: pointer;
+      border-right: 1px solid rgba(245,242,234,0.1);
+      display: flex;
+      flex-direction: column;
+      transition: background 200ms;
+      background: transparent;
+      text-align: left;
+    }
+    .dispatch-card:first-child { border-left: 1px solid rgba(245,242,234,0.1); }
+    .dispatch-card:hover { background: rgba(245,242,234,0.04); }
+    .dispatch-card-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: var(--night-2);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .dispatch-card-img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 400ms var(--ease);
+    }
+    .dispatch-card:hover .dispatch-card-img img { transform: scale(1.04); }
+    .dispatch-card-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-display); font-style: italic;
+      font-size: 56px; color: rgba(245,242,234,0.1);
+    }
+    .dispatch-card-body {
+      padding: 20px 24px 28px;
+      display: flex; flex-direction: column; gap: 8px; flex: 1;
+    }
+    .dispatch-card-cat {
+      font-family: var(--ff-mono); font-size: 9px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: #E8866A;
+    }
+    .dispatch-card-title {
+      font-family: var(--ff-display); font-size: 18px; font-weight: 700;
+      letter-spacing: -0.01em; line-height: 1.15; color: #F5F2EA;
+    }
+    .dispatch-card-meta {
+      font-family: var(--ff-mono); font-size: 10px;
+      color: rgba(245,242,234,0.35);
+      margin-top: auto; padding-top: 8px;
+    }
+    .dispatch-rail-fade-right {
+      position: relative;
+    }
+    .dispatch-rail-fade-right::after {
+      content: '';
+      position: absolute; top: 0; right: 0; bottom: 0; width: 80px;
+      background: linear-gradient(to right, transparent, var(--night));
+      pointer-events: none;
+    }
+
+    /* ── FEATURED CARDS ── */
+    .featured-section {
+      padding: 72px 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--rule);
+    }
+    .featured-label {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 20px; border-bottom: 1px solid var(--rule); margin-bottom: 40px;
+    }
+    .featured-grid {
+      display: grid;
+      grid-template-columns: minmax(0,1.6fr) minmax(0,1fr);
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .feat-card {
+      background: var(--bg);
+      cursor: pointer;
+      transition: background 200ms;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .feat-card:hover { background: var(--bg-warm); }
+    .feat-card-img {
+      width: 100%; aspect-ratio: 16/9; overflow: hidden;
+      background: var(--bg-deep); flex-shrink: 0;
+    }
+    .feat-card-img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 400ms var(--ease);
+    }
+    .feat-card:hover .feat-card-img img { transform: scale(1.03); }
+    .feat-card-img-ph {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat-card-content { padding: 32px 40px 40px; display: flex; flex-direction: column; flex: 1; }
+    .feat-card-kicker {
+      font-family: var(--ff-mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+    }
+    .feat-card-title {
+      font-family: var(--ff-display); font-weight: 700;
+      font-size: clamp(24px,3vw,42px); line-height: 1.05;
+      letter-spacing: -0.02em; color: var(--ink); margin-bottom: 14px;
+    }
+    .feat-card-sub {
+      font-family: var(--ff-display); font-style: italic;
+      font-size: 16px; line-height: 1.5; color: var(--ink-3);
+      margin-bottom: 20px;
+    }
+    .feat-card-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .feat-card-meta {
+      font-family: var(--ff-mono); font-size: 11px;
+      color: var(--ink-4); display: flex; align-items: center; gap: 12px;
+      margin-top: auto;
+    }
+    .secondary-cards {
+      display: flex; flex-direction: column; gap: 1px;
+    }
+    .sec-card {
+      background: var(--bg); cursor: pointer; transition: background 200ms;
+      display: flex; flex-direction: column; flex: 1; overflow: hidden;
+    }
+    .sec-card:hover { background: var(--bg-warm); }
+    .sec-card-img {
+      width: 100%; aspect-ratio: 16/9; overflow: hidden;
+      background: var(--bg-deep); flex-shrink: 0;
+    }
+    .sec-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 400ms var(--ease); }
+    .sec-card:hover .sec-card-img img { transform: scale(1.03); }
+    .sec-card-img-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .sec-card-content { padding: 20px 28px 24px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .sec-card-kicker {
+      font-family: var(--ff-mono); font-size: 9.5px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
+    }
+    .sec-card-title {
+      font-family: var(--ff-display); font-size: 19px; font-weight: 700;
+      letter-spacing: -0.015em; line-height: 1.1; color: var(--ink);
+    }
+    .sec-card-meta {
+      font-family: var(--ff-mono); font-size: 10.5px; color: var(--ink-4);
+    }
+    .sec-card-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+
+    /* ── MANIFESTO ── */
+    .manifesto {
+      padding: 112px 0;
+      background: var(--bg-warm);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .manifesto-grid {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1.5fr);
+      gap: 80px; align-items: flex-start;
+    }
+    .manifesto-sticky {
+      position: sticky; top: 120px;
+      display: flex; flex-direction: column; gap: 20px;
+    }
+    .manifesto-head {
+      font-family: var(--ff-display); font-size: clamp(48px,6vw,88px);
+      font-weight: 900; letter-spacing: -0.03em; line-height: 0.92; color: var(--ink);
+    }
+    .manifesto-head em { font-style: italic; font-weight: 400; color: var(--accent); }
+    .principles { margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .principle {
+      padding: 24px 0; border-top: 1px solid var(--rule);
+    }
+    .principle:nth-child(odd) { padding-right: 32px; }
+    .principle:nth-child(even) { padding-left: 32px; border-left: 1px solid var(--rule); }
+    .principle-head {
+      font-family: var(--ff-display); font-size: 22px; font-weight: 700;
+      letter-spacing: -0.01em; color: var(--ink); margin-bottom: 8px;
+    }
+    .principle-body {
+      font-family: var(--ff-sans); font-size: 14.5px; line-height: 1.6;
+      color: var(--ink-3);
+    }
+
+    /* ── ARCHIVE TABLE ── */
+    .archive-section {
+      padding: 80px 0 100px;
+      background: var(--bg);
+    }
+    .archive-head {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding-bottom: 20px; border-bottom: 1px solid var(--rule);
+      flex-wrap: wrap; gap: 24px;
+    }
+    .archive-title {
+      font-family: var(--ff-display); font-size: clamp(36px,4.5vw,64px);
+      font-weight: 900; letter-spacing: -0.025em; line-height: 1; color: var(--ink);
+    }
+    .archive-title em { font-style: italic; font-weight: 400; color: var(--accent); }
+    .table-header {
+      display: grid;
+      grid-template-columns: 52px minmax(0,1fr) 160px 120px 24px;
+      gap: 24px; padding: 14px 16px;
+      font-family: var(--ff-mono); font-size: 9.5px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-4);
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: 52px minmax(0,1fr) 160px 120px 24px;
+      gap: 24px; padding: 22px 16px;
+      border-top: 1px solid var(--rule);
+      cursor: pointer; transition: background 180ms;
+      text-align: left; width: 100%;
+    }
+    .table-row:hover { background: var(--bg-warm); }
+    .table-row:hover .row-arrow { transform: translateX(4px); color: var(--accent); }
+    .row-num {
+      font-family: var(--ff-display); font-style: italic; font-size: 28px;
+      line-height: 1; color: var(--ink); align-self: center;
+    }
+    .row-title-block { min-width: 0; align-self: center; }
+    .row-kicker {
+      font-family: var(--ff-mono); font-size: 9.5px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 5px;
+    }
+    .row-title {
+      font-family: var(--ff-display); font-size: 21px; font-weight: 700;
+      letter-spacing: -0.01em; line-height: 1.1; color: var(--ink);
+    }
+    .row-sub {
+      font-family: var(--ff-sans); font-style: italic; font-size: 13px;
+      color: var(--ink-4); margin-top: 3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .row-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .row-author {
+      font-family: var(--ff-sans); font-size: 13px; color: var(--ink-2);
+      align-self: center;
+    }
+    .row-date {
+      font-family: var(--ff-mono); font-size: 11px; color: var(--ink-4);
+      align-self: center;
+    }
+    .row-arrow {
+      font-family: var(--ff-mono); font-size: 13px; color: var(--ink-4);
+      align-self: center; transition: transform 200ms, color 200ms;
+    }
+
+    /* ── PITCH CTA ── */
+    .pitch-section {
+      background: var(--night);
+      padding: 96px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .pitch-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 100% at 100% 0%, rgba(193,68,14,0.12), transparent 55%);
+      pointer-events: none;
+    }
+    .pitch-inner {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: 80px; align-items: center;
+    }
+    .pitch-head {
+      font-family: var(--ff-display);
+      font-size: clamp(44px,5.5vw,80px);
+      font-weight: 900; letter-spacing: -0.03em; line-height: 0.92;
+      color: #F5F2EA;
+    }
+    .pitch-head em { font-style: italic; font-weight: 400; color: #E8866A; }
+    .pitch-right { display: flex; flex-direction: column; gap: 32px; }
+    .pitch-label {
+      font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(245,242,234,0.4);
+    }
+    .pitch-body {
+      font-family: var(--ff-display); font-style: italic;
+      font-size: 20px; line-height: 1.45; color: rgba(245,242,234,0.75);
+    }
+    .pitch-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .pitch-spec {
+      padding: 20px 0; border-top: 1px solid rgba(245,242,234,0.1);
+    }
+    .pitch-spec:nth-child(odd) { padding-right: 24px; }
+    .pitch-spec:nth-child(even) { padding-left: 24px; border-left: 1px solid rgba(245,242,234,0.1); }
+    .pitch-spec-head {
+      font-family: var(--ff-mono); font-size: 9.5px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(245,242,234,0.4); margin-bottom: 4px;
+    }
+    .pitch-spec-val {
+      font-family: var(--ff-sans); font-size: 14px; color: rgba(245,242,234,0.85);
+    }
+    .btn-light {
+      background: #F5F2EA; color: var(--night);
+      display: inline-flex; align-items: center; gap: 9px;
+      padding: 12px 22px; font-family: var(--ff-sans);
+      font-size: 13.5px; font-weight: 500; border-radius: 6px;
+      transition: background 160ms, color 160ms;
+    }
+    .btn-light:hover { background: var(--accent); color: #fff; }
+
+    /* ── NEWSLETTER ── */
+    .newsletter {
+      padding: 88px 0; background: var(--bg-deep);
+      border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    }
+    .nl-inner {
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
+      gap: 64px; align-items: center;
+    }
+    .nl-head {
+      font-family: var(--ff-display);
+      font-size: clamp(36px,4.5vw,64px);
+      font-weight: 900; letter-spacing: -0.025em; line-height: 0.92; color: var(--ink);
+    }
+    .nl-head em { font-style: italic; font-weight: 400; }
+    .nl-sub {
+      font-family: var(--ff-display); font-style: italic;
+      font-size: 18px; line-height: 1.45; color: var(--ink-3);
+      margin-top: 18px;
+    }
+    .nl-form { display: flex; flex-direction: column; gap: 12px; }
+    .nl-input {
+      width: 100%; padding: 14px 18px;
+      border: 1px solid var(--rule); background: var(--bg);
+      font-family: var(--ff-sans); font-size: 15px; color: var(--ink);
+      border-radius: 6px; outline: none;
+      transition: border-color 140ms;
+    }
+    .nl-input::placeholder { color: var(--ink-4); font-style: italic; }
+    .nl-input:focus { border-color: var(--ink); }
+    .nl-note { font-family: var(--ff-mono); font-size: 10.5px; color: var(--ink-4); }
+    .nl-success {
+      padding: 28px; border: 1px solid var(--rule); border-radius: 6px;
+      background: var(--bg);
+    }
+    .nl-success-head {
+      font-family: var(--ff-display); font-style: italic; font-size: 32px;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .nl-success-body { font-family: var(--ff-sans); font-size: 14px; color: var(--ink-3); }
+
+    /* ── ARTICLE VIEW ── */
+    .article-wrap { animation: fadein 220ms var(--ease) both; }
+    @keyframes fadein { from{opacity:0;transform:translateY(5px);} to{opacity:1;transform:none;} }
+    .article-header { padding: 40px 0 32px; }
+    .article-title {
+      font-family: var(--ff-display);
+      font-size: clamp(38px,5.5vw,76px);
+      font-weight: 900; letter-spacing: -0.025em; line-height: 0.94;
+      color: var(--ink); margin: 14px 0 0;
+    }
+    .article-sub {
+      font-family: var(--ff-display); font-style: italic;
+      font-size: 22px; line-height: 1.4; color: var(--ink-3); margin: 16px 0 0;
+    }
+    .article-byline {
+      display: flex; align-items: center; gap: 14px;
+      margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--rule);
+    }
+    .byline-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--night); color: var(--bg);
+      display: grid; place-items: center;
+      font-family: var(--ff-display); font-style: italic; font-size: 18px;
+      flex-shrink: 0;
+    }
+    .byline-name { font-family: var(--ff-sans); font-size: 13.5px; font-weight: 500; color: var(--ink); }
+    .byline-detail { font-family: var(--ff-sans); font-size: 12px; color: var(--ink-4); }
+    .cover-placeholder {
+      width: 100%; aspect-ratio: 16/7; background: var(--bg-deep);
+      border-radius: 4px; overflow: hidden; position: relative;
+      margin: 32px 0 56px;
+    }
+    .cover-glyph {
+      position: absolute; bottom: 20px; left: 32px;
+      font-family: var(--ff-display); font-size: 140px; line-height: 0.8;
+      color: var(--ink); opacity: 0.08; font-style: italic;
+    }
+    .cover-label {
+      position: absolute; bottom: 20px; right: 24px;
+      font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-4);
+    }
+    .post-body h2 {
+      font-family: var(--ff-display); font-weight: 700; font-size: 34px;
+      letter-spacing: -0.02em; line-height: 1.1; color: var(--ink);
+      margin: 52px 0 16px;
+    }
+    .post-body h3 {
+      font-family: var(--ff-display); font-weight: 700; font-size: 24px;
+      letter-spacing: -0.01em; line-height: 1.2; color: var(--ink);
+      margin: 36px 0 12px;
+    }
+    .post-body p {
+      font-family: var(--ff-sans); font-size: 19px; line-height: 1.68;
+      color: var(--ink); margin: 0 0 22px; font-weight: 300;
+    }
+    .post-body blockquote {
+      margin: 36px 0; padding: 0 0 0 28px;
+      border-left: 2.5px solid var(--accent);
+    }
+    .post-body blockquote p {
+      font-family: var(--ff-display); font-style: italic;
+      font-size: 28px; line-height: 1.3; color: var(--ink); margin: 0;
+    }
+    .post-body ul, .post-body ol {
+      font-family: var(--ff-sans); font-size: 18px; line-height: 1.65;
+      color: var(--ink); padding-left: 22px; margin: 0 0 22px; font-weight: 300;
+    }
+    .post-body hr { margin: 48px 0; }
+    .dropcap::first-letter {
+      font-family: var(--ff-display); font-weight: 900; float: left;
+      font-size: 5.2em; line-height: 0.82; margin: 0.04em 0.1em -0.05em 0;
+      color: var(--accent);
+    }
+    .about-bio.post-body p, .about-bio.post-body ul, .about-bio.post-body ol {
+      font-size: 16px; line-height: 1.65;
+    }
+    .about-bio.post-body blockquote p { font-size: 22px; }
+    .about-bio.dropcap::first-letter { font-size: 4em; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg-warm);
+      border-top: 1px solid var(--rule);
+      color: var(--ink);
+    }
+    .footer-inner { padding: 64px 0 28px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(0,1.8fr) repeat(3,minmax(0,1fr));
+      gap: 48px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .footer-brand-name {
+      font-family: var(--ff-display); font-size: 28px; font-weight: 700;
+      letter-spacing: -0.025em; color: var(--ink); margin: 12px 0 12px;
+    }
+    .footer-tagline {
+      font-family: var(--ff-display); font-style: italic; font-size: 16px;
+      line-height: 1.5; color: var(--ink-3); max-width: 300px;
+    }
+    .footer-col-head {
+      font-family: var(--ff-mono); font-size: 9.5px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink-4); margin-bottom: 18px;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-link {
+      font-family: var(--ff-display); font-size: 19px; color: var(--ink-2);
+      transition: color 140ms; cursor: pointer;
+    }
+    .footer-link:hover { color: var(--accent); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { font-family: var(--ff-mono); font-size: 10.5px; color: var(--ink-4); }
+
+    /* ── BACK BTN ── */
+    .back-btn {
+      font-family: var(--ff-sans); font-size: 13px; color: var(--ink-3);
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 0;
+      transition: color 140ms;
+    }
+    .back-btn:hover { color: var(--accent); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { padding: 96px 0; text-align: center; }
+    .empty-glyph {
+      font-family: var(--ff-display); font-style: italic; font-size: 120px;
+      color: var(--ink); opacity: 0.06; line-height: 1; margin-bottom: 24px;
+    }
+    .empty-msg { font-family: var(--ff-display); font-style: italic; font-size: 24px; color: var(--ink-3); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px){
+      .header-inner,.wrap,.footer-grid,.featured-grid,.pitch-inner,.nl-inner,.manifesto-grid{
+        grid-template-columns:1fr;
+      }
+      .hero-sub{grid-template-columns:1fr;}
+      .hero-h1{font-size:clamp(52px,14vw,96px);}
+      .secondary-cards{flex-direction:row;}
+      .sec-card{min-width:0;}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      .wrap{padding:0 24px;}
+      .header-inner{padding:16px 24px;}
+      .table-header,.table-row{grid-template-columns:40px minmax(0,1fr) 100px 24px;}
+      .table-header div:nth-child(3),.table-row .row-author{display:none;}
+      .dispatch-rail-header{padding:0 24px 24px;}
+      .dispatch-rail-scroll{padding:0 24px 40px;}
+    }
+    @media(max-width:640px){
+      .table-header,.table-row{grid-template-columns:36px minmax(0,1fr) 24px;}
+      .table-header div:nth-child(4),.table-row .row-date{display:none;}
+      .principles,.pitch-specs{grid-template-columns:1fr;}
+      .principle:nth-child(even){padding-left:0;border-left:0;}
+      .footer-grid{grid-template-columns:1fr;}
+      .dispatch-card{flex:0 0 240px;}
+    }
+  </style>
+</head>
+<body>
+<div id="root">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg)">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+      <div style="width:36px;height:36px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center">
+        <svg width="18" height="18" viewBox="0 0 28 28"><path d="M7.5 14.5L11.5 18.5L20.5 8.5" stroke="#F5F2EA" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;letter-spacing:-0.025em;color:var(--ink)">Framing Vote</span>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-4)">Loading</span>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+const SPACE='upaglixkbf42',TOKEN='H3fmoxO4StTBS-lRp_ULYaywbv3uM3C6WTG8o1M_PbU';
+const BASE=`https://cdn.contentful.com/spaces/${SPACE}/environments/master`;
+async function cfFetch(p){const r=await fetch(`${BASE}${p}&access_token=${TOKEN}`);if(!r.ok)throw new Error(r.status);return r.json();}
+async function getEntries(ct,extra=''){return cfFetch(`/entries?content_type=${ct}${extra}`);}
+
+function rt(doc){
+  if(!doc||!doc.content)return'';
+  const n=node=>{
+    if(node.nodeType==='text'){let t=node.value;(node.marks||[]).forEach(m=>{if(m.type==='bold')t=`<strong>${t}</strong>`;if(m.type==='italic')t=`<em>${t}</em>`;if(m.type==='code')t=`<code>${t}</code>`;});return t;}
+    const i=(node.content||[]).map(n).join('');
+    switch(node.nodeType){
+      case'paragraph':return`<p>${i}</p>`;case'heading-1':return`<h1>${i}</h1>`;case'heading-2':return`<h2>${i}</h2>`;
+      case'heading-3':return`<h3>${i}</h3>`;case'unordered-list':return`<ul>${i}</ul>`;case'ordered-list':return`<ol>${i}</ol>`;
+      case'list-item':return`<li>${i}</li>`;case'blockquote':return`<blockquote>${i}</blockquote>`;case'hr':return`<hr/>`;
+case'hyperlink':return`<a href="${node.data?.uri}" target="_blank" rel="noopener">${i}</a>`;
+case 'embedded-asset-block': {
+  const target = node.data?.target;
+
+  // Direct asset fields
+  const file = target?.fields?.file;
+
+  // Fallback via includes
+  const id = target?.sys?.id;
+  const allAssets = window.__fvAssets || [];
+  const linked = allAssets.find(x => x.sys?.id === id);
+
+  const finalFile = file || linked?.fields?.file;
+
+  // Debug panel — visible in the article body
+  const debugInfo = `
+    <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:12px 16px;margin:16px 0;font-family:monospace;font-size:12px;color:#333">
+      <strong>🎬 embedded-asset-block debug</strong><br/>
+      asset id: ${id || 'none'}<br/>
+      assets in pool: ${allAssets.length}<br/>
+      direct file: ${file ? JSON.stringify(file.contentType) : 'none'}<br/>
+      linked: ${linked ? 'found' : 'NOT FOUND'}<br/>
+      finalFile contentType: ${finalFile?.contentType || 'none'}<br/>
+      finalFile url: ${finalFile?.url || 'none'}
+    </div>`;
+
+  if (!finalFile?.url) return debugInfo;
+
+  const src = finalFile.url.startsWith('//') ? 'https:' + finalFile.url : finalFile.url.startsWith('http') ? finalFile.url : 'https:' + finalFile.url;
+  const mime = finalFile.contentType || '';
+
+  if (mime.startsWith('video/')) {
+    return debugInfo + `
+      <video controls playsinline style="width:100%;margin:24px 0;border-radius:6px">
+        <source src="${src}" type="${mime}">
+      </video>
+    `;
+  }
+
+  if (mime.startsWith('image/')) {
+    return debugInfo + `
+      <img
+        src="${src}"
+        style="width:100%;margin:24px 0;border-radius:6px"
+      />
+    `;
+  }
+
+  return debugInfo + `<p style="color:red;font-family:monospace">⚠️ unhandled mime: ${mime}</p>`;
+}
+      default: return i;
+    }
+  };
+return doc.content.map(node => n(node)).join('');
+}
+function fmtDate(s){if(!s)return'';return new Date(s).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});}
+function fmtDateLong(s){if(!s)return'';return new Date(s).toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});}
+
+/* ── ASSET HELPERS ──
+   Resolves a Contentful asset reference using the includes.Asset array.
+   Field name: `portfolio` (single asset, used as cover/profile image everywhere)
+*/
+function resolveAsset(ref, assets){
+  if(!ref) return null;
+  if(ref?.fields?.file?.url) return ref;
+  const id = ref?.sys?.id;
+  if(id && assets) return assets.find(x => x.sys?.id === id) || null;
+  return null;
+}
+function assetUrl(ref, assets, w=1200){
+  const a = resolveAsset(ref, assets);
+  const url = a?.fields?.file?.url;
+  if(!url) return null;
+  const base = url.startsWith("//") ? url : "//" + url.replace(/^https?:\/\//, "");
+  return "https:" + base + "?w=" + w + "&fm=jpg&fl=progressive&q=80";
+}
+function assetAlt(ref, assets){
+  const a = resolveAsset(ref, assets);
+  return a?.fields?.description || a?.fields?.title || "";
+}
+
+/* ── CATEGORY HELPERS ── */
+function getCategories(items){
+  const cats=new Set();
+  (items||[]).forEach(it=>{
+    const c=it.category||it.categories;
+    if(Array.isArray(c))c.forEach(x=>x&&cats.add(x));
+    else if(c)cats.add(c);
+  });
+  return Array.from(cats).sort();
+}
+function matchesCategory(item, filter){
+  if(!filter||filter==='All')return true;
+  const c=item.category||item.categories;
+  if(Array.isArray(c))return c.includes(filter);
+  return c===filter;
+}
+
+/* ── PHOTO COMPONENT ── resolves `portfolio` field */
+function Photo({item, assets, w=1200, style={}, className='', alt=''}){
+  const src=assetUrl(item?.profile, assets, w);
+  const altText=assetAlt(item?.profile, assets)||alt||item?.title||'';
+  if(!src)return null;
+  return <img src={src} alt={altText} style={style} className={className}/>;
+}
+
+/* ── CHIP COMPONENTS ── */
+function CategoryChip({cat, onClick, active=false, dark=false}){
+  if(!cat)return null;
+  const darkStyle=dark?{color:'#E8866A',background:'rgba(232,134,106,0.12)',cursor:onClick?'pointer':'default'}:{};
+  return(
+    <span
+      className={`chip${onClick?' chip-btn':''}${active?' active':''}`}
+      style={darkStyle}
+      onClick={onClick?()=>onClick(cat):undefined}
+    >{cat}</span>
+  );
+}
+function CategoryChips({item, onClick, dark=false}){
+  const cats=item?.category||item?.categories;
+  if(!cats)return null;
+  const arr=Array.isArray(cats)?cats:[cats];
+  if(!arr.length)return null;
+  return(
+    <div style={{display:'flex',flexWrap:'wrap',gap:5}}>
+      {arr.map(c=><CategoryChip key={c} cat={c} onClick={onClick} dark={dark}/>)}
+    </div>
+  );
+}
+
+/* ── FILTER BAR ── */
+function FilterBar({items, activeFilter, setFilter, dark=false}){
+  const cats=['All',...getCategories(items)];
+  if(cats.length<=1)return null;
+  return(
+    <div className="filter-bar" style={dark?{borderColor:'rgba(245,242,234,0.12)'}:{}}>
+      <span className="filter-label" style={dark?{color:'rgba(245,242,234,0.3)'}:{}}>Filter by region</span>
+      {cats.map(c=>(
+        <button
+          key={c}
+          className={`filter-pill${activeFilter===c?' active':''}`}
+          style={dark?{
+            borderColor: activeFilter===c ? 'rgba(245,242,234,0.6)' : 'rgba(245,242,234,0.15)',
+            color: activeFilter===c ? 'var(--night)' : 'rgba(245,242,234,0.5)',
+            background: activeFilter===c ? '#F5F2EA' : 'transparent'
+          }:{}}
+          onClick={()=>setFilter(c)}
+        >{c}</button>
+      ))}
+    </div>
+  );
+}
+
+function Mark({size=28}){
+  return(
+    <span style={{display:'inline-block',width:size,height:size,background:'var(--accent)',borderRadius:Math.round(size*0.15),flexShrink:0}}>
+      <svg width={size} height={size} viewBox="0 0 28 28">
+        <path d="M7.5 14.5L11.5 18.5L20.5 8.5" stroke="#F5F2EA" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </span>
+  );
+}
+
+function ReadingProgress(){
+  const[p,setP]=useState(0);
+  useEffect(()=>{const f=()=>{const h=document.documentElement,m=h.scrollHeight-h.clientHeight;setP(m>0?Math.min(1,h.scrollTop/m):0);};window.addEventListener('scroll',f);f();return()=>window.removeEventListener('scroll',f);},[]);
+  return<div id="progress" style={{transform:`scaleX(${p})`}}/>;
+}
+
+function Header({route,setRoute}){
+  const links=[['home','Front'],['archive','Archive'],['news','Dispatches'],['about','About'],['submit','Pitch us']];
+  const[scrolled,setScrolled]=useState(false);
+  useEffect(()=>{const f=()=>setScrolled(window.scrollY>8);window.addEventListener('scroll',f);f();return()=>window.removeEventListener('scroll',f);},[]);
+  return(
+    <header className={scrolled?'scrolled':''}>
+      <div className="header-inner">
+        <button onClick={()=>setRoute('home')} className="wordmark">
+          <span className="wordmark-mark">
+            <svg width="14" height="14" viewBox="0 0 28 28"><path d="M7.5 14.5L11.5 18.5L20.5 8.5" stroke="#F5F2EA" strokeWidth="2.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+          Framing Vote
+        </button>
+        <nav>
+          {links.map(([k,label])=>(
+            <button key={k} onClick={()=>setRoute(k)} className={`nav-btn${route===k?' active':''}`}>{label}</button>
+          ))}
+        </nav>
+        <button className="btn-cta" onClick={()=>document.getElementById('fv-nl')?.scrollIntoView({behavior:'smooth'})}>
+          Subscribe <span className="mono-arrow">→</span>
+        </button>
+      </div>
+    </header>
+  );
+}
+
+/* ── HERO ── */
+function Hero({featured,settings,about,setRoute,setCurrentArticle,setCurrentNews,articles,news,assets}){
+  const num=settings?.issueNumber||'01';
+  const theme=settings?.issueTheme||'The Argument';
+  const season=settings?.issueSeason||'';
+  const tagline=settings?.tagline||'A journal on how the vote is asked, counted, and contested.';
+  const verbs=['frame','count','read','question','contest'];
+  const[vIdx,setVIdx]=useState(0);
+  useEffect(()=>{const t=setInterval(()=>setVIdx(i=>(i+1)%verbs.length),2400);return()=>clearInterval(t);},[]);
+
+  return(
+    <section className="hero">
+      <div className="wrap">
+        <div className="hero-bar">
+          <div className="hero-bar-left">
+            <span className="issue-num">Issue №{String(num).padStart(2,'0')}</span>
+            <span className="dot-sep"/>
+            <span className="issue-theme">{theme}</span>
+            {season&&<span className="issue-num">{season}</span>}
+          </div>
+          <div className="live-badge">
+            <span className="live-dot"/>
+            {featured?`Filed ${fmtDate(featured.publishDate)||'live'}`:'In preparation'}
+          </div>
+        </div>
+        <div className="hero-head">
+          <h1 className="hero-h1">We <em>{verbs[vIdx]}</em><br/>elections.</h1>
+          <div className="hero-sub">
+            <p className="hero-tagline">{tagline}</p>
+            <div className="hero-actions">
+              <button className="btn" onClick={()=>document.getElementById('fv-nl')?.scrollIntoView({behavior:'smooth'})}>
+                Get the dispatch <span className="mono-arrow">→</span>
+              </button>
+              <button className="btn btn-outline-ghost" onClick={()=>setRoute('submit')}>Pitch us</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── DISPATCH RAIL ── horizontal scroll, photo + title cards */
+function DispatchRail({news,assets,setRoute,setCurrentNews}){
+  const[activeFilter,setActiveFilter]=useState('All');
+  if(!news||news.length===0)return null;
+  const filtered=activeFilter==='All'?news:news.filter(n=>matchesCategory(n,activeFilter));
+
+  return(
+    <section className="dispatch-rail-section">
+      <div className="dispatch-rail-header">
+        <div>
+          <div className="label" style={{color:'rgba(245,242,234,0.4)',marginBottom:8}}>Field dispatches</div>
+          <div style={{fontFamily:'var(--ff-display)',fontSize:'clamp(28px,3.5vw,44px)',fontWeight:700,letterSpacing:'-0.02em',lineHeight:1.05,color:'#F5F2EA'}}>
+            Notes from the field.
+          </div>
+        </div>
+        <button onClick={()=>setRoute('news')} style={{fontFamily:'var(--ff-mono)',fontSize:11,color:'#E8866A',display:'inline-flex',alignItems:'center',gap:7,flexShrink:0,alignSelf:'flex-end'}}>
+          All dispatches <span className="mono-arrow">→</span>
+        </button>
+      </div>
+
+      {/* Filter bar inside rail */}
+      <div style={{maxWidth:1320,margin:'0 auto',padding:'0 48px'}}>
+        <FilterBar items={news} activeFilter={activeFilter} setFilter={setActiveFilter} dark={true}/>
+      </div>
+
+      <div className="dispatch-rail-fade-right">
+        <div className="dispatch-rail-scroll" style={{paddingTop:24}}>
+          {filtered.map(n=>{
+            const src=assetUrl(n.profile,assets,560);
+            return(
+              <button key={n.id} className="dispatch-card" onClick={()=>{setCurrentNews(n);setRoute('newsArticle');}}>
+                <div className="dispatch-card-img">
+                  {src
+                    ?<img src={src} alt={assetAlt(n.profile,assets)||n.title||''}/>
+                    :<div className="dispatch-card-img-placeholder">
+                      <span style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:40,color:'rgba(245,242,234,0.08)'}}>∅</span>
+                    </div>
+                  }
+                </div>
+                <div className="dispatch-card-body">
+                  {(n.category||n.categories)&&(
+                    <div className="dispatch-card-cat">
+                      {Array.isArray(n.category||n.categories)
+                        ?(n.category||n.categories).join(' · ')
+                        :(n.category||n.categories)}
+                    </div>
+                  )}
+                  <div className="dispatch-card-title">{n.title}</div>
+                  {n.summary&&<div style={{fontFamily:'var(--ff-sans)',fontSize:13,lineHeight:1.5,color:'rgba(245,242,234,0.5)',marginTop:4,overflow:'hidden',display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical'}}>{n.summary}</div>}
+                  <div className="dispatch-card-meta">
+                    {n.author&&<span>{n.author}</span>}
+                    {n.author&&n.publishDate&&<span style={{margin:'0 6px'}}>·</span>}
+                    {n.publishDate&&<span>{fmtDate(n.publishDate)}</span>}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+          {/* Spacer card so last item clears fade */}
+          <div style={{flexShrink:0,width:48}}/>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FEATURED GRID ── */
+function FeaturedGrid({articles,about,assets,setRoute,setCurrentArticle}){
+  if(!articles||articles.length===0)return null;
+  const[main,...rest]=articles;
+  const secondaries=rest.slice(0,2);
+  const mainSrc=assetUrl(main.profile,assets,1200);
+  return(
+    <section className="featured-section">
+      <div className="wrap">
+        <div className="featured-label">
+          <span className="label label-accent">Latest essays</span>
+          <button onClick={()=>setRoute('archive')} style={{fontFamily:'var(--ff-mono)',fontSize:11,color:'var(--ink-3)',display:'inline-flex',alignItems:'center',gap:7}} onMouseEnter={e=>e.currentTarget.style.color='var(--accent)'} onMouseLeave={e=>e.currentTarget.style.color='var(--ink-3)'}>
+            Full archive <span className="mono-arrow">→</span>
+          </button>
+        </div>
+        <div className="featured-grid">
+          <div className="feat-card" onClick={()=>{setCurrentArticle(main);setRoute('article');}}>
+            <div className="feat-card-img">
+              {mainSrc
+                ?<img src={mainSrc} alt={assetAlt(main.profile,assets)||main.title}/>
+                :<div className="feat-card-img-ph" style={{background:'var(--bg-deep)'}}>
+                  <span style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:64,color:'var(--ink)',opacity:0.08}}>{main.glyph||'§'}</span>
+                </div>
+              }
+            </div>
+            <div className="feat-card-content">
+              {main.kicker&&<div className="feat-card-kicker">{main.kicker}</div>}
+              <div className="feat-card-title">{main.title}</div>
+              {main.subtitle&&<div className="feat-card-sub">{main.subtitle}</div>}
+              {(main.category||main.categories)&&(
+                <div className="feat-card-chips">
+                  <CategoryChips item={main} onClick={null}/>
+                </div>
+              )}
+              <div className="feat-card-meta">
+                <span>{main.author||about?.editorName}</span>
+                <span className="dot-sep"/>
+                <span>{main.publishDate?fmtDate(main.publishDate):'—'}</span>
+                <span style={{marginLeft:'auto',fontFamily:'var(--ff-mono)',fontSize:11,color:'var(--accent)'}}>Read →</span>
+              </div>
+            </div>
+          </div>
+          {secondaries.length>0&&(
+            <div className="secondary-cards">
+              {secondaries.map(a=>{
+                const sSrc=assetUrl(a.profile,assets,600);
+                return(
+                  <div key={a.id} className="sec-card" onClick={()=>{setCurrentArticle(a);setRoute('article');}}>
+                    <div className="sec-card-img">
+                      {sSrc
+                        ?<img src={sSrc} alt={assetAlt(a.profile,assets)||a.title}/>
+                        :<div className="sec-card-img-ph" style={{background:'var(--bg-deep)'}}>
+                          <span style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:40,color:'var(--ink)',opacity:0.08}}>{a.glyph||'§'}</span>
+                        </div>
+                      }
+                    </div>
+                    <div className="sec-card-content">
+                      {a.kicker&&<div className="sec-card-kicker">{a.kicker}</div>}
+                      <div className="sec-card-title">{a.title}</div>
+                      {(a.category||a.categories)&&<div className="sec-card-chips"><CategoryChips item={a}/></div>}
+                      <div className="sec-card-meta">{a.author||about?.editorName} · {a.publishDate?fmtDate(a.publishDate):'—'}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── MANIFESTO ── */
+function Manifesto(){
+  return(
+    <section className="manifesto">
+      <div className="wrap">
+        <div className="manifesto-grid">
+          <div className="manifesto-sticky">
+            <Mark size={44}/>
+            <div className="label label-accent" style={{marginTop:24}}>The position</div>
+            <p style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:17,lineHeight:1.55,color:'var(--ink-3)',maxWidth:300}}>
+              We don't predict elections. We frame them. Four issues a year, plus the occasional recount.
+            </p>
+          </div>
+          <div>
+            <h2 className="manifesto-head">The vote is<br/>the question.<br/><em>The framing<br/>is the answer.</em></h2>
+            <div className="principles">
+              {[
+                ["No models.","We don't run forecasts. We don't aggregate polls. We don't tell you what will happen."],
+                ["No takes.","One essay at a time, slowly written. Edited until it earns the reader."],
+                ["No paywall.","Free to read, by design. The dispatch is the only thing in your inbox."],
+                ["No spectacle.","Elections deserve seriousness. We write at the speed they actually deserve."],
+              ].map(([h,b])=>(
+                <div key={h} className="principle">
+                  <div className="principle-head">{h}</div>
+                  <p className="principle-body">{b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── REGISTER (home excerpt) ── */
+function Register({articles,about,assets,setRoute,setCurrentArticle}){
+  if(!articles||articles.length===0)return null;
+  return(
+    <section className="archive-section">
+      <div className="wrap">
+        <div className="archive-head">
+          <div>
+            <div className="label label-accent">The register</div>
+            <h2 className="archive-title" style={{marginTop:10}}>
+              {articles.length} {articles.length===1?'essay':'essays'}, <em>logged.</em>
+            </h2>
+          </div>
+          <div style={{textAlign:'right',fontFamily:'var(--ff-mono)',fontSize:11,color:'var(--ink-4)',lineHeight:1.8}}>
+            <div>Updated {new Date().toLocaleDateString('en-US',{day:'numeric',month:'short'})}</div>
+            <div style={{color:'var(--accent)'}}>● Open to all</div>
+          </div>
+        </div>
+        <div className="table-header">
+          <div>№</div><div>Title</div><div>Author</div><div>Filed</div><div/>
+        </div>
+        {articles.slice(0,8).map((a,i)=>(
+          <button key={a.id} className="table-row" onClick={()=>{setCurrentArticle(a);setRoute('article');}}>
+            <div className="row-num">{String(i+1).padStart(2,'0')}</div>
+            <div className="row-title-block">
+              {a.kicker&&<div className="row-kicker">{a.kicker}</div>}
+              <div className="row-title">{a.title}</div>
+              {a.subtitle&&<div className="row-sub">{a.subtitle}</div>}
+              {(a.category||a.categories)&&<div className="row-chips"><CategoryChips item={a}/></div>}
+            </div>
+            <div className="row-author">{a.author||about?.editorName}</div>
+            <div className="row-date">{a.publishDate?fmtDate(a.publishDate):'–'}</div>
+            <div className="row-arrow">→</div>
+          </button>
+        ))}
+        <div style={{display:'flex',justifyContent:'space-between',marginTop:16,fontFamily:'var(--ff-mono)',fontSize:11,color:'var(--ink-4)'}}>
+          <span>Showing {Math.min(8,articles.length)} of {articles.length}</span>
+          <button onClick={()=>setRoute('archive')} style={{color:'var(--accent)'}} onMouseEnter={e=>e.currentTarget.style.color='var(--ink)'} onMouseLeave={e=>e.currentTarget.style.color='var(--accent)'}>Full archive →</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── PITCH CTA ── */
+function PitchCTA({about,setRoute}){
+  return(
+    <section className="pitch-section">
+      <div className="wrap">
+        <div className="pitch-inner">
+          <div>
+            <div className="label" style={{color:'rgba(245,242,234,0.4)',marginBottom:28}}>Work with us</div>
+            <h2 className="pitch-head">We read every pitch.<br/><em>We reply to all.</em></h2>
+          </div>
+          <div className="pitch-right">
+            <div>
+              <div className="pitch-label">What we publish</div>
+              <p className="pitch-body" style={{marginTop:10}}>Long-form essays, field reports, data analyses, and editorial arguments on elections and democratic institutions.</p>
+            </div>
+            <div className="pitch-specs">
+              {[['Length','2,500–6,000 words'],['Tone','First-person. Argument required.'],['Sources','Primary documents preferred.'],['Rights','First pub. You retain ownership.']].map(([h,b])=>(
+                <div key={h} className="pitch-spec">
+                  <div className="pitch-spec-head">{h}</div>
+                  <div className="pitch-spec-val">{b}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+              <button className="btn-light" onClick={()=>setRoute('submit')}>See pitch guidelines <span className="mono-arrow">→</span></button>
+              {about?.editorEmail&&(
+                <a className="btn-light" href={`mailto:${about.editorEmail}`} style={{border:'1px solid rgba(245,242,234,0.15)',background:'transparent',color:'rgba(245,242,234,0.65)',display:'inline-flex',alignItems:'center',gap:9,padding:'12px 22px',fontFamily:'var(--ff-sans)',fontSize:'13.5px',fontWeight:500,borderRadius:6}}>
+                  Email us directly
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── NEWSLETTER ── */
+function Newsletter(){
+  const[email,setEmail]=useState('');
+  const[done,setDone]=useState(false);
+  return(
+    <section id="fv-nl" className="newsletter">
+      <div className="wrap">
+        <div className="nl-inner">
+          <div>
+            <div className="label label-accent">The dispatch · Sundays</div>
+            <h2 className="nl-head" style={{marginTop:16}}>One letter a week.<br/><em>No more.</em></h2>
+            <p className="nl-sub">What we are reading, commissioning, and the elections we're watching. Free. No tracking, no sharing.</p>
+          </div>
+          <div>
+            {done?(
+              <div className="nl-success">
+                <div className="nl-success-head">Filed.</div>
+                <div className="nl-success-body">Watch your inbox on Sunday.</div>
+              </div>
+            ):(
+              <form onSubmit={e=>{e.preventDefault();if(email)setDone(true);}} className="nl-form">
+                <input className="nl-input" type="email" required placeholder="reader@example.org" value={email} onChange={e=>setEmail(e.target.value)}/>
+                <button type="submit" className="btn" style={{alignSelf:'flex-start'}}>Subscribe <span className="mono-arrow">→</span></button>
+                <span className="nl-note">Free. Unsubscribe with one click.</span>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FOOTER ── */
+function Footer({setRoute,settings,about}){
+  const cols=[
+    {head:'Read',links:[['Front','home'],['Archive','archive'],['Dispatches','news']]},
+    {head:'Office',links:[['About','about'],['Pitch','submit'],['Email',null,about?.editorEmail?`mailto:${about.editorEmail}`:null]]},
+    {head:'Imprint',links:[['Privacy',null],['RSS',null,'#'],['Colophon','about']]},
+  ];
+  return(
+    <footer>
+      <div className="wrap footer-inner">
+        <div className="footer-grid">
+          <div>
+            <Mark size={34}/>
+            <div className="footer-brand-name">Framing Vote</div>
+            <p className="footer-tagline">{settings?.tagline||'A journal on how the vote is asked, counted, and contested.'} Quarterly, plus the occasional recount.</p>
+          </div>
+          {cols.map(col=>(
+            <div key={col.head}>
+              <div className="footer-col-head">{col.head}</div>
+              <ul className="footer-links">
+                {col.links.map(([label,dest,href])=>(
+                  <li key={label}>
+                    {href?<a href={href} className="footer-link">{label}</a>:<span className="footer-link" onClick={()=>dest&&setRoute(dest)}>{label}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="footer-bottom">
+          <span className="footer-copy" style={{display:'flex',alignItems:'center',gap:8}}>
+            <span style={{width:5,height:5,borderRadius:'50%',background:'var(--accent)',display:'inline-block'}}/>
+            Framing Vote — Est. {settings?.foundingYear||'2026'}
+          </span>
+          <span className="footer-copy">Issue №{String(settings?.issueNumber||'01').padStart(2,'0')} · {settings?.issueSeason||''}</span>
+          <span className="footer-copy">© {new Date().getFullYear()} · All rights reserved</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── ARTICLE VIEW ── */
+function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle}){
+  if(!article)return null;
+  const html=rt(article.body);
+  const related=(articles||[]).filter(a=>a.id!==article.id).slice(0,3);
+  const coverSrc=assetUrl(article.profile,assets,1600);
+  const authorPortrait=assetUrl(about?.profile,assets,160);
+  return(
+    <article className="article-wrap">
+      <ReadingProgress/>
+      <div style={{padding:'32px 0 0'}}>
+        <div className="read">
+          <button className="back-btn" onClick={()=>setRoute('home')}><span className="mono-arrow">←</span> Back</button>
+        </div>
+      </div>
+      <header className="article-header">
+        <div className="read">
+          {/* Category chips — clickable, navigate to archive with filter */}
+          {(article.category||article.categories)&&(
+            <div style={{display:'flex',flexWrap:'wrap',gap:6,marginBottom:14}}>
+              <CategoryChips item={article} onClick={null}/>
+            </div>
+          )}
+          {article.kicker&&<span className="chip">{article.kicker}</span>}
+          <h1 className="article-title">{article.title}</h1>
+          {article.subtitle&&<p className="article-sub">{article.subtitle}</p>}
+          <div className="article-byline">
+            {authorPortrait
+              ?<img src={authorPortrait} alt={about?.editorName||''} style={{width:40,height:40,borderRadius:'50%',objectFit:'cover',objectPosition:'center top',flexShrink:0}}/>
+              :<div className="byline-avatar">{(article.author||about?.editorName||'E')[0]}</div>
+            }
+            <div>
+              <div className="byline-name">{article.author||about?.editorName}</div>
+              <div className="byline-detail">{article.publishDate?fmtDateLong(article.publishDate):''}{ article.publishDate?' · ':''} 12 min read</div>
+            </div>
+            <button className="btn btn-outline-ghost" style={{marginLeft:'auto',padding:'8px 14px',fontSize:12.5}} onClick={()=>navigator.share?.({title:article.title,url:location.href}).catch(()=>{})}>Share</button>
+          </div>
+        </div>
+      </header>
+      <div style={{padding:'0 0 56px'}}>
+        <div className="wrap">
+          {coverSrc
+            ?<div style={{width:'100%',aspectRatio:'16/7',borderRadius:4,overflow:'hidden',background:'var(--bg-deep)',minHeight:240}}>
+              <img src={coverSrc} alt={assetAlt(article.profile,assets)||article.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            </div>
+            :<div className="cover-placeholder">
+              <div className="cover-glyph">{article.glyph||'§'}</div>
+              <div className="cover-label">Cover · {article.kicker||'Essay'}</div>
+            </div>
+          }
+        </div>
+      </div>
+      <div className="read post-body dropcap" style={{paddingBottom:64}} dangerouslySetInnerHTML={{__html:html||`<p>${article.subtitle||''}</p>`}}/>
+      <div style={{padding:'32px 0',borderTop:'1px solid var(--rule)'}}>
+        <div className="read" style={{display:'flex',gap:16,alignItems:'flex-start'}}>
+          {authorPortrait
+            ?<img src={authorPortrait} alt={about?.editorName||''} style={{width:52,height:52,borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
+            :<div style={{width:52,height:52,borderRadius:'50%',background:'var(--bg-deep)',color:'var(--ink)',display:'grid',placeItems:'center',fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:22,flexShrink:0}}>{(article.author||about?.editorName||'E')[0]}</div>
+          }
+          <div>
+            <div className="label" style={{marginBottom:6}}>About the author</div>
+            <div style={{fontFamily:'var(--ff-display)',fontSize:22,fontWeight:700,letterSpacing:'-0.01em',color:'var(--ink)'}}>{article.author||about?.editorName}</div>
+            <p style={{fontFamily:'var(--ff-sans)',fontSize:14,lineHeight:1.55,color:'var(--ink-3)',margin:'6px 0 0',maxWidth:500}}>{about?.editorTitle||''}. Writes on the framing of the vote.</p>
+          </div>
+        </div>
+      </div>
+      {related.length>0&&(
+        <div style={{padding:'56px 0 80px',background:'var(--bg-warm)',borderTop:'1px solid var(--rule)'}}>
+          <div className="wrap">
+            <div className="label label-accent" style={{marginBottom:20}}>Read next</div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:1,background:'var(--rule)',border:'1px solid var(--rule)',borderRadius:4,overflow:'hidden'}}>
+              {related.map(a=>{
+                const thumb=assetUrl(a.profile,assets,600);
+                return(
+                  <button key={a.id} onClick={()=>{setCurrentArticle(a);setRoute('article');window.scrollTo(0,0);}} style={{textAlign:'left',background:'var(--bg-warm)',display:'flex',flexDirection:'column',transition:'background 200ms',overflow:'hidden'}} onMouseEnter={e=>e.currentTarget.style.background='var(--bg-deep)'} onMouseLeave={e=>e.currentTarget.style.background='var(--bg-warm)'}>
+                    <div style={{width:'100%',aspectRatio:'3/2',overflow:'hidden',background:'var(--bg-deep)'}}>
+                      {thumb
+                        ?<img src={thumb} alt={a.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                        :<div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <span style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:48,color:'var(--ink)',opacity:0.12}}>{a.glyph||'§'}</span>
+                        </div>
+                      }
+                    </div>
+                    <div style={{padding:24,display:'flex',flexDirection:'column',gap:8,flex:1}}>
+                      {a.kicker&&<div className="row-kicker">{a.kicker}</div>}
+                      <div style={{fontFamily:'var(--ff-display)',fontSize:20,fontWeight:700,lineHeight:1.1,letterSpacing:'-0.01em',color:'var(--ink)'}}>{a.title}</div>
+                      {(a.category||a.categories)&&<CategoryChips item={a}/>}
+                      <div style={{fontFamily:'var(--ff-mono)',fontSize:10.5,color:'var(--ink-4)',marginTop:'auto',display:'flex',justifyContent:'space-between'}}>
+                        <span>{a.author||about?.editorName}</span>
+                        <span>{a.publishDate?fmtDate(a.publishDate):''}</span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+/* ── ARCHIVE VIEW ── with category filter */
+function ArchiveView({articles,settings,about,assets,setRoute,setCurrentArticle}){
+  const[q,setQ]=useState('');
+  const[activeFilter,setActiveFilter]=useState('All');
+  const filtered=useMemo(()=>{
+    let res=articles;
+    if(activeFilter!=='All')res=res.filter(a=>matchesCategory(a,activeFilter));
+    const t=q.trim().toLowerCase();
+    if(t)res=res.filter(a=>(a.title||'').toLowerCase().includes(t)||(a.subtitle||'').toLowerCase().includes(t)||(a.kicker||'').toLowerCase().includes(t)||(a.author||'').toLowerCase().includes(t));
+    return res;
+  },[q,articles,activeFilter]);
+
+  return(
+    <section style={{padding:'56px 0 96px',animation:'fadein 200ms ease both'}}>
+      <div className="wrap">
+        <div className="archive-head">
+          <div>
+            <div className="label label-accent">The archive</div>
+            <h1 className="archive-title" style={{marginTop:10}}>
+              {articles.length===0?<>First issue <em>coming.</em></>:<>Every essay, <em>logged.</em></>}
+            </h1>
+          </div>
+          <div style={{minWidth:260,flex:'0 1 300px'}}>
+            <input style={{width:'100%',padding:'12px 16px',border:'1px solid var(--rule)',background:'var(--bg)',fontFamily:'var(--ff-sans)',fontSize:14,color:'var(--ink)',borderRadius:6,outline:'none'}} placeholder="Search essays, authors…" value={q} onChange={e=>setQ(e.target.value)}/>
+          </div>
+        </div>
+
+        <FilterBar items={articles} activeFilter={activeFilter} setFilter={setActiveFilter}/>
+
+        {articles.length===0?(
+          <div className="empty-state">
+            <div className="empty-glyph">§</div>
+            <p className="empty-msg">The first issue is in preparation.</p>
+          </div>
+        ):(
+          <>
+            <div className="table-header">
+              <div>№</div><div>Title</div><div>Author</div><div>Filed</div><div/>
+            </div>
+            {filtered.map((a,i)=>(
+              <button key={a.id} className="table-row" onClick={()=>{setCurrentArticle(a);setRoute('article');}}>
+                <div className="row-num">{String(i+1).padStart(2,'0')}</div>
+                <div className="row-title-block">
+                  {a.kicker&&<div className="row-kicker">{a.kicker}</div>}
+                  <div className="row-title">{a.title}</div>
+                  {a.subtitle&&<div className="row-sub">{a.subtitle}</div>}
+                  {(a.category||a.categories)&&<div className="row-chips"><CategoryChips item={a}/></div>}
+                </div>
+                <div className="row-author">{a.author||about?.editorName}</div>
+                <div className="row-date">{a.publishDate?fmtDate(a.publishDate):'–'}</div>
+                <div className="row-arrow">→</div>
+              </button>
+            ))}
+            {filtered.length===0&&<div style={{padding:'48px 16px',fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:22,color:'var(--ink-4)'}}>No results{q?` for "${q}"`:''}.</div>}
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ── NEWS VIEW ── with category filter */
+function NewsView({news,about,assets,setRoute,setCurrentNews}){
+  const[activeFilter,setActiveFilter]=useState('All');
+  const filtered=activeFilter==='All'?news:news.filter(n=>matchesCategory(n,activeFilter));
+
+  return(
+    <section style={{padding:'56px 0 96px',animation:'fadein 200ms ease both'}}>
+      <div className="wrap">
+        <div className="archive-head" style={{marginBottom:0}}>
+          <div>
+            <div className="label label-accent">Field dispatches</div>
+            <h1 className="archive-title" style={{marginTop:10}}>Notes from the <em>field.</em></h1>
+          </div>
+        </div>
+
+        <FilterBar items={news} activeFilter={activeFilter} setFilter={setActiveFilter}/>
+
+        {news.length===0?(
+          <div className="empty-state">
+            <div className="empty-glyph">∅</div>
+            <p className="empty-msg">No dispatches yet. First issue coming soon.</p>
+          </div>
+        ):(
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:1,background:'var(--rule)',border:'1px solid var(--rule)',borderRadius:4,overflow:'hidden',marginTop:32}}>
+            {filtered.map(it=>{
+              const src=assetUrl(it.profile,assets,640);
+              return(
+                <button key={it.id} onClick={()=>{setCurrentNews(it);setRoute('newsArticle');}} style={{textAlign:'left',background:'var(--bg)',display:'flex',flexDirection:'column',transition:'background 200ms',overflow:'hidden'}} onMouseEnter={e=>e.currentTarget.style.background='var(--bg-warm)'} onMouseLeave={e=>e.currentTarget.style.background='var(--bg)'}>
+                  {src&&(
+                    <div style={{width:'100%',aspectRatio:'16/9',overflow:'hidden',background:'var(--bg-deep)',flexShrink:0}}>
+                      <img src={src} alt={assetAlt(it.profile,assets)||it.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',transition:'transform 400ms var(--ease)'}}/>
+                    </div>
+                  )}
+                  <div style={{padding:28,display:'flex',flexDirection:'column',gap:10,flex:1}}>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+                      {(it.category||it.categories)&&<CategoryChips item={it}/>}
+                    </div>
+                    <div style={{fontFamily:'var(--ff-display)',fontSize:22,fontWeight:700,letterSpacing:'-0.01em',lineHeight:1.1,color:'var(--ink)'}}>{it.title}</div>
+                    {it.summary&&<p style={{fontFamily:'var(--ff-sans)',fontSize:14,lineHeight:1.55,color:'var(--ink-3)',margin:0}}>{it.summary}</p>}
+                    <div style={{fontFamily:'var(--ff-mono)',fontSize:10.5,color:'var(--ink-4)',marginTop:'auto',display:'flex',justifyContent:'space-between'}}>
+                      <span>{it.author||about?.editorName}</span>
+                      <span>{it.publishDate?fmtDate(it.publishDate):''}</span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+            {filtered.length===0&&<div style={{gridColumn:'1/-1',padding:'48px',fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:20,color:'var(--ink-4)',textAlign:'center'}}>No dispatches for this region.</div>}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ── NEWS ARTICLE VIEW ── */
+function NewsArticleView({item,about,assets,setRoute}){
+  if(!item)return null;
+  const html=rt(item.body);
+  const coverSrc=assetUrl(item.profile,assets,1400);
+  return(
+    <article className="article-wrap">
+      <ReadingProgress/>
+      <div style={{padding:'32px 0 0'}}>
+        <div className="read">
+          <button className="back-btn" onClick={()=>setRoute('news')}><span className="mono-arrow">←</span> All dispatches</button>
+        </div>
+      </div>
+      <header className="article-header">
+        <div className="read">
+          {(item.category||item.categories)&&(
+            <div style={{display:'flex',flexWrap:'wrap',gap:6,marginBottom:12}}>
+              <CategoryChips item={item}/>
+            </div>
+          )}
+          <h1 className="article-title">{item.title}</h1>
+          {item.summary&&<p className="article-sub">{item.summary}</p>}
+          <div className="article-byline">
+            <div className="byline-avatar">{(item.author||about?.editorName||'E')[0]}</div>
+            <div>
+              <div className="byline-name">{item.author||about?.editorName}</div>
+              {item.publishDate&&<div className="byline-detail">{fmtDateLong(item.publishDate)}</div>}
+            </div>
+          </div>
+        </div>
+      </header>
+      {coverSrc&&(
+        <div style={{padding:'0 0 48px'}}>
+          <div className="wrap">
+            <div style={{width:'100%',aspectRatio:'16/7',borderRadius:4,overflow:'hidden',background:'var(--bg-deep)',minHeight:200}}>
+              <img src={coverSrc} alt={assetAlt(item.profile,assets)||item.title} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="read post-body" style={{paddingBottom:80}} dangerouslySetInnerHTML={{__html:html||`<p>${item.summary||''}</p>`}}/>
+      <div style={{borderTop:'1px solid var(--rule)',padding:'32px 0'}}>
+        <div className="read" style={{display:'flex',gap:10}}>
+          <button className="btn btn-outline-ghost" onClick={()=>setRoute('news')}><span className="mono-arrow">←</span> All dispatches</button>
+          <button className="btn btn-outline-ghost" onClick={()=>setRoute('home')}>Homepage</button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ── ABOUT VIEW ── */
+function AboutView({about,assets,setRoute}){
+  if(!about)return<div style={{padding:'80px 32px',textAlign:'center',fontFamily:'var(--ff-sans)',color:'var(--ink-3)'}}>Loading…</div>;
+  const bioHtml=about.editorBio?.nodeType?rt(about.editorBio):`<p>${about.editorBio||''}</p>`;
+  const descHtml=about.journalDescription?.nodeType?rt(about.journalDescription):`<p>${about.journalDescription||''}</p>`;
+  const prinHtml=about.publishingPrinciples?.nodeType?rt(about.publishingPrinciples):about.publishingPrinciples?`<p>${about.publishingPrinciples}</p>`:null;
+  const portraitSrc=assetUrl(about.profile,assets,480);
+  const team=(about.team||[]).map(t=>t.fields||t).filter(Boolean);
+  const board=(about.advisoryBoard||[]).map(b=>b.fields||b).filter(Boolean);
+
+  return(
+    <section style={{animation:'fadein 200ms ease both'}}>
+      <div style={{borderBottom:'1px solid var(--rule)',background:'var(--bg)'}}>
+        <div className="wrap" style={{padding:'64px 48px 72px'}}>
+          <div className="label label-accent" style={{marginBottom:32}}>The editor</div>
+          <div style={{display:'grid',gridTemplateColumns:portraitSrc?'minmax(0,1fr) 340px':'1fr',gap:64,alignItems:'flex-start'}}>
+            <div>
+              <h1 style={{fontFamily:'var(--ff-display)',fontSize:'clamp(48px,6vw,96px)',fontWeight:900,letterSpacing:'-0.03em',lineHeight:0.92,color:'var(--ink)',margin:0}}>{about.editorName||'The editor'}</h1>
+              {about.editorTitle&&<div style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:22,color:'var(--ink-3)',marginTop:14}}>{about.editorTitle}</div>}
+              {about.editorEmail&&<a href={`mailto:${about.editorEmail}`} style={{display:'inline-flex',alignItems:'center',gap:8,marginTop:24,fontFamily:'var(--ff-mono)',fontSize:13,color:'var(--accent)'}}>{about.editorEmail}</a>}
+              <div className="post-body about-bio dropcap" style={{marginTop:40,maxWidth:640}} dangerouslySetInnerHTML={{__html:bioHtml}}/>
+              <div style={{display:'flex',gap:10,marginTop:32,flexWrap:'wrap'}}>
+                <button className="btn" onClick={()=>setRoute('submit')}>Pitch an essay <span className="mono-arrow">→</span></button>
+                <button className="btn btn-outline-ghost" onClick={()=>document.getElementById('fv-nl')?.scrollIntoView({behavior:'smooth'})}>Get the dispatch</button>
+              </div>
+            </div>
+            {portraitSrc&&(
+              <div style={{position:'sticky',top:100}}>
+                <div style={{width:'100%',borderRadius:4,overflow:'hidden',background:'var(--bg-deep)'}}>
+                  <img src={portraitSrc} alt={about.editorName||''} style={{width:'100%',height:'auto',maxHeight:'72vh',objectFit:'cover',objectPosition:'center top',display:'block'}}/>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {descHtml&&(
+        <div style={{background:'var(--bg-warm)',borderBottom:'1px solid var(--rule)'}}>
+          <div className="wrap" style={{padding:'72px 48px'}}>
+            <div style={{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1.6fr)',gap:80,alignItems:'flex-start'}}>
+              <div style={{position:'sticky',top:100}}>
+                <Mark size={40}/>
+                <div className="label label-accent" style={{marginTop:22,marginBottom:12}}>About the journal</div>
+                <p style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:17,lineHeight:1.55,color:'var(--ink-3)',maxWidth:280,margin:0}}>A journal on how the vote is asked, counted, and contested.</p>
+              </div>
+              <div>
+                <h2 style={{fontFamily:'var(--ff-display)',fontSize:'clamp(36px,4.5vw,64px)',fontWeight:900,letterSpacing:'-0.03em',lineHeight:0.94,margin:'0 0 36px',color:'var(--ink)'}}>A journal on elections, <em style={{fontStyle:'italic',fontWeight:400,color:'var(--accent)'}}>written to last.</em></h2>
+                <div className="post-body about-bio" dangerouslySetInnerHTML={{__html:descHtml}}/>
+                {prinHtml&&<><h3 style={{fontFamily:'var(--ff-display)',fontSize:32,fontWeight:700,letterSpacing:'-0.02em',margin:'52px 0 8px',color:'var(--ink)'}}>Publishing principles</h3><div className="post-body about-bio" dangerouslySetInnerHTML={{__html:prinHtml}}/></>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {team.length>0&&(
+        <div style={{background:'var(--bg)',borderBottom:'1px solid var(--rule)'}}>
+          <div className="wrap" style={{padding:'72px 48px'}}>
+            <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',paddingBottom:24,borderBottom:'1px solid var(--rule)',marginBottom:40,flexWrap:'wrap',gap:16}}>
+              <div>
+                <div className="label label-accent" style={{marginBottom:10}}>Editorial team</div>
+                <h2 style={{fontFamily:'var(--ff-display)',fontSize:'clamp(32px,4vw,56px)',fontWeight:900,letterSpacing:'-0.025em',lineHeight:1,margin:0,color:'var(--ink)'}}>{team.length} {team.length===1?'editor':'editors'}, one <em style={{fontStyle:'italic',fontWeight:400}}>mission.</em></h2>
+              </div>
+            </div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:1,background:'var(--rule)',border:'1px solid var(--rule)',borderRadius:4,overflow:'hidden'}}>
+              {team.map((member,i)=>{
+                const mPhoto=assetUrl(member.profile||member.profile,assets,320);
+                return(
+                  <div key={i} style={{background:'var(--bg)',padding:'32px'}}>
+                    {mPhoto?<img src={mPhoto} alt={member.name||''} style={{width:64,height:64,borderRadius:'50%',objectFit:'cover',objectPosition:'top',marginBottom:16,display:'block'}}/>
+                      :<div style={{width:64,height:64,borderRadius:'50%',background:'var(--bg-deep)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:24,color:'var(--ink)',marginBottom:16}}>{(member.name||'?')[0]}</div>}
+                    <div style={{fontFamily:'var(--ff-display)',fontSize:22,fontWeight:700,letterSpacing:'-0.01em',color:'var(--ink)'}}>{member.name}</div>
+                    {member.title&&<div style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:16,color:'var(--ink-3)',marginTop:4}}>{member.title}</div>}
+                    {member.bio&&<p style={{fontFamily:'var(--ff-sans)',fontSize:14,lineHeight:1.55,color:'var(--ink-3)',margin:'12px 0 0'}}>{member.bio}</p>}
+                    {member.email&&<a href={`mailto:${member.email}`} style={{display:'inline-block',marginTop:12,fontFamily:'var(--ff-mono)',fontSize:12,color:'var(--accent)'}}>{member.email}</a>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {board.length>0&&(
+        <div style={{background:'var(--bg-warm)',borderBottom:'1px solid var(--rule)'}}>
+          <div className="wrap" style={{padding:'72px 48px'}}>
+            <div style={{paddingBottom:24,borderBottom:'1px solid var(--rule)',marginBottom:40}}>
+              <div className="label label-accent" style={{marginBottom:10}}>Advisory board</div>
+              <h2 style={{fontFamily:'var(--ff-display)',fontSize:'clamp(28px,3.5vw,48px)',fontWeight:900,letterSpacing:'-0.025em',lineHeight:1,margin:0,color:'var(--ink)'}}>People who keep us <em style={{fontStyle:'italic',fontWeight:400}}>honest.</em></h2>
+            </div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))',gap:0}}>
+              {board.map((member,i)=>{
+                const mPhoto=assetUrl(member.profile||member.profile,assets,200);
+                return(
+                  <div key={i} style={{padding:'24px 0',borderTop:'1px solid var(--rule)',paddingRight:24}}>
+                    {mPhoto?<img src={mPhoto} alt={member.name||''} style={{width:48,height:48,borderRadius:'50%',objectFit:'cover',objectPosition:'top',marginBottom:12,display:'block'}}/>
+                      :<div style={{width:48,height:48,borderRadius:'50%',background:'var(--bg-deep)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:20,color:'var(--ink)',marginBottom:12}}>{(member.name||'?')[0]}</div>}
+                    <div style={{fontFamily:'var(--ff-display)',fontSize:18,fontWeight:700,letterSpacing:'-0.01em',color:'var(--ink)'}}>{member.name}</div>
+                    {member.title&&<div style={{fontFamily:'var(--ff-sans)',fontSize:13,color:'var(--ink-3)',marginTop:3,lineHeight:1.4}}>{member.title}</div>}
+                    {member.affiliation&&<div style={{fontFamily:'var(--ff-mono)',fontSize:11,color:'var(--ink-4)',marginTop:4}}>{member.affiliation}</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{background:'var(--bg)',borderBottom:'1px solid var(--rule)'}}>
+        <div className="wrap" style={{padding:'64px 48px'}}>
+          <div className="label" style={{marginBottom:24}}>Colophon</div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:0}}>
+            {[['Founded',about.foundingYear||'2026'],['Frequency','Quarterly + occasional recounts'],['Format','Free to read, online-first'],['Typeset','Playfair Display, DM Mono']].map(([k,v])=>(
+              <div key={k} style={{paddingTop:18,paddingBottom:18,borderTop:'1px solid var(--rule)',paddingRight:24}}>
+                <div className="label" style={{marginBottom:5}}>{k}</div>
+                <div style={{fontFamily:'var(--ff-display)',fontSize:17,color:'var(--ink)'}}>{v}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── SUBMIT VIEW ── */
+function SubmitView({about,setRoute}){
+  const[name,setName]=useState('');
+  const[email,setEmail]=useState('');
+  const[pitch,setPitch]=useState('');
+  const[sent,setSent]=useState(false);
+  const iStyle={width:'100%',padding:'13px 16px',border:'1px solid var(--rule)',background:'var(--bg-warm)',fontFamily:'var(--ff-sans)',fontSize:15,color:'var(--ink)',borderRadius:6,outline:'none',transition:'border-color 140ms'};
+  return(
+    <section style={{padding:'56px 0 96px',animation:'fadein 200ms ease both'}}>
+      <div className="wrap">
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1.6fr)',gap:80,alignItems:'flex-start'}}>
+          <div style={{position:'sticky',top:120}}>
+            <div className="label label-accent">Pitch an essay</div>
+            <h1 style={{fontFamily:'var(--ff-display)',fontSize:'clamp(44px,6vw,96px)',fontWeight:900,letterSpacing:'-0.03em',lineHeight:0.92,color:'var(--ink)',margin:'16px 0 0'}}>We read every pitch.<br/><em style={{fontStyle:'italic',fontWeight:400,color:'var(--accent)'}}>We reply to all.</em></h1>
+            <p style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:22,lineHeight:1.4,color:'var(--ink-3)',marginTop:20}}>Long-form essays, field reports, data analyses, and editorial arguments on elections and democratic institutions.</p>
+            <div style={{marginTop:40,display:'grid',gridTemplateColumns:'1fr 1fr',gap:0}}>
+              {[['Length','2,500–6,000 words.'],['Tone','First-person. Argument required.'],['Sources','Primary documents preferred.'],['Rights','First pub. You retain ownership.']].map(([h,b])=>(
+                <div key={h} style={{paddingTop:18,borderTop:'1px solid var(--rule)',paddingBottom:18}}>
+                  <div className="label" style={{marginBottom:5}}>{h}</div>
+                  <p style={{fontFamily:'var(--ff-sans)',fontSize:13.5,lineHeight:1.5,color:'var(--ink-3)',margin:0}}>{b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            {sent?(
+              <div style={{padding:40,background:'var(--bg-warm)',border:'1px solid var(--rule)',borderRadius:6}}>
+                <div style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:40,color:'var(--accent)',marginBottom:10}}>Received.</div>
+                <p style={{fontFamily:'var(--ff-sans)',fontSize:16,color:'var(--ink-3)',margin:0}}>We aim to reply within two weeks. Commissioned pieces are paid.</p>
+              </div>
+            ):(
+              <div style={{display:'flex',flexDirection:'column',gap:16}}>
+                <div>
+                  <div className="label" style={{marginBottom:8}}>Send a pitch</div>
+                  <p style={{fontFamily:'var(--ff-sans)',fontSize:14,color:'var(--ink-3)',margin:0}}>200–300 words — your argument, your angle, why now. Or email directly to{' '}
+                    {about?.editorEmail?<a href={`mailto:${about.editorEmail}`} style={{color:'var(--accent)',fontFamily:'var(--ff-mono)',fontSize:13}}>{about.editorEmail}</a>:<span style={{fontFamily:'var(--ff-mono)',fontSize:13,color:'var(--ink-4)'}}>email coming soon</span>}.
+                  </p>
+                </div>
+                <input style={iStyle} placeholder="Your name" value={name} onChange={e=>setName(e.target.value)} onFocus={e=>e.target.style.borderColor='var(--ink)'} onBlur={e=>e.target.style.borderColor='var(--rule)'}/>
+                <input style={iStyle} type="email" placeholder="your@email.com" value={email} onChange={e=>setEmail(e.target.value)} onFocus={e=>e.target.style.borderColor='var(--ink)'} onBlur={e=>e.target.style.borderColor='var(--rule)'}/>
+                <textarea style={{...iStyle,minHeight:200,resize:'vertical',lineHeight:1.6}} placeholder="Your pitch — argument, angle, why now (200–300 words)" value={pitch} onChange={e=>setPitch(e.target.value)} onFocus={e=>e.target.style.borderColor='var(--ink)'} onBlur={e=>e.target.style.borderColor='var(--rule)'}/>
+                <button className="btn" style={{alignSelf:'flex-start'}} onClick={()=>{if(name&&email&&pitch)setSent(true);}}>Send pitch <span className="mono-arrow">→</span></button>
+                <p style={{fontFamily:'var(--ff-mono)',fontSize:10.5,color:'var(--ink-4)',margin:0}}>Commissioned pieces are paid. We reply within two weeks.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── HOME ── */
+function HomeView(props){
+  const featured=props.articles&&props.articles.length>0?props.articles[0]:null;
+  return(<>
+    <Hero featured={featured} {...props}/>
+    {props.news.length>0&&<DispatchRail {...props}/>}
+    {props.articles.length>0&&<FeaturedGrid {...props}/>}
+    <Manifesto/>
+    {props.articles.length>0&&<Register {...props}/>}
+    <PitchCTA {...props}/>
+  </>);
+}
+
+/* ── APP ── */
+function App(){
+  const[route,setRoute]=useState('home');
+  const[articles,setArticles]=useState([]);
+  const[news,setNews]=useState([]);
+  const[settings,setSettings]=useState(null);
+  const[about,setAbout]=useState(null);
+  const[assets,setAssets]=useState([]);
+  const[currentArticle,setCurrentArticle]=useState(null);
+  const[currentNews,setCurrentNews]=useState(null);
+  const[loading,setLoading]=useState(true);
+
+  useEffect(()=>{window.scrollTo(0,0);},[route]);
+
+  useEffect(()=>{
+    async function load(){
+      try{
+        const[aR,sR,abR,nR]=await Promise.all([
+          getEntries('articlePost','&order=-fields.publishDate&include=10'),
+          getEntries('settings'),
+          getEntries('about','&include=2'),
+          getEntries('news','&order=-fields.publishDate&include=2'),
+        ]);
+        const allAssets=[
+          ...(aR.includes?.Asset||[]),
+          ...(abR.includes?.Asset||[]),
+          ...(nR.includes?.Asset||[]),
+        ];
+        setAssets(allAssets);
+        window.__fvAssets = allAssets;
+        const mappedArticles=(aR.items||[]).map(i=>({id:i.sys.id,...i.fields}));
+        const mappedNews=(nR.items||[]).map(i=>({id:i.sys.id,...i.fields}));
+        // Debug: log first item fields so we can confirm field names + asset shape
+        if(mappedArticles[0]) console.log('[FV] article[0] fields:', Object.keys(mappedArticles[0]), '| profile:', mappedArticles[0].profile);
+        if(mappedNews[0]) console.log('[FV] news[0] fields:', Object.keys(mappedNews[0]), '| profile:', mappedNews[0].profile);
+        console.log('[FV] total assets in includes:', allAssets.length, allAssets[0]);
+        setArticles(mappedArticles);
+        setNews(mappedNews);
+        if(sR.items?.length)setSettings(sR.items[0].fields);
+        if(abR.items?.length)setAbout(abR.items[0].fields);
+      }catch(e){console.error('Contentful error:',e);}
+      finally{setLoading(false);}
+    }
+    load();
+  },[]);
+
+  if(loading)return(
+    <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh',background:'var(--bg)'}}>
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:14}}>
+        <Mark size={36}/>
+        <span style={{fontFamily:'Playfair Display,serif',fontSize:22,fontWeight:700,letterSpacing:'-0.025em',color:'var(--ink)'}}>Framing Vote</span>
+        <span style={{fontFamily:'DM Mono,monospace',fontSize:10,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--ink-4)'}}>Loading</span>
+      </div>
+    </div>
+  );
+
+  const props={articles,news,settings,about,assets,setRoute,setCurrentArticle,setCurrentNews};
+
+  return(
+    <div className="page">
+      <Header route={route} setRoute={setRoute}/>
+      <main style={{flex:1}}>
+        {route==='home'        &&<HomeView {...props}/>}
+        {route==='article'     &&<ArticleView article={currentArticle} {...props} articles={articles} setCurrentArticle={setCurrentArticle}/>}
+        {route==='archive'     &&<ArchiveView {...props}/>}
+        {route==='news'        &&<NewsView {...props}/>}
+        {route==='newsArticle' &&<NewsArticleView item={currentNews} about={about} assets={assets} setRoute={setRoute}/>}
+        {route==='about'       &&<AboutView about={about} assets={assets} setRoute={setRoute}/>}
+        {route==='submit'      &&<SubmitView about={about} setRoute={setRoute}/>}
+      </main>
+      <Newsletter/>
+      <Footer setRoute={setRoute} settings={settings} about={about}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
