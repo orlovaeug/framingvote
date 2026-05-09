@@ -1827,6 +1827,7 @@ function App(){
           ...(nR.includes?.Asset||[]),
         ];
         setAssets(allAssets);
+        window.__fvAssets = allAssets;
         const mappedArticles=(aR.items||[]).map(i=>({id:i.sys.id,...i.fields}));
         const mappedNews=(nR.items||[]).map(i=>({id:i.sys.id,...i.fields}));
         // Debug: log first item fields so we can confirm field names + asset shape
