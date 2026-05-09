@@ -1816,7 +1816,8 @@ function App(){
     async function load(){
       try{
         const[aR,sR,abR,nR]=await Promise.all([
-          getEntries('articlePost','&order=-fields.publishDate&include=2'),
+          getEntries('articlePost','&order=-fields.publishDate&include=10'),
+          window.__fvAssets = res.includes?.Asset || [];
           getEntries('settings'),
           getEntries('about','&include=2'),
           getEntries('news','&order=-fields.publishDate&include=2'),
