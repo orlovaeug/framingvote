@@ -805,24 +805,46 @@ function rt(doc){
       case'heading-3':return`<h3>${i}</h3>`;case'unordered-list':return`<ul>${i}</ul>`;case'ordered-list':return`<ol>${i}</ol>`;
       case'list-item':return`<li>${i}</li>`;case'blockquote':return`<blockquote>${i}</blockquote>`;case'hr':return`<hr/>`;
 case'hyperlink':return`<a href="${node.data?.uri}" target="_blank" rel="noopener">${i}</a>`;
-case'embedded-asset-block':{
-  const id=node.data?.target?.sys?.id;
-  // assets is not in scope here, so we store it on window temporarily
-  const a=(window.__fvAssets||[]).find(x=>x.sys?.id===id);
-  const url=a?.fields?.file?.url;
-  const mime=a?.fields?.file?.contentType||'';
-  if(!url)return'';
-  const src='https:'+url;
-  if(mime.startsWith('video/'))
-    return`<video controls style="width:100%;border-radius:4px;margin:24px 0"><source src="${src}" type="${mime}">Your browser does not support video.</video>`;
-  if(mime.startsWith('image/'))
-    return`<img src="${src}?w=1200&fm=jpg&q=80" alt="${a?.fields?.title||''}" style="width:100%;border-radius:4px;margin:16px 0"/>`;
-  return`<a href="${src}" target="_blank" rel="noopener">${a?.fields?.title||'Download file'}</a>`;
+case 'embedded-asset-block': {
+  const target = node.data?.target;
+
+  // Direct asset fields
+  const file = target?.fields?.file;
+
+  // Fallback via includes
+  const id = target?.sys?.id;
+  const linked = (window.__fvAssets || []).find(
+    x => x.sys?.id === id
+  );
+
+  const finalFile = file || linked?.fields?.file;
+
+  if (!finalFile?.url) return '';
+
+  const src = 'https:' + finalFile.url;
+  const mime = finalFile.contentType || '';
+
+  if (mime.startsWith('video/')) {
+    return `
+      <video controls playsinline style="width:100%;margin:24px 0;border-radius:6px">
+        <source src="${src}" type="${mime}">
+      </video>
+    `;
+  }
+
+  if (mime.startsWith('image/')) {
+    return `
+      <img
+        src="${src}"
+        style="width:100%;margin:24px 0;border-radius:6px"
+      />
+    `;
+  }
+
+  return '';
 }
-default:return i;
-    }
   };
-  return doc.content.map(n).join('');
+return doc.content.map(node => n(node)).join('');
 }
 function fmtDate(s){if(!s)return'';return new Date(s).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});}
 function fmtDateLong(s){if(!s)return'';return new Date(s).toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});}
