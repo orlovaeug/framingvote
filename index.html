@@ -804,7 +804,22 @@ function rt(doc){
       case'paragraph':return`<p>${i}</p>`;case'heading-1':return`<h1>${i}</h1>`;case'heading-2':return`<h2>${i}</h2>`;
       case'heading-3':return`<h3>${i}</h3>`;case'unordered-list':return`<ul>${i}</ul>`;case'ordered-list':return`<ol>${i}</ol>`;
       case'list-item':return`<li>${i}</li>`;case'blockquote':return`<blockquote>${i}</blockquote>`;case'hr':return`<hr/>`;
-      case'hyperlink':return`<a href="${node.data?.uri}" target="_blank" rel="noopener">${i}</a>`;default:return i;
+case'hyperlink':return`<a href="${node.data?.uri}" target="_blank" rel="noopener">${i}</a>`;
+case'embedded-asset-block':{
+  const id=node.data?.target?.sys?.id;
+  // assets is not in scope here, so we store it on window temporarily
+  const a=(window.__fvAssets||[]).find(x=>x.sys?.id===id);
+  const url=a?.fields?.file?.url;
+  const mime=a?.fields?.file?.contentType||'';
+  if(!url)return'';
+  const src='https:'+url;
+  if(mime.startsWith('video/'))
+    return`<video controls style="width:100%;border-radius:4px;margin:24px 0"><source src="${src}" type="${mime}">Your browser does not support video.</video>`;
+  if(mime.startsWith('image/'))
+    return`<img src="${src}?w=1200&fm=jpg&q=80" alt="${a?.fields?.title||''}" style="width:100%;border-radius:4px;margin:16px 0"/>`;
+  return`<a href="${src}" target="_blank" rel="noopener">${a?.fields?.title||'Download file'}</a>`;
+}
+default:return i;
     }
   };
   return doc.content.map(n).join('');
