@@ -1,0 +1,42 @@
+<div style="font-family: sans-serif; padding: 1.5rem 0; max-width: 720px;">
+  <p style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #888780; margin: 0 0 12px;">2026 English local elections — net seat change by party</p>
+  <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; font-size: 12px; color: #5F5E5A;">
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:1px;background:#1D9E75;display:inline-block;"></span>Gain</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:1px;background:#c94040;display:inline-block;"></span>Loss</span>
+  </div>
+  <div style="position:relative;width:100%;height:280px;">
+    <canvas id="fv-seats" role="img" aria-label="Horizontal bar chart: Reform UK +1426, Green +363, Lib Dem +152, Independents +17, Conservatives -552, Labour -1375">Reform UK +1426, Green +363, Lib Dem +152, Independents +17, Conservatives -552, Labour -1375.</canvas>
+  </div>
+  <p style="font-size:11px;color:#a8a89f;margin-top:8px;">Source: Wikipedia / ITV News, 8 May 2026. 129 of 136 councils declared at time of reporting.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+(function(){
+  var data = [-1375,-552,17,152,363,1426];
+  new Chart(document.getElementById('fv-seats'),{
+    type:'bar',
+    data:{
+      labels:['Labour','Conservatives','Independents','Lib Dems','Green Party','Reform UK'],
+      datasets:[{
+        data:data,
+        backgroundColor:data.map(function(v){return v>=0?'#1D9E75':'#c94040';}),
+        borderWidth:0,
+        borderRadius:2
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(c){return(c.raw>0?' +':' ')+c.raw.toLocaleString()+' seats';}}}
+      },
+      scales:{
+        x:{grid:{color:'#e2e0d8'},ticks:{color:'#6b6b66',font:{size:11},callback:function(v){return(v>0?'+':'')+v.toLocaleString();}}},
+        y:{grid:{display:false},ticks:{color:'#1a1a18',font:{size:12}}}
+      }
+    }
+  });
+})();
+</script>
