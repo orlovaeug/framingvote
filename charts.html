@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chart</title>
+  <!-- Load Chart.js once here, upfront, before anything else -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -38,17 +40,18 @@
         })
         .then(html => {
           const container = document.getElementById('chart-container');
-          container.innerHTML = html;
 
-          // Re-run scripts (innerHTML doesn't execute them)
+          // Strip out any <script src="...chart.js..."> tags since we already loaded it above
+          const cleaned = html.replace(/<script[^>]+cdnjs\.cloudflare\.com[^>]*><\/script>/gi, '');
+          container.innerHTML = cleaned;
+
+          // Re-run inline scripts only (external Chart.js already loaded)
           container.querySelectorAll('script').forEach(old => {
-            const s = document.createElement('script');
-            if (old.src) {
-              s.src = old.src;
-            } else {
+            if (!old.src) {
+              const s = document.createElement('script');
               s.textContent = old.textContent;
+              document.body.appendChild(s);
             }
-            document.body.appendChild(s);
           });
         })
         .catch(err => {
