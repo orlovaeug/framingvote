@@ -1565,7 +1565,7 @@ function NewsView({news,about,assets,setRoute,setCurrentNews}){
 /* ── NEWS ARTICLE VIEW ── */
 function NewsArticleView({item,about,assets,setRoute}){
   if(!item)return null;
-  const html=rt(item.body, assets);
+  const html = item.rawHtml || rt(item.body, assets);
   const coverSrc=assetUrl(item.profile,assets,1400);
   return(
     <article className="article-wrap">
