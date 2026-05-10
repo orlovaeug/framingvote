@@ -680,12 +680,15 @@
       color: var(--ink); padding-left: 22px; margin: 0 0 22px; font-weight: 300;
     }
     .post-body hr { margin: 48px 0; }
-    .dropcap::first-letter {
-      font-family: var(--ff-display); font-weight: 900; float: left;
-      font-size: 5.2em; line-height: 0.82; margin: 0.04em 0.1em -0.05em 0;
-      color: var(--accent); }
-      .dropcap > *:nth-child(2) { clear: both;
-    }
+   .dropcap::first-letter {
+  font-family: var(--ff-display); font-weight: 900;
+  font-size: 4.5em; line-height: 0.82;
+  color: var(--accent);
+  float: left;
+  margin: 0.04em 0.12em 0 0;
+  padding-bottom: 0.05em;
+}
+.dropcap p:first-child::after { content: ''; display: block; clear: both; }
     .about-bio.post-body p, .about-bio.post-body ul, .about-bio.post-body ol {
       font-size: 16px; line-height: 1.65;
     }
