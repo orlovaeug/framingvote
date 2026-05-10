@@ -793,8 +793,7 @@ const { useState, useEffect, useMemo } = React;
 
 const SPACE='upaglixkbf42',TOKEN='H3fmoxO4StTBS-lRp_ULYaywbv3uM3C6WTG8o1M_PbU';
 const BASE=`https://cdn.contentful.com/spaces/${SPACE}/environments/master`;
-async function cfFetch(p){const r=await fetch(`${BASE}${p}&access_token=${TOKEN}`);if(!r.ok)throw new Error(r.status);return r.json();}
-async function getEntries(ct,extra=''){return cfFetch(`/entries?content_type=${ct}${extra}`);}
+async function cfFetch(p){const r=await fetch(`${BASE}${p}&access_token=${TOKEN}&_=${Date.now()}`);if(!r.ok)throw new Error(r.status);return r.json();}async function getEntries(ct,extra=''){return cfFetch(`/entries?content_type=${ct}${extra}`);}
 
 function rt(doc, assets){
   if(!doc||!doc.content)return'';
