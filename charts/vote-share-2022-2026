@@ -1,40 +1,38 @@
 <div style="font-family: sans-serif; padding: 1.5rem 0; max-width: 720px;">
-  <p style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #888780; margin: 0 0 12px;">2026 English local elections — net seat change by party</p>
-  <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; font-size: 12px; color: #5F5E5A;">
-    <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:1px;background:#1D9E75;display:inline-block;"></span>Gain</span>
-    <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:1px;background:#c94040;display:inline-block;"></span>Loss</span>
+  <p style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #888780; margin: 0 0 12px;">Projected national vote share — English local elections 2022 · 2025 · 2026</p>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:14px;font-size:12px;color:#5F5E5A;">
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:1px;background:#c8c6be;display:inline-block;"></span>2022</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:1px;background:#5DCAA5;display:inline-block;"></span>2025</span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:1px;background:#0F6E56;display:inline-block;"></span>2026</span>
   </div>
   <div style="position:relative;width:100%;height:280px;">
-    <canvas id="fv-seats" role="img" aria-label="Horizontal bar chart: Reform UK +1426, Green +363, Lib Dem +152, Independents +17, Conservatives -552, Labour -1375">Reform UK +1426, Green +363, Lib Dem +152, Independents +17, Conservatives -552, Labour -1375.</canvas>
+    <canvas id="fv-vote" role="img" aria-label="Grouped bar chart: Reform UK rose from 0% to 30% to 27%. Labour fell from 35% to 19% to 15%. Conservative fell from 35% to 18% to 20%."></canvas>
   </div>
-  <p style="font-size:11px;color:#a8a89f;margin-top:8px;">Source: Wikipedia / ITV News, 8 May 2026. 129 of 136 councils declared at time of reporting.</p>
+  <p style="font-size:11px;color:#a8a89f;margin-top:8px;">Sources: House of Commons Library, Rallings &amp; Thrasher estimates, Sky News national equivalent vote 2026.</p>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 (function(){
-  var data = [-1375,-552,17,152,363,1426];
-  new Chart(document.getElementById('fv-seats'),{
+  new Chart(document.getElementById('fv-vote'),{
     type:'bar',
     data:{
-      labels:['Labour','Conservatives','Independents','Lib Dems','Green Party','Reform UK'],
-      datasets:[{
-        data:data,
-        backgroundColor:data.map(function(v){return v>=0?'#1D9E75':'#c94040';}),
-        borderWidth:0,
-        borderRadius:2
-      }]
+      labels:['Reform UK','Conservative','Labour','Lib Dem','Green'],
+      datasets:[
+        {label:'2022',data:[0,35,35,19,6],backgroundColor:'#c8c6be',borderWidth:0,borderRadius:2},
+        {label:'2025',data:[30,18,19,16,7],backgroundColor:'#5DCAA5',borderWidth:0,borderRadius:2},
+        {label:'2026',data:[27,20,15,14,14],backgroundColor:'#0F6E56',borderWidth:0,borderRadius:2}
+      ]
     },
     options:{
-      indexAxis:'y',
       responsive:true,
       maintainAspectRatio:false,
       plugins:{
         legend:{display:false},
-        tooltip:{callbacks:{label:function(c){return(c.raw>0?' +':' ')+c.raw.toLocaleString()+' seats';}}}
+        tooltip:{callbacks:{label:function(c){return' '+c.dataset.label+': '+c.raw+'%';}}}
       },
       scales:{
-        x:{grid:{color:'#e2e0d8'},ticks:{color:'#6b6b66',font:{size:11},callback:function(v){return(v>0?'+':'')+v.toLocaleString();}}},
-        y:{grid:{display:false},ticks:{color:'#1a1a18',font:{size:12}}}
+        x:{grid:{display:false},ticks:{color:'#1a1a18',font:{size:12}}},
+        y:{grid:{color:'#e2e0d8'},ticks:{color:'#6b6b66',font:{size:11},callback:function(v){return v+'%';}},max:40}
       }
     }
   });
