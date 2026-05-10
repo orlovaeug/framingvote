@@ -1346,7 +1346,7 @@ function Footer({setRoute,settings,about}){
 /* ── ARTICLE VIEW ── */
 function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle}){
   if(!article)return null;
-  const html=rt(article.body, assets);
+  const html = article.rawHtml || rt(article.body, assets);;
   const related=(articles||[]).filter(a=>a.id!==article.id).slice(0,3);
   const coverSrc=assetUrl(article.profile,assets,1600);
   const authorPortrait=assetUrl(about?.profile,assets,160);
