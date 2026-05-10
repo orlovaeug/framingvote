@@ -1342,7 +1342,21 @@ function Footer({setRoute,settings,about}){
     </footer>
   );
 }
-
+/* ── SCRIPTED HTML ── */
+function ScriptedHTML({html, className, style}){
+  const ref = React.useRef(null);
+  React.useEffect(()=>{
+    if(!ref.current||!html)return;
+    ref.current.innerHTML = html;
+    ref.current.querySelectorAll('script').forEach(old=>{
+      const s = document.createElement('script');
+      if(old.src) s.src = old.src;
+      else s.textContent = old.textContent;
+      document.body.appendChild(s);
+    });
+  },[html]);
+  return <div ref={ref} className={className} style={style}/>;
+}
 /* ── ARTICLE VIEW ── */
 function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle}){
   if(!article)return null;
@@ -1395,8 +1409,7 @@ function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle})
           }
         </div>
       </div>
-      <div className="read post-body dropcap" style={{paddingBottom:64}} dangerouslySetInnerHTML={{__html:html||`<p>${article.subtitle||''}</p>`}}/>
-      <div style={{padding:'32px 0',borderTop:'1px solid var(--rule)'}}>
+<ScriptedHTML html={html||`<p>${article.subtitle||''}</p>`} className="read post-body dropcap" style={{paddingBottom:64}}/>      <div style={{padding:'32px 0',borderTop:'1px solid var(--rule)'}}>
         <div className="read" style={{display:'flex',gap:16,alignItems:'flex-start'}}>
           {authorPortrait
             ?<img src={authorPortrait} alt={about?.editorName||''} style={{width:52,height:52,borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
@@ -1602,8 +1615,7 @@ function NewsArticleView({item,about,assets,setRoute}){
           </div>
         </div>
       )}
-      <div className="read post-body" style={{paddingBottom:80}} dangerouslySetInnerHTML={{__html:html||`<p>${item.summary||''}</p>`}}/>
-      <div style={{borderTop:'1px solid var(--rule)',padding:'32px 0'}}>
+<ScriptedHTML html={html||`<p>${item.summary||''}</p>`} className="read post-body" style={{paddingBottom:80}}/>      <div style={{borderTop:'1px solid var(--rule)',padding:'32px 0'}}>
         <div className="read" style={{display:'flex',gap:10}}>
           <button className="btn btn-outline-ghost" onClick={()=>setRoute('news')}><span className="mono-arrow">←</span> All dispatches</button>
           <button className="btn btn-outline-ghost" onClick={()=>setRoute('home')}>Homepage</button>
