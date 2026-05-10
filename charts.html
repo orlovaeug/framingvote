@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #F0EDE6;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    #error {
+      display: none;
+      padding: 24px;
+      font-size: 12px;
+      color: #c94040;
+    }
+  </style>
+</head>
+<body>
+  <div id="chart-container"></div>
+  <div id="error"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) {
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error').textContent = 'No chart id specified.';
+    } else {
+      fetch(`charts/${id}.html`)
+        .then(res => {
+          if (!res.ok) throw new Error(`Chart "${id}" not found.`);
+          return res.text();
+        })
+        .then(html => {
+          const container = document.getElementById('chart-container');
+          container.innerHTML = html;
+
+          // Re-run scripts (innerHTML doesn't execute them)
+          container.querySelectorAll('script').forEach(old => {
+            const s = document.createElement('script');
+            if (old.src) {
+              s.src = old.src;
+            } else {
+              s.textContent = old.textContent;
+            }
+            document.body.appendChild(s);
+          });
+        })
+        .catch(err => {
+          document.getElementById('error').style.display = 'block';
+          document.getElementById('error').textContent = err.message;
+        });
+    }
+  </script>
+
+</body>
+</html>
