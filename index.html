@@ -1254,8 +1254,8 @@ function AboutView({about,assets,entryPool}){
   const portraitSrc=assetUrl(about.profile,assets,640);
 
   /* Resolve team — each item may be a link or already resolved */
-const team=(about.correspondents||[])
-  .map(ref=>resolveCorrespondent(ref, entryPool))
+  const team=(about.correspondents||[])
+    .map(ref=>resolveCorrespondent(ref, entryPool))
     .filter(Boolean); // removes nulls (broken links, loops, missing entries)
 
   return(
