@@ -586,7 +586,7 @@ function articleBelongsToIssue(a,issueId){return getArticleIssueId(a)===issueId;
 function resolveCorrespondent(ref, entryPool){
   if(!ref)return null;
   // Already fully resolved — has fields directly
-if(ref.fields) return { id: ref.sys?.id, ...ref.fields };
+  if(ref.fields) return { id: ref.sys?.id, ...ref.fields };
   // It's a link — look it up in the pool
   const id = ref?.sys?.id;
   if(!id)return null;
@@ -1317,19 +1317,19 @@ function AboutView({about,assets,entryPool}){
             </div>
             {team.map((member,i)=>{
               const mPhoto=assetUrl(member.profile,assets,480);
-const mBioHtml = member.editorBio?.nodeType ? rt(member.editorBio, assets) : member.editorBio ? `<p>${member.editorBio}</p>` : '';
-          return(
+              const mBioHtml=member.editorBio?.nodeType?rt(member.editorBio,assets):member.editorBio?`<p>${member.editorBio}</p>`:'';
+              return(
                 <div key={member.id||i} style={{display:'flex',gap:48,alignItems:'flex-start',padding:'56px 0',borderTop:'1px solid var(--rule)',flexWrap:'wrap'}}>
                   <div style={{flexShrink:0,width:'clamp(120px,20vw,200px)'}}>
                     {mPhoto
                       ?<div style={{borderRadius:4,overflow:'hidden',background:'var(--bg-deep)'}}><img src={mPhoto} alt={member.editorName||''} style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',objectPosition:'top',display:'block'}}/></div>
-                      :<div style={{width:'100%',aspectRatio:'3/4',borderRadius:4,background:'var(--bg-deep)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:48,color:'var(--ink)',opacity:0.15}}>{(member.editorName || '?')[0]}</div>
+                      :<div style={{width:'100%',aspectRatio:'3/4',borderRadius:4,background:'var(--bg-deep)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:48,color:'var(--ink)',opacity:0.15}}>{(member.editorName||'?')[0]}</div>
                     }
                   </div>
                   <div style={{flex:'1 1 280px'}}>
                     <div style={{fontFamily:'var(--ff-display)',fontSize:'clamp(28px,3.5vw,48px)',fontWeight:900,letterSpacing:'-0.025em',lineHeight:1,color:'var(--ink)'}}>{member.editorName}</div>
-                    {member.editorTitle && ( <div style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:18,color:'var(--ink-3)',marginTop:8}}> {member.editorTitle} </div> )}                    
-                    {member.editorEmail && ( <a href={`mailto:${member.editorEmail}`} style={{display:'inline-block',marginTop:10,fontFamily:'var(--ff-mono)',fontSize:12,color:'var(--accent)'}}> {member.editorEmail} </a> )}
+                    {member.editorTitle&&<div style={{fontFamily:'var(--ff-display)',fontStyle:'italic',fontSize:18,color:'var(--ink-3)',marginTop:8}}>{member.editorTitle}</div>}
+                    {member.editorEmail&&<a href={`mailto:${member.editorEmail}`} style={{display:'inline-block',marginTop:10,fontFamily:'var(--ff-mono)',fontSize:12,color:'var(--accent)'}}>{member.editorEmail}</a>}
                     {mBioHtml&&<div className="post-body about-bio" style={{marginTop:20}} dangerouslySetInnerHTML={{__html:mBioHtml}}/>}
                   </div>
                 </div>
