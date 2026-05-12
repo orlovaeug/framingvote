@@ -1,0 +1,39 @@
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-size:12px;color:#888780;">
+  <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#D85A30;"></span>Projected seats (More in Common MRP, 2026)</span>
+</div>
+<div style="position:relative;width:100%;height:200px;">
+  <canvas id="chart4" role="img" aria-label="Projected Westminster seats at next UK general election: Reform UK 381, Labour 85, Conservative 70, Lib Dems 60, Other 54">Reform UK 381, Labour 85, Conservative 70, Lib Dems 60, Other 54.</canvas>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+new Chart(document.getElementById('chart4'), {
+  type: 'bar',
+  indexAxis: 'y',
+  data: {
+    labels: ['Reform UK','Labour','Conservative','Lib Dems','Other'],
+    datasets: [{
+      label: 'Projected seats',
+      data: [381, 85, 70, 60, 54],
+      backgroundColor: ['#D85A30','#1D9E75','#185FA5','#7F77DD','#888780'],
+      borderWidth: 0,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x} seats` } }
+    },
+    scales: {
+      x: {
+        beginAtZero: true, max: 420,
+        grid: { color: 'rgba(136,135,128,0.15)' },
+        ticks: { color: '#888780', font: { size: 11 }, callback: v => v + ' seats' }
+      },
+      y: { grid: { display: false }, ticks: { color: '#888780', font: { size: 12 } } }
+    }
+  }
+});
+</script>
