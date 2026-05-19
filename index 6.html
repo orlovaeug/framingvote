@@ -1,0 +1,2400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Framing Vote — A journal on elections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;1,6..96,400;1,6..96,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      /* Paper / ink — near white for minimalist futuristic feel */
+      --paper:#FCFBF7;
+      --paper-soft:#FFFFFF;
+      --paper-deep:#F2F0E8;
+      --paper-edge:#E0DCCD;
+      --ink:#0E0E0C;
+      --ink-2:#2C2A26;
+      --ink-3:#62604F;
+      --ink-4:#A8A595;
+
+      /* Bright editorial accents */
+      --red:#E11F1C;
+      --red-deep:#B0140E;
+      --red-soft:#FFC8C2;
+      --yellow:#F4D52A;
+      --green:#3DDC91;
+      --pink:#FF6FA3;
+      --blue:#2C4FE5;
+
+      /* Active accent — switched by tweaks */
+      --accent:var(--red);
+      --accent-deep:var(--red-deep);
+
+      --font-display:"Fraunces","Times New Roman",serif;
+      --font-didone:"Bodoni Moda","Didot",serif;
+      --font-serif:"Bodoni Moda","Georgia",serif;
+      --font-sans:"Inter Tight",-apple-system,sans-serif;
+      --font-mono:"JetBrains Mono",ui-monospace,monospace;
+      --font-script:"Caveat",cursive;
+      --font-marker:"Permanent Marker",cursive;
+      --ease:cubic-bezier(0.2,0.7,0.2,1);
+    }
+    *,*::before,*::after{box-sizing:border-box;}
+    html,body,#root{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+    a{color:inherit;text-decoration:none;}
+    button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;padding:0;}
+    ::selection{background:var(--accent);color:var(--paper);}
+    img{max-width:100%;display:block;}
+
+    .page{min-height:100vh;display:flex;flex-direction:column;background:var(--paper);}
+    .wrap{width:100%;max-width:1440px;margin:0 auto;padding:0 48px;}
+    .read{width:100%;max-width:680px;margin:0 auto;padding:0 32px;}
+    .hr{border:0;border-top:1px solid var(--paper-edge);margin:0;}
+
+    /* Typography ---------------------------------------------------------- */
+    .eyebrow{font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3);}
+    .eyebrow-accent{color:var(--accent);}
+    .mono{font-family:var(--font-mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-3);text-transform:uppercase;}
+    .script{font-family:var(--font-script);color:var(--accent);font-weight:600;}
+    .marker{font-family:var(--font-marker);color:var(--accent);text-transform:uppercase;letter-spacing:0.02em;}
+
+    .display{font-family:var(--font-display);font-weight:500;letter-spacing:-0.028em;line-height:0.9;color:var(--ink);}
+    .display em{font-family:var(--font-didone);font-style:italic;font-weight:400;color:var(--ink);letter-spacing:-0.02em;}
+    .display .red{color:var(--accent);}
+
+    .didone{font-family:var(--font-didone);font-weight:400;letter-spacing:-0.018em;line-height:1;color:var(--ink);}
+    .didone em{font-style:italic;}
+
+    /* Buttons ------------------------------------------------------------- */
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;font-family:var(--font-sans);font-size:11.5px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;background:var(--ink);color:var(--paper);border-radius:0;transition:transform 140ms var(--ease),background 140ms var(--ease);}
+    .btn:hover{background:var(--accent);}
+    .btn:active{transform:translateY(1px);}
+    .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);}
+    .btn-ghost:hover{background:var(--ink);color:var(--paper);}
+    .btn-red{background:var(--accent);color:var(--paper);}
+    .btn-red:hover{background:var(--accent-deep);}
+    .btn-on-dark{background:var(--paper);color:var(--ink);}
+    .btn-on-dark:hover{background:var(--accent);color:var(--paper);}
+    .arrow{font-family:var(--font-mono);font-size:13px;font-weight:500;}
+
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);background:transparent;cursor:pointer;transition:all 140ms;border-radius:999px;}
+    .pill:hover{background:var(--ink);color:var(--paper);}
+    .pill.active{background:var(--accent);color:var(--paper);border-color:var(--accent);}
+
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;font-family:var(--font-sans);font-size:10.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);background:transparent;border:1px solid var(--accent);}
+
+    .input{display:block;width:100%;box-sizing:border-box;padding:14px 16px;border:1px solid var(--ink);background:var(--paper-soft);font-family:var(--font-serif);font-size:16px;color:var(--ink);border-radius:0;outline:none;transition:border-color 140ms;}
+    .input::placeholder{color:var(--ink-4);font-style:italic;}
+    .input:focus{border-color:var(--accent);}
+    .input.on-dark{background:rgba(250,246,236,0.04);border-color:rgba(250,246,236,0.3);color:var(--paper);}
+    .input.on-dark::placeholder{color:rgba(250,246,236,0.45);}
+    .input.on-dark:focus{border-color:var(--paper);}
+
+    /* Halftone treatment for images --------------------------------------- */
+    .halftone{
+      position:relative;
+      overflow:hidden;
+      filter:grayscale(1) contrast(1.4) brightness(0.97);
+    }
+    .halftone::after{
+      content:"";
+      position:absolute;inset:0;
+      background-image:radial-gradient(circle at center, rgba(14,14,12,0.55) 22%, transparent 23%);
+      background-size:3.2px 3.2px;
+      mix-blend-mode:lighten;
+      pointer-events:none;
+    }
+
+    /* Numbered red circle annotation (Vogue style) ------------------------ */
+    .num-mark{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:34px;height:34px;border-radius:50%;
+      background:var(--accent);color:var(--paper);
+      font-family:var(--font-script);font-weight:700;font-size:20px;line-height:1;
+      transform:rotate(-4deg);
+    }
+
+    /* Hand-drawn underline */
+    .script-underline{position:relative;display:inline-block;}
+    .script-underline::after{
+      content:"";position:absolute;left:-4%;right:-4%;bottom:-8px;height:8px;
+      background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 6' preserveAspectRatio='none'><path d='M1,4 C20,1 40,5 60,2 C80,5 95,1 99,3' stroke='%23E11F1C' stroke-width='2' fill='none' stroke-linecap='round'/></svg>") no-repeat center/100% 100%;
+    }
+
+    /* Star decorative */
+    .star-deco{display:inline-block;width:18px;height:18px;background:var(--ink);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);}
+
+    /* Image slot styling */
+    image-slot{
+      --slot-bg:var(--paper-deep);
+      --slot-border:1px dashed var(--paper-edge);
+      --slot-text-color:var(--ink-3);
+      --slot-text-size:11px;
+      font-family:var(--font-mono);
+    }
+
+    /* Marquee ticker ------------------------------------------------------ */
+    .ticker{display:flex;overflow:hidden;}
+    .ticker-track{display:flex;gap:48px;flex-shrink:0;padding:14px 0;animation:tick 70s linear infinite;}
+    .ticker:hover .ticker-track{animation-play-state:paused;}
+    @keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    .ticker-item{display:inline-flex;align-items:center;gap:14px;white-space:nowrap;}
+
+    /* Article body styling ----------------------------------------------- */
+    .post-body h2{font-family:var(--font-display);font-weight:500;font-size:36px;line-height:1.1;letter-spacing:-0.02em;color:var(--ink);margin:48px 0 16px;}
+    .post-body h2 em{font-style:italic;color:var(--accent);}
+    .post-body h3{font-family:var(--font-display);font-weight:500;font-size:24px;line-height:1.2;color:var(--ink);margin:32px 0 12px;}
+    .post-body p{font-family:var(--font-serif);font-size:19px;line-height:1.65;color:var(--ink);margin:0 0 22px;text-align:justify;hyphens:auto;-webkit-hyphens:auto;}
+    .post-body p a{color:var(--accent);text-decoration:underline;text-underline-offset:0.2em;}
+    .post-body p a:hover{color:var(--accent-deep);}
+    .post-body strong{color:var(--ink);font-weight:600;}
+    .post-body em{font-style:italic;}
+    .post-body blockquote{margin:32px 0;padding:0 0 0 28px;border-left:3px solid var(--accent);}
+    .post-body blockquote p{font-family:var(--font-display);font-size:30px;font-style:italic;line-height:1.25;color:var(--ink);margin:0;}
+    .post-body ul,.post-body ol{font-family:var(--font-serif);font-size:19px;line-height:1.65;color:var(--ink);padding-left:24px;margin:0 0 22px;}
+    .post-body li{margin-bottom:8px;}
+    .post-body hr{border:0;border-top:1px solid var(--paper-edge);margin:48px 0;}
+    .dropcap::first-letter{font-family:var(--font-didone);font-weight:700;float:left;font-size:6em;line-height:0.82;margin:0.04em 0.08em -0.05em 0;color:var(--accent);font-style:italic;}
+
+    .progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:100;transition:transform 80ms linear;}
+
+    .row-link{transition:background 200ms ease;}
+    .row-link:hover{background:var(--paper-deep);}
+    .row-link:hover .row-arrow{transform:translateX(4px);color:var(--accent);}
+    .row-link:hover .row-title{color:var(--accent);}
+
+    .fade-in{animation:fade 320ms var(--ease) both;}
+    @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+    @keyframes wiggle{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(-2deg);}}
+    /* RGB glitch split on hover */
+    .glitch{position:relative;}
+    .glitch::before,.glitch::after{content:"";position:absolute;inset:0;background-image:inherit;background-size:cover;mix-blend-mode:screen;opacity:0;pointer-events:none;transition:opacity 200ms,transform 280ms var(--ease);}
+    .glitch:hover::before{opacity:0.55;transform:translate(-4px,1px);background:radial-gradient(closest-side,rgba(225,30,30,0.6),transparent 70%);}
+    .glitch:hover::after{opacity:0.55;transform:translate(4px,-1px);background:radial-gradient(closest-side,rgba(30,140,255,0.55),transparent 70%);}
+
+    /* Rolling number transitions */
+    .roller{display:inline-flex;overflow:hidden;height:1em;line-height:1;vertical-align:baseline;}
+    .roller-col{display:inline-flex;flex-direction:column;transition:transform 800ms cubic-bezier(0.2,0.8,0.2,1);}
+    .roller-cell{height:1em;line-height:1;}
+
+    /* Film strip horizontal scroll */
+    .film-strip{display:flex;gap:0;align-items:stretch;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:8px 0 8px;}
+    .film-strip::-webkit-scrollbar{display:none;}
+    .film-frame{flex:0 0 auto;scroll-snap-align:start;position:relative;border-right:1px solid var(--paper-edge);transition:flex-basis 380ms var(--ease);}
+    .film-frame:last-child{border-right:0;}
+
+    /* Reveal staggered text */
+    @keyframes word-in{from{opacity:0;transform:translateY(0.4em);}to{opacity:1;transform:none;}}
+    @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+    @keyframes cycle-in{from{opacity:0;transform:translateY(8px) rotate(-2deg);}to{opacity:1;transform:translateY(-0.12em) rotate(-2deg);}}
+    @keyframes cycle-out{from{opacity:1;transform:translateY(-0.12em) rotate(-2deg);}to{opacity:0;transform:translateY(-12px) rotate(-2deg);}}
+
+    /* Custom cursor */
+    .fv-cursor-on,.fv-cursor-on *{cursor:none !important;}
+    .fv-cursor-on input,.fv-cursor-on textarea,.fv-cursor-on [contenteditable]{cursor:text !important;}
+    #fv-cursor-ring{position:fixed;width:34px;height:34px;border:1px solid var(--ink);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 280ms var(--ease),height 280ms var(--ease),border-color 280ms,background 280ms,opacity 240ms;mix-blend-mode:multiply;}
+    #fv-cursor-dot{position:fixed;width:6px;height:6px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+
+    /* Scroll reveal */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 700ms var(--ease),transform 700ms var(--ease);}
+    .reveal.in{opacity:1;transform:none;}
+    .reveal-delay-1{transition-delay:80ms;}
+    .reveal-delay-2{transition-delay:160ms;}
+    .reveal-delay-3{transition-delay:240ms;}
+
+    /* Magnetic numbered circle */
+    .mag-num{transition:transform 200ms var(--ease);will-change:transform;cursor:pointer;}
+    .mag-num:hover .mag-num-circle{transform:scale(1.18) rotate(-6deg);}
+    .mag-num-pop{position:absolute;top:calc(100% + 12px);left:0;width:240px;padding:14px 16px;background:var(--paper-soft);border:1.5px solid var(--ink);font-family:var(--font-serif);font-style:italic;font-size:14px;line-height:1.5;color:var(--ink);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity 200ms,transform 200ms;z-index:30;}
+    .mag-num.open .mag-num-pop{opacity:1;transform:none;pointer-events:auto;}
+    .mag-num-pop::before{content:"";position:absolute;top:-8px;left:14px;width:14px;height:14px;background:var(--paper-soft);border-left:1.5px solid var(--ink);border-top:1.5px solid var(--ink);transform:rotate(45deg);}
+
+    /* Polaroid card */
+    .polaroid{background:var(--paper-soft);padding:14px 14px 48px;border:1px solid var(--paper-edge);box-shadow:0 24px 36px -22px rgba(14,14,12,0.3),0 6px 12px -8px rgba(14,14,12,0.15);transition:transform 380ms var(--ease),box-shadow 380ms var(--ease);cursor:grab;user-select:none;}
+    .polaroid:active{cursor:grabbing;}
+    .polaroid:hover{box-shadow:0 30px 50px -22px rgba(14,14,12,0.4),0 8px 16px -8px rgba(14,14,12,0.2);}
+
+    /* Stamped wordmark layering */
+    .stamp{position:relative;display:inline-block;}
+    .stamp::before{content:attr(data-stamp);position:absolute;left:8px;top:6px;color:var(--accent);opacity:0.25;pointer-events:none;z-index:-1;}
+
+    /* Hover lift on cards */
+    .lift{transition:transform 240ms var(--ease);}
+    .lift:hover{transform:translate(-3px,-3px);}
+
+    @media(max-width:1100px){
+      .wrap{padding:0 28px;}
+      .read{padding:0 24px;}
+      .display{letter-spacing:-0.022em;}
+    }
+    @media(max-width:720px){
+      .hide-md{display:none !important;}
+      .show-mobile{display:flex !important;}
+      .wrap{padding:0 20px;}
+      .read{padding:0 20px;}
+      /* Responsive grids */
+      .grid-responsive-2{grid-template-columns:1fr !important;}
+      /* Post body smaller on mobile */
+      .post-body p{font-size:17px;}
+      .post-body h2{font-size:26px;}
+      .post-body blockquote p{font-size:22px;}
+    }
+    @media(max-width:480px){
+      .wrap{padding:0 16px;}
+      .read{padding:0 16px;}
+      .btn{padding:12px 16px;font-size:10px;letter-spacing:0.12em;}
+    }
+    /* show-mobile hidden by default on desktop */
+    .show-mobile{display:none;}
+
+    /* ── POST BODY (rich text rendering) ── */
+    .post-body h2{font-family:var(--font-display);font-weight:500;font-size:36px;line-height:1.1;letter-spacing:-0.02em;color:var(--ink);margin:48px 0 16px;}
+    .post-body h2 em{font-style:italic;color:var(--accent);}
+    .post-body h3{font-family:var(--font-display);font-weight:500;font-size:24px;line-height:1.2;color:var(--ink);margin:32px 0 12px;}
+    .post-body p{font-family:var(--font-serif);font-size:19px;line-height:1.65;color:var(--ink);margin:0 0 22px;text-align:justify;hyphens:auto;-webkit-hyphens:auto;}
+    .post-body p a{color:var(--accent);text-decoration:underline;text-underline-offset:0.2em;}
+    .post-body p a:hover{color:var(--accent-deep);}
+    .post-body strong{color:var(--ink);font-weight:600;}
+    .post-body em{font-style:italic;}
+    .post-body blockquote{margin:32px 0;padding:0 0 0 28px;border-left:3px solid var(--accent);}
+    .post-body blockquote p{font-family:var(--font-display);font-size:28px;font-style:italic;line-height:1.25;color:var(--ink);margin:0;text-align:left;hyphens:none;-webkit-hyphens:none;}
+    .post-body ul,.post-body ol{font-family:var(--font-serif);font-size:19px;line-height:1.65;color:var(--ink);padding-left:24px;margin:0 0 22px;}
+    .post-body li{margin-bottom:8px;}
+    .post-body hr{border:0;border-top:1px solid var(--paper-edge);margin:48px 0;}
+
+    /* ── EMBED BREAKOUTS ── */
+    .embed-breakout{width:min(100vw,1040px);margin-left:50%;transform:translateX(-50%);margin-top:36px;margin-bottom:36px;}
+    .embed-video{aspect-ratio:16/9;width:100%;display:block;border:0;}
+    .embed-iframe{width:100%;min-height:500px;border:0;display:block;}
+    .embed-caption{font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);margin-top:10px;padding:0 4px;}
+    .embed-img{width:100%;display:block;}
+
+    /* ── UTILITIES ── */
+    .back-btn{font-family:var(--font-sans);font-size:13px;color:var(--ink-3);display:inline-flex;align-items:center;gap:8px;padding:6px 0;transition:color 140ms;background:none;border:0;cursor:pointer;}
+    .back-btn:hover{color:var(--accent);}
+    .empty-state{padding:96px 0;text-align:center;}
+    .empty-glyph{font-family:var(--font-didone);font-style:italic;font-size:120px;color:var(--ink);opacity:0.06;line-height:1;margin-bottom:24px;}
+    .empty-msg{font-family:var(--font-didone);font-style:italic;font-size:24px;color:var(--ink-3);}
+    .issue-breadcrumb{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px;cursor:pointer;transition:color 140ms;background:none;border:0;}
+    .issue-breadcrumb:hover{color:var(--accent);}
+
+    /* ── COMPAT ALIASES (for adapted components) ── */
+    :root{--bg:var(--paper);--bg-warm:var(--paper-deep);--bg-deep:var(--paper-deep);--rule:var(--paper-edge);--ff-display:var(--font-display);--ff-sans:var(--font-sans);--ff-mono:var(--font-mono);--night:var(--ink);--night-2:var(--ink-2);--accent-pale:rgba(225,31,28,0.08);}
+  </style>
+</head>
+<body>
+<div id="root">
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#FAF6EC;">
+    <div style="text-align:center;font-family:'Fraunces',serif;font-size:32px;color:#0E0E0C;letter-spacing:-0.02em;">Framing Vote</div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" data-presets="env,react">
+/* Framing Vote v2 — modern editorial collage */
+const { useState, useEffect, useMemo, useRef } = React;
+
+/* ── CONTENTFUL ── */
+const SPACE='upaglixkbf42',TOKEN='H3fmoxO4StTBS-lRp_ULYaywbv3uM3C6WTG8o1M_PbU';
+const BASE=`https://cdn.contentful.com/spaces/${SPACE}/environments/master`;
+async function cfFetch(path){const r=await fetch(`${BASE}${path}&access_token=${TOKEN}`);if(!r.ok)throw new Error(r.status);return r.json();}
+async function getEntries(ct,extra=''){return cfFetch(`/entries?content_type=${ct}${extra}`);}
+
+/* ── RICH TEXT ── */
+function rt(doc, assets){
+  if(!doc||!doc.content)return'';
+  const assetPool=assets||window.__fvAssets||[];
+  const n=node=>{
+    if(node.nodeType==='text'){
+      let t=node.value;
+      (node.marks||[]).forEach(m=>{
+        if(m.type==='bold')t=`<strong>${t}</strong>`;
+        if(m.type==='italic')t=`<em>${t}</em>`;
+        if(m.type==='code')t=`<code>${t}</code>`;
+      });
+      return t;
+    }
+    const i=(node.content||[]).map(n).join('');
+    switch(node.nodeType){
+      case'paragraph':return`<p>${i}</p>`;
+      case'heading-1':return`<h1>${i}</h1>`;
+      case'heading-2':return`<h2>${i}</h2>`;
+      case'heading-3':return`<h3>${i}</h3>`;
+      case'unordered-list':return`<ul>${i}</ul>`;
+      case'ordered-list':return`<ol>${i}</ol>`;
+      case'list-item':return`<li>${i}</li>`;
+      case'blockquote':return`<blockquote>${i}</blockquote>`;
+      case'hr':return`<hr/>`;
+      case'hyperlink':return`<a href="${node.data?.uri}" target="_blank" rel="noopener">${i}</a>`;
+      case'embedded-entry-block':{
+        const target=node.data?.target;
+        const ct=target?.sys?.contentType?.sys?.id||target?.fields?.contentType;
+        const fields=target?.fields||{};
+        if(ct==='videoEmbed'||ct==='video'){
+          const url=fields.url||fields.src||fields.embedUrl||'';
+          const caption=fields.caption||fields.title||'';
+          if(!url)return'';
+          const isStream=/youtube|youtu\.be|vimeo/.test(url);
+          const src=isStream?url.replace('watch?v=','embed/').replace('youtu.be/','www.youtube.com/embed/'):url;
+          return`<div class="embed-breakout"><iframe class="embed-video" src="${src}" allowfullscreen loading="lazy" title="${caption}"></iframe>${caption?`<div class="embed-caption">${caption}</div>`:''}</div>`;
+        }
+        if(ct==='iframeEmbed'||ct==='iframe'||ct==='embed'||ct==='interactiveEmbed'||ct==='chartEmbed'||ct==='chart'||ct==='dataViz'){
+          const url=fields.url||fields.src||fields.embedUrl||'';
+          const caption=fields.caption||fields.label||fields.title||'';
+          if(!url)return'';
+          return`<div class="embed-breakout"><iframe class="embed-iframe" src="${url}" loading="lazy" title="${caption}"></iframe>${caption?`<div class="embed-caption">${caption}</div>`:''}</div>`;
+        }
+        return'';
+      }
+      case'embedded-asset-block':{
+        const target=node.data?.target;
+        const file=target?.fields?.file;
+        const id=target?.sys?.id;
+        const linked=assetPool.find(x=>x.sys?.id===id);
+        const finalFile=file||linked?.fields?.file;
+        if(!finalFile?.url)return'';
+        const src=finalFile.url.startsWith('//')?'https:'+finalFile.url:finalFile.url.startsWith('http')?finalFile.url:'https:'+finalFile.url;
+        const mime=finalFile.contentType||'';
+        if(mime.startsWith('video/'))return`<div class="embed-breakout"><video controls playsinline class="embed-video"><source src="${src}" type="${mime}"></video></div>`;
+        if(mime.startsWith('image/'))return`<div class="embed-breakout"><img src="${src}" class="embed-img" alt="${linked?.fields?.description||linked?.fields?.title||''}"/>${linked?.fields?.description?`<div class="embed-caption">${linked.fields.description}</div>`:''}</div>`;
+        return'';
+      }
+      default:return i;
+    }
+  };
+  return doc.content.map(node=>n(node)).join('');
+}
+
+function fmtDate(s){if(!s)return'';return new Date(s).toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});}
+function fmtDateLong(s){if(!s)return'';return new Date(s).toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});}
+
+/* ── ASSET HELPERS ── */
+function resolveAsset(ref,assets){
+  if(!ref)return null;
+  if(ref?.fields?.file?.url)return ref;
+  const id=ref?.sys?.id;
+  if(id&&assets)return assets.find(x=>x.sys?.id===id)||null;
+  return null;
+}
+function assetUrl(ref,assets,w=1200){
+  const a=resolveAsset(ref,assets);
+  const url=a?.fields?.file?.url;
+  if(!url)return null;
+  const base=url.startsWith('//')?url:'//'+url.replace(/^https?:\/\//,'');
+  return'https:'+base+'?w='+w+'&fm=jpg&fl=progressive&q=80';
+}
+function assetAlt(ref,assets){
+  const a=resolveAsset(ref,assets);
+  return a?.fields?.description||a?.fields?.title||'';
+}
+
+/* ── CATEGORY / ISSUE HELPERS ── */
+function getCategories(items){
+  const cats=new Set();
+  (items||[]).forEach(it=>{
+    const c=it.category||it.categories;
+    if(Array.isArray(c))c.forEach(x=>x&&cats.add(x));
+    else if(c)cats.add(c);
+  });
+  return Array.from(cats).sort();
+}
+function matchesCategory(item,filter){
+  if(!filter||filter==='All')return true;
+  const c=item.category||item.categories;
+  if(Array.isArray(c))return c.includes(filter);
+  return c===filter;
+}
+function getArticleIssueId(a){return a?.issue?.sys?.id||a?.issueId||null;}
+function articleBelongsToIssue(a,issueId){return getArticleIssueId(a)===issueId;}
+
+/* ── RESOLVE CORRESPONDENT ── */
+function resolveCorrespondent(ref,entryPool){
+  if(!ref)return null;
+  if(ref.fields)return{id:ref.sys?.id,...ref.fields};
+  const id=ref?.sys?.id;
+  if(!id)return null;
+  const entry=(entryPool||[]).find(e=>e.sys?.id===id);
+  if(!entry)return null;
+  return{id:entry.sys.id,...entry.fields};
+}
+
+/* ── SAMPLE DATA ── */
+const SAMPLE_ARTICLES = [
+  {id:'s1',kicker:'THE ARGUMENT · COMPULSORY TURNOUT',title:'The fragile arithmetic of compulsory voting',subtitle:'Across nine countries that compel turnout, the penalty for staying home has quietly drifted from civic obligation to administrative footnote.',author:'Anna Kowalski',publishDate:'2026-04-22',glyph:'§',readTime:18,country:'AUS · BEL · BRA',annotations:[{n:1,label:'the fine, in euros'},{n:2,label:'paid by 1 in 11'},{n:3,label:"and rarely chased"}]},
+  {id:'s2',kicker:'COMPARATIVE · RUNOFFS',title:'How Romania broke its own runoff',subtitle:'A constitutional court does not annul an election lightly. In December, one did — and the country has been re-reading the result ever since.',author:'Matei Pavel',publishDate:'2026-04-08',glyph:'¶',readTime:14,country:'ROU'},
+  {id:'s3',kicker:'FIELD · KENYA',title:'The poll station that counted twice',subtitle:'A dispatch from Kisumu County on what a recount means when the first count never quite ended.',author:'Lucia Otieno',publishDate:'2026-03-19',glyph:'†',readTime:11,country:'KEN'},
+  {id:'s4',kicker:'METHOD · BALLOT DESIGN',title:'When the ballot itself becomes the question',subtitle:'Twelve countries, twelve typefaces. What the ballot asks before any voter answers.',author:'Sven Halmstad',publishDate:'2026-03-02',glyph:'‡',readTime:9,country:'12 ✕ COUNTRY'},
+  {id:'s5',kicker:'OPINION · THE MARGIN',title:'Against the politics of the decimal',subtitle:'The closer the count, the louder the certainty. A note on living with elections that almost tie.',author:'Anna Kowalski',publishDate:'2026-02-14',glyph:'·',readTime:7,country:'USA · DEU · GBR'},
+];
+const SAMPLE_NEWS = [
+  {id:'n1',category:'Note',title:'A correction on the Brno turnout figure',summary:'The figure we ran in February was off by 1.4 points. Here is what changed and why.',author:'The Editors',publishDate:'2026-05-10'},
+  {id:'n2',category:'From the desk',title:'Why we are skipping the German exit polls',summary:'Reading the exit-poll spread is not our craft. We will read the result instead.',author:'Anna Kowalski',publishDate:'2026-05-04'},
+  {id:'n3',category:'Commission',title:'Calling for essays on the Indonesian regional vote',summary:'Pitches open through 1 June. Long-form preferred; field reporting welcomed.',author:'The Editors',publishDate:'2026-04-27'},
+  {id:'n4',category:'Reading list',title:'Five books on closely-decided elections',summary:'A short shelf for the week of the French legislative recount.',author:'Lucia Otieno',publishDate:'2026-04-19'},
+];
+const SAMPLE_SETTINGS = {issueNumber:1,issueTheme:'The Argument',issueSeason:'Spring 2026',foundingYear:2026,tagline:'A journal on how the vote is asked, counted, and contested.'};
+const SAMPLE_ABOUT = {editorName:'Anna Kowalski',editorTitle:'Founding Editor',editorEmail:'editor@framingvote.eu',journalDescription:{nodeType:'document',content:[{nodeType:'paragraph',content:[{nodeType:'text',value:'Framing Vote is a journal on elections — long-form essays, dispatches, and reference material on how the vote is asked, counted, and contested across countries.',marks:[]}]}]},editorBio:{nodeType:'document',content:[{nodeType:'paragraph',content:[{nodeType:'text',value:'Anna Kowalski writes on comparative democracy and electoral law. Based in Amsterdam. Covers elections across at least five countries.',marks:[]}]}]}};
+
+/* Monochrome editorial — single accent (red marker) on white-cream */
+const SHAPES = {
+  blob: 'M5,18 C20,4 60,2 88,8 C99,16 98,40 96,72 C90,93 70,98 38,96 C12,93 2,86 4,60 C2,40 0,28 5,18 Z',
+  rect: 'M2,6 L94,2 L98,90 L8,96 Z',
+};
+
+/* ── SVG PRIMITIVES ─────────────────────────────────────────────────── */
+
+/* Wordmark — chunky red square + name */
+function FVWordmark({size=22}){
+  return (
+    <span style={{display:'inline-flex',alignItems:'center',gap:10,lineHeight:1}}>
+      <span style={{display:'inline-flex',width:size*1.1,height:size*1.1,background:'var(--accent)',color:'var(--paper)',alignItems:'center',justifyContent:'center',fontFamily:'var(--font-display)',fontWeight:700,fontSize:size*0.7,letterSpacing:'-0.04em'}}>F</span>
+      <span style={{fontFamily:'var(--font-display)',fontWeight:600,fontSize:size,letterSpacing:'-0.025em',color:'var(--ink)'}}>Framing Vote</span>
+    </span>
+  );
+}
+
+/* Numbered red circle with script caption + MAGNETIC interaction & quote popup */
+function NumLabel({n,label,quote,style,labelAngle=-2,circleAngle=-4,size=34,alignCaption='left',magnetic=true}){
+  const ref=useRef(null);
+  const[open,setOpen]=useState(false);
+  useEffect(()=>{
+    if(!magnetic)return;
+    const el=ref.current;if(!el)return;
+    const circle=el.querySelector('.mag-num-circle');
+    const onMove=(e)=>{
+      const r=el.getBoundingClientRect();
+      const cx=r.left+r.width/2,cy=r.top+r.height/2;
+      const dx=e.clientX-cx,dy=e.clientY-cy;
+      const d=Math.hypot(dx,dy);
+      if(d<140){
+        const k=(1-d/140)*0.45;
+        circle.style.transform=`translate(${dx*k}px,${dy*k}px) rotate(${circleAngle}deg)`;
+      }else{
+        circle.style.transform=`rotate(${circleAngle}deg)`;
+      }
+    };
+    window.addEventListener('mousemove',onMove);
+    return()=>window.removeEventListener('mousemove',onMove);
+  },[magnetic,circleAngle]);
+  const handleClick=(e)=>{e.stopPropagation();if(quote)setOpen(o=>!o);};
+  return (
+    <div ref={ref} className={`mag-num${open?' open':''}`} onClick={handleClick} style={{display:'inline-flex',flexDirection:'column',gap:6,alignItems:alignCaption==='left'?'flex-start':alignCaption==='right'?'flex-end':'center',pointerEvents:'auto',position:'relative',...style}}>
+      <span className="mag-num-circle" style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:size,height:size,borderRadius:'50%',background:'var(--accent)',color:'var(--paper)',fontFamily:'var(--font-script)',fontWeight:700,fontSize:size*0.6,lineHeight:1,transform:`rotate(${circleAngle}deg)`,boxShadow:'0 1px 0 rgba(14,14,12,0.2)',transition:'transform 220ms var(--ease)'}}>{n}</span>
+      {label&&<span style={{fontFamily:'var(--font-script)',color:'var(--accent)',fontSize:20,fontWeight:600,transform:`rotate(${labelAngle}deg)`,lineHeight:1.1,whiteSpace:'nowrap'}}>{label}</span>}
+      {quote&&<div className="mag-num-pop">“{quote}”</div>}
+    </div>
+  );
+}
+
+/* Stacked editorial title — "HELMUT Neustadter NEWTON" structure */
+function StackedTitle({top,middle,bottom,size='clamp(48px,9vw,148px)'}){
+  return (
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center',lineHeight:0.9,position:'relative'}}>
+      <div style={{fontFamily:'var(--font-display)',fontWeight:600,fontSize:size,letterSpacing:'-0.025em',color:'var(--ink)',textTransform:'uppercase'}}>{top}</div>
+      <div style={{fontFamily:'var(--font-script)',color:'var(--accent)',fontSize:`calc(${size} * 0.62)`,fontWeight:600,transform:'translateY(-0.18em) rotate(-2deg)',padding:'0 0.2em',whiteSpace:'nowrap'}}>{middle}</div>
+      <div style={{fontFamily:'var(--font-display)',fontWeight:600,fontSize:size,letterSpacing:'-0.025em',color:'var(--ink)',textTransform:'uppercase',marginTop:`calc(${size} * -0.22)`}}>{bottom}</div>
+    </div>
+  );
+}
+
+/* ── LIVE WORLD CLOCK STRIP ── */
+function LiveClockStrip({className=''}){
+  const[now,setNow]=useState(new Date());
+  useEffect(()=>{const t=setInterval(()=>setNow(new Date()),1000);return()=>clearInterval(t);},[]);
+  const cities=[
+    {name:'AMS',tz:'Europe/Amsterdam'},
+    {name:'NYC',tz:'America/New_York'},
+    {name:'NBO',tz:'Africa/Nairobi'},
+    {name:'TYO',tz:'Asia/Tokyo'},
+  ];
+  const fmt=(tz)=>{
+    try{return now.toLocaleTimeString('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});}
+    catch(e){return now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});}
+  };
+  return (
+    <div className={className} style={{display:'flex',alignItems:'center',gap:14,fontFamily:'var(--font-mono)',fontSize:11,color:'var(--ink-3)',letterSpacing:'0.04em'}}>
+      {cities.map((c,i)=>(
+        <React.Fragment key={c.name}>
+          {i>0&&<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}/>}
+          <span style={{display:'inline-flex',alignItems:'baseline',gap:6}}>
+            <span style={{color:'var(--ink)',fontWeight:600}}>{c.name}</span>
+            <span style={{fontVariantNumeric:'tabular-nums'}}>{fmt(c.tz)}</span>
+          </span>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+/* ── COMMAND PALETTE (⌘K) ── */
+function CommandPalette({articles,news,setRoute,setCurrentArticle,setCurrentNews}){
+  const[open,setOpen]=useState(false);
+  const[q,setQ]=useState('');
+  const[sel,setSel]=useState(0);
+  const inputRef=useRef(null);
+  useEffect(()=>{
+    const handler=(e)=>{
+      const mod=e.metaKey||e.ctrlKey;
+      if(mod&&(e.key==='k'||e.key==='K')){e.preventDefault();setOpen(o=>!o);setQ('');setSel(0);}
+      if(e.key==='Escape')setOpen(false);
+    };
+    window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler);
+  },[]);
+  useEffect(()=>{if(open)setTimeout(()=>inputRef.current?.focus(),20);},[open]);
+  const navItems=[
+    {kind:'page',label:'Front page',target:()=>setRoute('home')},
+    {kind:'page',label:'Archive',target:()=>setRoute('archive')},
+    {kind:'page',label:'Notes',target:()=>setRoute('news')},
+    {kind:'page',label:'About the journal',target:()=>setRoute('about')},
+    {kind:'page',label:'Pitch an essay',target:()=>setRoute('submit')},
+    {kind:'page',label:'Subscribe to dispatch',target:()=>{setRoute('home');setTimeout(()=>document.getElementById('fv-newsletter')?.scrollIntoView({behavior:'smooth'}),100);}},
+  ];
+  const all=[
+    ...navItems,
+    ...(articles||SAMPLE_ARTICLES).map(a=>({kind:'essay',label:a.title,sub:`${a.author} · ${fmtDate(a.publishDate)}`,target:()=>{setCurrentArticle(a);setRoute('article');}})),
+    ...(news||SAMPLE_NEWS).map(n=>({kind:'note',label:n.title,sub:`${n.category} · ${fmtDate(n.publishDate)}`,target:()=>{setCurrentNews(n);setRoute('newsArticle');}})),
+  ];
+  const filtered=q.trim()?all.filter(it=>(it.label+' '+(it.sub||'')+' '+it.kind).toLowerCase().includes(q.toLowerCase())):all.slice(0,8);
+  useEffect(()=>{setSel(0);},[q]);
+  const onKeyDown=(e)=>{
+    if(e.key==='ArrowDown'){e.preventDefault();setSel(s=>Math.min(s+1,filtered.length-1));}
+    if(e.key==='ArrowUp'){e.preventDefault();setSel(s=>Math.max(s-1,0));}
+    if(e.key==='Enter'){e.preventDefault();const item=filtered[sel];if(item){item.target();setOpen(false);}}
+  };
+  if(!open)return null;
+  return (
+    <div onClick={()=>setOpen(false)} style={{position:'fixed',inset:0,zIndex:200,background:'rgba(14,14,12,0.4)',backdropFilter:'blur(8px) saturate(140%)',WebkitBackdropFilter:'blur(8px) saturate(140%)',display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:'12vh'}}>
+      <div onClick={e=>e.stopPropagation()} style={{width:'min(620px,92vw)',background:'var(--paper)',border:'1px solid var(--ink)',boxShadow:'0 40px 80px -32px rgba(14,14,12,0.5)',animation:'fade 240ms var(--ease) both'}}>
+        <div style={{display:'flex',alignItems:'center',gap:14,padding:'18px 20px',borderBottom:'1px solid var(--paper-edge)'}}>
+          <span className="mono" style={{color:'var(--accent)'}}>JUMP</span>
+          <input ref={inputRef} value={q} onChange={e=>setQ(e.target.value)} onKeyDown={onKeyDown} placeholder="Jump to essay, note, or page…" style={{flex:1,border:0,outline:0,background:'transparent',fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:24,color:'var(--ink)',letterSpacing:'-0.01em'}}/>
+          <span className="mono" style={{display:'inline-flex',alignItems:'center',gap:4}}><kbd style={{fontFamily:'var(--font-mono)',fontSize:10,border:'1px solid var(--paper-edge)',padding:'2px 5px'}}>esc</kbd></span>
+        </div>
+        <div style={{maxHeight:'56vh',overflowY:'auto'}}>
+          {filtered.length===0?(
+            <div style={{padding:'32px 20px',fontFamily:'var(--font-serif)',fontStyle:'italic',color:'var(--ink-3)'}}>Nothing matches “{q}”.</div>
+          ):filtered.map((it,i)=>(
+            <button key={i} onClick={()=>{it.target();setOpen(false);}} onMouseEnter={()=>setSel(i)} style={{display:'grid',gridTemplateColumns:'72px 1fr auto',gap:18,padding:'14px 20px',width:'100%',textAlign:'left',borderTop:i>0?'1px solid var(--paper-edge)':'none',background:sel===i?'var(--paper-deep)':'transparent',cursor:'pointer'}}>
+              <span className="mono" style={{color:'var(--accent)'}}>{it.kind.toUpperCase()}</span>
+              <span style={{minWidth:0}}>
+                <span style={{display:'block',fontFamily:'var(--font-didone)',fontSize:18,letterSpacing:'-0.01em',color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{it.label}</span>
+                {it.sub&&<span className="mono" style={{display:'block',marginTop:2}}>{it.sub}</span>}
+              </span>
+              <span className="mono arrow" style={{color:sel===i?'var(--accent)':'var(--ink-3)'}}>↵</span>
+            </button>
+          ))}
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 20px',borderTop:'1px solid var(--paper-edge)',fontFamily:'var(--font-mono)',fontSize:10,letterSpacing:'0.06em',color:'var(--ink-3)',textTransform:'uppercase'}}>
+          <span>{filtered.length} {filtered.length===1?'match':'matches'}</span>
+          <span style={{display:'inline-flex',gap:14}}>
+            <span><kbd style={{border:'1px solid var(--paper-edge)',padding:'2px 5px'}}>↑↓</kbd> navigate</span>
+            <span><kbd style={{border:'1px solid var(--paper-edge)',padding:'2px 5px'}}>↵</kbd> open</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── PAGE SECTION INDICATOR ── */
+function PageNav(){
+  const[active,setActive]=useState(0);
+  const sections=[
+    {id:'fv-sec-hero',label:'Cover'},
+    {id:'fv-sec-ticker',label:'Desk'},
+    {id:'fv-sec-grid',label:'Essays'},
+    {id:'fv-sec-notes',label:'Notes'},
+    {id:'fv-sec-year',label:'The year'},
+    {id:'fv-sec-manifesto',label:'Position'},
+    {id:'fv-sec-register',label:'Register'},
+    {id:'fv-newsletter',label:'Dispatch'},
+  ];
+  useEffect(()=>{
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting){
+          const idx=sections.findIndex(s=>s.id===en.target.id);
+          if(idx>=0)setActive(idx);
+        }
+      });
+    },{rootMargin:'-40% 0px -50% 0px',threshold:0});
+    sections.forEach(s=>{const el=document.getElementById(s.id);if(el)obs.observe(el);});
+    return()=>obs.disconnect();
+  },[]);
+  const jump=(id)=>{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+  return (
+    <div className="hide-md" style={{position:'fixed',right:18,top:'50%',transform:'translateY(-50%)',zIndex:40,display:'flex',flexDirection:'column',gap:14,padding:'12px 8px',mixBlendMode:'multiply'}}>
+      {sections.map((s,i)=>(
+        <button key={s.id} onClick={()=>jump(s.id)} title={s.label} style={{display:'flex',alignItems:'center',gap:10,padding:'4px 2px',background:'transparent',position:'relative'}}>
+          <span style={{width:active===i?28:12,height:2,background:active===i?'var(--accent)':'var(--ink-4)',transition:'all 280ms var(--ease)'}}/>
+          <span style={{fontFamily:'var(--font-mono)',fontSize:10,letterSpacing:'0.12em',textTransform:'uppercase',color:active===i?'var(--ink)':'var(--ink-4)',opacity:active===i?1:0,transform:active===i?'translateX(0)':'translateX(-6px)',transition:'all 280ms var(--ease)',whiteSpace:'nowrap'}}>{s.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ── CUSTOM CURSOR ── */
+function CustomCursor({enabled=true}){
+  useEffect(()=>{
+    if(!enabled)return;
+    if(window.matchMedia('(pointer:coarse)').matches)return;
+    document.documentElement.classList.add('fv-cursor-on');
+    const dot=document.createElement('div');dot.id='fv-cursor-dot';
+    const ring=document.createElement('div');ring.id='fv-cursor-ring';
+    document.body.appendChild(dot);document.body.appendChild(ring);
+    let dx=window.innerWidth/2,dy=window.innerHeight/2;
+    let rx=dx,ry=dy;
+    const move=(e)=>{dx=e.clientX;dy=e.clientY;dot.style.left=dx+'px';dot.style.top=dy+'px';};
+    let raf;
+    const tick=()=>{rx+=(dx-rx)*0.2;ry+=(dy-ry)*0.2;ring.style.left=rx+'px';ring.style.top=ry+'px';raf=requestAnimationFrame(tick);};tick();
+    const over=(e)=>{
+      const t=e.target;
+      if(!t||!t.closest)return;
+      const isInteractive=t.closest('button, a, input, [role=button], .polaroid, .mag-num');
+      if(isInteractive){ring.style.width='60px';ring.style.height='60px';ring.style.borderColor='var(--accent)';ring.style.background='rgba(122,31,31,0.06)';}
+      else{ring.style.width='34px';ring.style.height='34px';ring.style.borderColor='var(--ink)';ring.style.background='transparent';}
+    };
+    const out=()=>{ring.style.opacity='0';dot.style.opacity='0';};
+    const back=()=>{ring.style.opacity='1';dot.style.opacity='1';};
+    document.addEventListener('mousemove',move);
+    document.addEventListener('mouseover',over);
+    document.addEventListener('mouseleave',out);
+    document.addEventListener('mouseenter',back);
+    return()=>{
+      document.removeEventListener('mousemove',move);
+      document.removeEventListener('mouseover',over);
+      document.removeEventListener('mouseleave',out);
+      document.removeEventListener('mouseenter',back);
+      cancelAnimationFrame(raf);
+      dot.remove();ring.remove();
+      document.documentElement.classList.remove('fv-cursor-on');
+    };
+  },[enabled]);
+  return null;
+}
+
+/* ── CYCLING WORD (hero verb morph) ── */
+function CyclingWord({words,interval=2400,style}){
+  const[i,setI]=useState(0);
+  const[phase,setPhase]=useState('in');
+  useEffect(()=>{
+    const t=setInterval(()=>{
+      setPhase('out');
+      setTimeout(()=>{setI(x=>(x+1)%words.length);setPhase('in');},340);
+    },interval);
+    return()=>clearInterval(t);
+  },[words.length,interval]);
+  return (
+    <span style={{position:'relative',display:'inline-block',minWidth:'1.6em',textAlign:'center',color:'var(--accent)',fontFamily:'var(--font-script)',fontWeight:600,fontStyle:'normal',fontSize:'0.62em',letterSpacing:0,padding:'0 0.1em',...style}}>
+      <span key={i} style={{display:'inline-block',animation:phase==='in'?'cycle-in 340ms var(--ease) both':'cycle-out 320ms var(--ease) both'}}>{words[i]}</span>
+    </span>
+  );
+}
+
+/* ── LIVE ELECTIONS COUNTER ── */
+function LiveCounter(){
+  const[n,setN]=useState(47);
+  useEffect(()=>{
+    const t=setInterval(()=>setN(prev=>Math.max(40,Math.min(58,prev+(Math.random()>0.5?1:-1)))),5400);
+    return()=>clearInterval(t);
+  },[]);
+  return (
+    <span style={{display:'inline-flex',alignItems:'baseline',gap:6}}>
+      <span style={{color:'var(--accent)',fontWeight:700,fontVariantNumeric:'tabular-nums',fontSize:13}}>{String(n).padStart(2,'0')}</span>
+      <span>elections watched</span>
+    </span>
+  );
+}
+
+/* ── ASK THE EDITOR (AI chat using window.claude) ── */
+function AskTheEditor(){
+  const[open,setOpen]=useState(false);
+  const[history,setHistory]=useState([]);
+  const[q,setQ]=useState('');
+  const[busy,setBusy]=useState(false);
+  const scroller=useRef(null);
+  useEffect(()=>{if(scroller.current)scroller.current.scrollTop=scroller.current.scrollHeight;},[history,busy]);
+  const ask=async()=>{
+    if(!q.trim()||busy)return;
+    const prompt=`You are an editor at Framing Vote, a literary journal on elections. Answer briefly (3-4 sentences max), in a measured, third-person tone. No exclamation marks. The journal does not predict elections; it frames them. The reader asks: ${q}`;
+    const myQ=q;
+    setHistory(h=>[...h,{role:'reader',text:myQ}]);
+    setQ('');setBusy(true);
+    try{
+      if(!window.claude||!window.claude.complete){
+        setHistory(h=>[...h,{role:'editor',text:'The editor is available only in the published environment.'}]);
+      }else{
+        const ans=await window.claude.complete(prompt);
+        setHistory(h=>[...h,{role:'editor',text:ans}]);
+      }
+    }catch(e){
+      setHistory(h=>[...h,{role:'editor',text:'The editor is briefly away. Try again in a moment.'}]);
+    }finally{setBusy(false);}
+  };
+  if(!open)return (
+    <button onClick={()=>setOpen(true)} className="hide-md" style={{position:'fixed',bottom:20,left:20,zIndex:160,padding:'10px 18px',background:'var(--ink)',color:'var(--paper)',fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.16em',textTransform:'uppercase',display:'inline-flex',alignItems:'center',gap:10,border:0,cursor:'pointer'}}>
+      <span style={{width:7,height:7,borderRadius:'50%',background:'var(--accent)',animation:'pulse 2s ease-in-out infinite'}}/>
+      Ask the editor
+    </button>
+  );
+  return (
+    <div className="hide-md" style={{position:'fixed',bottom:20,left:20,zIndex:160,width:380,maxWidth:'calc(100vw - 40px)',background:'var(--paper-soft)',border:'1px solid var(--ink)',display:'flex',flexDirection:'column',boxShadow:'0 24px 48px -20px rgba(14,14,12,0.4)',animation:'fade 240ms var(--ease) both'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 18px',borderBottom:'1px solid var(--paper-edge)'}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <span style={{width:8,height:8,borderRadius:'50%',background:'var(--accent)',animation:'pulse 2s ease-in-out infinite'}}/>
+          <span className="eyebrow">§ Ask the editor</span>
+        </div>
+        <button onClick={()=>setOpen(false)} style={{fontFamily:'var(--font-mono)',fontSize:18,color:'var(--ink-3)',padding:'0 4px'}}>×</button>
+      </div>
+      <div ref={scroller} style={{padding:'14px 18px',maxHeight:'40vh',minHeight:120,overflowY:'auto',display:'flex',flexDirection:'column',gap:14,fontFamily:'var(--font-serif)',fontSize:14,lineHeight:1.55,color:'var(--ink)'}}>
+        {history.length===0 && (
+          <p style={{fontStyle:'italic',color:'var(--ink-3)',margin:0}}>Ask about the issue, comparative electoral systems, or any of our essays. The editor will answer briefly.</p>
+        )}
+        {history.map((m,i)=>(
+          <div key={i} style={{display:'flex',flexDirection:'column',gap:4}}>
+            <span className="mono" style={{color:m.role==='editor'?'var(--accent)':'var(--ink-3)'}}>{m.role==='editor'?'EDITOR':'YOU'}</span>
+            <span style={{fontStyle:m.role==='reader'?'italic':'normal'}}>{m.text}</span>
+          </div>
+        ))}
+        {busy && <span className="mono" style={{color:'var(--ink-3)'}}>… thinking</span>}
+      </div>
+      <form onSubmit={e=>{e.preventDefault();ask();}} style={{display:'flex',gap:8,padding:'12px 18px',borderTop:'1px solid var(--paper-edge)',alignItems:'center'}}>
+        <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Type a question…" disabled={busy} style={{flex:1,border:0,outline:0,background:'transparent',fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:18,color:'var(--ink)'}}/>
+        <button type="submit" disabled={busy||!q.trim()} style={{fontFamily:'var(--font-mono)',fontSize:10,fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',color:busy||!q.trim()?'var(--ink-4)':'var(--accent)'}}>send ↵</button>
+      </form>
+    </div>
+  );
+}
+
+/* ── ROLLING COUNTER ── */
+function Counter({to,duration=1400,suffix=''}){
+  const[n,setN]=useState(0);
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(!ref.current)return;
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting){
+          const start=performance.now();
+          const ease=(t)=>1-Math.pow(1-t,3);
+          const step=(now)=>{
+            const t=Math.min(1,(now-start)/duration);
+            setN(Math.round(ease(t)*to));
+            if(t<1)requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+          obs.disconnect();
+        }
+      });
+    },{threshold:0.4});
+    obs.observe(ref.current);
+    return()=>obs.disconnect();
+  },[to,duration]);
+  return <span ref={ref} style={{fontVariantNumeric:'tabular-nums'}}>{n}{suffix}</span>;
+}
+
+/* ── STATS RIBBON ── */
+function StatsRibbon({articles,news}){
+  const essayCount=(articles||SAMPLE_ARTICLES).length;
+  const noteCount=(news||SAMPLE_NEWS).length;
+  const stats=[
+    {n:essayCount,label:'Essays · since 2026',foot:'And counting'},
+    {n:noteCount,label:'Notes · this quarter',foot:'Filed between issues'},
+    {n:5,label:'Countries · covered',foot:'At least five'},
+    {n:1,label:'Issue · published',foot:'More in preparation'},
+  ];
+  return (
+    <section style={{padding:'clamp(40px,6vw,80px) 0',borderTop:'1px solid var(--paper-edge)',borderBottom:'1px solid var(--paper-edge)',background:'var(--paper)'}}>
+      <div className="wrap">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:32,flexWrap:'wrap',gap:16}}>
+          <div className="eyebrow eyebrow-accent">The journal · in numbers</div>
+          <div className="mono">Updated live</div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:0,borderTop:'1px solid var(--ink)'}}>
+          {stats.map((s,i)=>(
+            <div key={i} style={{padding:'clamp(16px,2vw,28px)',borderRight:i<stats.length-1?'1px solid var(--paper-edge)':'0',borderBottom:'1px solid var(--paper-edge)',display:'flex',flexDirection:'column',gap:6}}>
+              <div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontWeight:700,fontSize:'clamp(40px,5vw,84px)',lineHeight:0.95,color:'var(--ink)',letterSpacing:'-0.025em'}}>
+                <Counter to={s.n}/>
+              </div>
+              <div className="eyebrow" style={{marginTop:8,fontSize:10}}>{s.label}</div>
+              <div style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:13,color:'var(--ink-3)',marginTop:4}}>{s.foot}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── ESSAY FILM STRIP — horizontal-scroll essays with expand-on-hover ── */
+function EssayFilm({articles,setRoute,setCurrentArticle}){
+  const all=(articles&&articles.length?articles:SAMPLE_ARTICLES);
+  /* Extract category from kicker — split on common separators, trim & cap length */
+  const catOf=(a)=>{
+    const k=(a.kicker||'').trim();if(!k)return 'ESSAY';
+    const seg=k.split(/[·•—–:|]/)[0].trim().toUpperCase();
+    /* If still long, take first 2-3 words */
+    if(seg.length>22){
+      const words=seg.split(/\s+/);
+      return words.slice(0,3).join(' ');
+    }
+    return seg||'ESSAY';
+  };
+  const cats=useMemo(()=>{
+    const set=new Set();all.forEach(a=>{const c=catOf(a);if(c)set.add(c);});
+    return ['ALL',...Array.from(set)];
+  },[all]);
+  const[cat,setCat]=useState('ALL');
+  const filtered=cat==='ALL'?all:all.filter(a=>catOf(a)===cat);
+  const list=filtered.slice(0,12);
+  const[hover,setHover]=useState(-1);
+  const stripRef=useRef(null);
+  const scroll=(dir)=>{const el=stripRef.current;if(!el)return;el.scrollBy({left:dir*el.clientWidth*0.85,behavior:'smooth'});};
+  return (
+    <section id="fv-sec-grid" style={{padding:'clamp(60px,8vw,120px) 0',background:'var(--paper)',borderTop:'1px solid var(--paper-edge)',position:'relative'}}>
+      <div className="wrap" style={{paddingBottom:32}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',gap:16,flexWrap:'wrap',marginBottom:32}}>
+          <div>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:14}}>The essays · 01—{String(all.length).padStart(2,'0')}</div>
+            <h2 className="display" style={{fontSize:'clamp(28px,5.6vw,84px)',margin:0,maxWidth:900}}>
+              The reading list, <em>filed this year.</em>
+            </h2>
+          </div>
+          <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+            <button onClick={()=>scroll(-1)} className="pill hide-md" style={{padding:'10px 14px'}} aria-label="Previous">←</button>
+            <button onClick={()=>scroll(1)} className="pill hide-md" style={{padding:'10px 14px'}} aria-label="Next">→</button>
+            <button onClick={()=>setRoute('archive')} className="btn btn-ghost" style={{padding:'10px 16px',fontSize:10.5}}>All essays <span className="arrow">→</span></button>
+          </div>
+        </div>
+        {/* Category tabs — Vogue-style */}
+        <div style={{display:'flex',gap:0,borderTop:'1px solid var(--ink)',borderBottom:'1px solid var(--paper-edge)',overflowX:'auto',scrollbarWidth:'none'}}>
+          {cats.map((c)=>{
+            const active=cat===c;
+            const count=c==='ALL'?all.length:all.filter(a=>catOf(a)===c).length;
+            return (
+              <button key={c} onClick={()=>setCat(c)} style={{padding:'18px 22px',position:'relative',display:'flex',alignItems:'baseline',gap:8,whiteSpace:'nowrap',fontFamily:'var(--font-sans)',fontSize:11.5,fontWeight:600,letterSpacing:'0.18em',textTransform:'uppercase',color:active?'var(--ink)':'var(--ink-3)',cursor:'pointer',transition:'color 180ms'}} onMouseEnter={e=>{if(!active)e.currentTarget.style.color='var(--accent)';}} onMouseLeave={e=>{if(!active)e.currentTarget.style.color='var(--ink-3)';}}>
+                <span style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontWeight:700,fontSize:18,color:active?'var(--accent)':'var(--ink-4)',letterSpacing:0,textTransform:'none'}}>{String(count).padStart(2,'0')}</span>
+                <span>{c}</span>
+                {active&&<span style={{position:'absolute',left:0,bottom:-1,height:3,width:'100%',background:'var(--accent)'}}/>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div ref={stripRef} className="film-strip">
+        {list.length===0?(
+          <div style={{padding:'80px 48px',textAlign:'center',fontFamily:'var(--font-serif)',fontStyle:'italic',color:'var(--ink-3)',width:'100%'}}>No essays in <span style={{color:'var(--accent)'}}>{cat}</span> yet.</div>
+        ):list.map((a,i)=>{
+          const isExpanded=hover===i;
+          return (
+            <div key={a.id+'-'+cat} className="film-frame" onMouseEnter={()=>setHover(i)} onMouseLeave={()=>setHover(-1)} style={{flexBasis:isExpanded?'min(560px,90vw)':'min(280px,80vw)',transition:'flex-basis 480ms var(--ease)'}}>
+              <button onClick={()=>{setCurrentArticle(a);setRoute('article');}} style={{display:'flex',flexDirection:'column',width:'100%',height:'100%',textAlign:'left',padding:'24px 28px',background:'var(--paper-soft)',cursor:'pointer'}}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline'}}>
+                  <span style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontWeight:700,fontSize:48,lineHeight:1,color:'var(--ink)',fontVariantNumeric:'tabular-nums'}}>{String(i+1).padStart(2,'0')}</span>
+                  <span className="mono" style={{color:'var(--accent)'}}>{a.country||catOf(a)}</span>
+                </div>
+                <div style={{margin:'32px 0 24px',aspectRatio:'4/5',background:'var(--paper-deep)',position:'relative',overflow:'hidden'}}>
+                  {a.coverImageUrl?(
+                    <img src={a.coverImageUrl} alt={a.title||''} loading="lazy" className="halftone" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+                  ):(
+                    <div className="halftone" style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(135deg,transparent 0 14px,rgba(14,14,12,0.04) 14px 15px)',display:'flex',alignItems:'center',justifyContent:'center',padding:'12px',textAlign:'center',fontFamily:'var(--font-mono)',fontSize:'10px',letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)'}}>{a.kicker||'editorial'}</div>
+                  )}
+                  <div style={{position:'absolute',left:8,bottom:8,fontFamily:'var(--font-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--paper)',background:'var(--ink)',padding:'2px 6px'}}>FR · {String(i+1).padStart(3,'0')}</div>
+                </div>
+                {a.kicker&&<div className="eyebrow eyebrow-accent" style={{marginBottom:8}}>{a.kicker}</div>}
+                <div style={{fontFamily:'var(--font-didone)',fontWeight:400,fontSize:isExpanded?28:22,lineHeight:1.12,letterSpacing:'-0.01em',color:'var(--ink)',transition:'font-size 380ms var(--ease)'}}>
+                  {a.title}
+                </div>
+                {isExpanded&&a.subtitle&&(
+                  <p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:15,lineHeight:1.5,color:'var(--ink-3)',margin:'14px 0 0',animation:'fade 360ms var(--ease) both'}}>{a.subtitle}</p>
+                )}
+                <div style={{marginTop:'auto',paddingTop:20,display:'flex',justifyContent:'space-between',alignItems:'baseline',fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)'}}>
+                  <span>By {a.author}</span>
+                  <span className="mono">{a.readTime||12}′</span>
+                </div>
+              </button>
+            </div>
+          );
+        })}
+      </div>
+      <div className="wrap" style={{paddingTop:24,display:'flex',justifyContent:'space-between',alignItems:'center',gap:16}}>
+        <span className="mono">{list.length} {list.length===1?'essay':'essays'} in <span style={{color:'var(--accent)',fontWeight:700}}>{cat}</span> · scroll horizontally · hover to expand</span>
+        <span className="mono">FR · {String(list.length).padStart(3,'0')}</span>
+      </div>
+    </section>
+  );
+}
+
+/* Polaroid card — individual draggable/tiltable card */
+function Polaroid({article,index,baseRotation=0,zIndex=1,onOpen}){
+  const ref=useRef(null);
+  const[drag,setDrag]=useState({active:false,startX:0,startY:0,rot:baseRotation});
+  const[tilt,setTilt]=useState({x:0,y:0,active:false});
+  useEffect(()=>{setDrag(d=>({...d,rot:baseRotation}));},[baseRotation]);
+  const onPointerDown=(e)=>{
+    setDrag(d=>({...d,active:true,startX:e.clientX,startY:e.clientY,startRot:d.rot}));
+    ref.current?.setPointerCapture?.(e.pointerId);
+  };
+  const onPointerMove=(e)=>{
+    if(drag.active){
+      const dx=e.clientX-drag.startX;
+      const dy=e.clientY-drag.startY;
+      setDrag(d=>({...d,rot:(d.startRot||baseRotation)+dx*0.15,dragY:dy*0.5,dragX:dx*0.5}));
+    }else{
+      const r=ref.current?.getBoundingClientRect();if(!r)return;
+      const cx=r.left+r.width/2,cy=r.top+r.height/2;
+      setTilt({x:((e.clientY-cy)/r.height)*-14,y:((e.clientX-cx)/r.width)*14,active:true});
+    }
+  };
+  const onPointerLeave=()=>{if(!drag.active)setTilt({x:0,y:0,active:false});};
+  const onPointerUp=(e)=>{
+    setDrag(d=>({...d,active:false,dragX:0,dragY:0,rot:baseRotation+(d.rot-baseRotation)*0.3}));
+  };
+  const transform=`perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translate(${drag.dragX||0}px,${drag.dragY||0}px) rotate(${drag.rot}deg)`;
+  return (
+    <div ref={ref} className="polaroid" onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onPointerLeave={onPointerLeave} onClick={()=>!drag.active&&onOpen?.(article)} style={{position:'relative',width:240,zIndex,transform,transition:drag.active?'none':'transform 360ms var(--ease)',transformStyle:'preserve-3d'}}>
+      <div style={{display:'flex',justifyContent:'space-between',padding:'2px 4px 10px',fontFamily:'var(--font-sans)',fontSize:9.5,fontWeight:600,letterSpacing:'0.16em',textTransform:'uppercase',color:'var(--ink-3)'}}>
+        <span>№{String(index).padStart(2,'0')}</span>
+        <span style={{color:'var(--accent)'}}>{article.country||'WORLDWIDE'}</span>
+      </div>
+      <div className="halftone" style={{aspectRatio:'3/4',background:'var(--paper-deep)',marginBottom:14}}>
+        <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',padding:'12px',textAlign:'center',fontFamily:'var(--font-mono)',fontSize:'10px',letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)',backgroundImage:'repeating-linear-gradient(135deg,transparent 0 14px,rgba(14,14,12,0.04) 14px 15px)'}}>{article.kicker||'editorial'}</div>
+      </div>
+      <div style={{fontFamily:'var(--font-didone)',fontWeight:400,fontSize:18,lineHeight:1.15,letterSpacing:'-0.01em',color:'var(--ink)',marginTop:8,minHeight:64}}>
+        {article.title.length>62?article.title.slice(0,62)+'…':article.title}
+      </div>
+      <div style={{fontFamily:'var(--font-script)',color:'var(--accent)',fontSize:16,fontWeight:600,marginTop:6,transform:'rotate(-1deg)',display:'inline-block'}}>by {article.author}</div>
+    </div>
+  );
+}
+
+/* Polaroid Deck — a row of draggable cards */
+function PolaroidDeck({articles,setRoute,setCurrentArticle}){
+  const items=(articles&&articles.length?articles:SAMPLE_ARTICLES).slice(0,5);
+  const rotations=[-9,4,-3,7,-5];
+  return (
+    <section id="fv-sec-polaroid" style={{padding:'120px 0 80px',background:'var(--paper)',borderTop:'1px solid var(--paper-edge)',position:'relative',overflow:'hidden'}}>
+      <div className="wrap">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:16,paddingBottom:12,borderBottom:'1px solid var(--paper-edge)',flexWrap:'wrap',gap:16}}>
+          <div className="mono">02 · Front page · Drag to shuffle</div>
+          <div className="mono">TABLET / MOBILE</div>
+        </div>
+        {/* Stamped masthead like the double VOGUE */}
+        <div style={{textAlign:'center',padding:'24px 0 40px'}}>
+          <span className="stamp" data-stamp="Framing Vote" style={{fontFamily:'var(--font-display)',fontWeight:700,fontSize:'clamp(48px,8vw,128px)',letterSpacing:'-0.03em',color:'var(--ink)',lineHeight:0.9}}>Framing Vote</span>
+          <div style={{borderTop:'1px solid var(--ink)',marginTop:18,paddingTop:14,maxWidth:560,marginLeft:'auto',marginRight:'auto',display:'flex',justifyContent:'space-around',fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:22,color:'var(--ink)'}}>
+            <span>Field</span>
+            <span>Method</span>
+            <span style={{color:'var(--accent)'}}>Argument</span>
+          </div>
+        </div>
+
+        {/* Draggable polaroid row */}
+        <div style={{display:'flex',gap:24,justifyContent:'center',alignItems:'center',padding:'60px 0',flexWrap:'wrap'}}>
+          {items.map((a,i)=>(
+            <Polaroid key={a.id} article={a} index={i+1} baseRotation={rotations[i%rotations.length]} zIndex={items.length-Math.abs(2-i)} onOpen={(art)=>{setCurrentArticle(art);setRoute('article');}}/>
+          ))}
+        </div>
+        <div style={{textAlign:'center',marginTop:24}}>
+          <span className="mono" style={{color:'var(--ink-3)'}}>Drag any card to shuffle · click to read</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* Scroll-reveal wrapper */
+function Reveal({children,delay=0,as='div',className='',style}){
+  const ref=useRef(null);
+  const[seen,setSeen]=useState(false);
+  useEffect(()=>{
+    if(!ref.current||seen)return;
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{if(en.isIntersecting){setSeen(true);io.disconnect();}});
+    },{threshold:0.15});
+    io.observe(ref.current);
+    return()=>io.disconnect();
+  },[seen]);
+  const Tag=as;
+  return <Tag ref={ref} className={`reveal${seen?' in':''}${delay?' reveal-delay-'+delay:''} ${className}`} style={style}>{children}</Tag>;
+}
+
+/* Star asterisk decoration */
+function StarMark({size=18,color,style}){
+  return (
+    <span style={{display:'inline-block',width:size,height:size,background:color||'var(--ink)',clipPath:'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)',transform:'rotate(-8deg)',...style}}/>
+  );
+}
+
+/* Hand-drawn arrow */
+function ScribbleArrow({length=120,angle=0,curve=20,style,color}){
+  return (
+    <svg width={length} height={Math.abs(curve)+40} viewBox={`0 0 ${length} ${Math.abs(curve)+40}`} style={{position:'absolute',transform:`rotate(${angle}deg)`,pointerEvents:'none',...style}} aria-hidden>
+      <path d={`M5,${20+curve/2} Q${length/2},${20-curve} ${length-18},${20+curve/2}`} stroke={color||'var(--accent)'} strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+      <path d={`M${length-18},${20+curve/2} l-10,-4 m10,4 l-7,8`} stroke={color||'var(--accent)'} strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+/* Halftone image w/ optional torn-paper outline (monochrome editorial) */
+function HalftoneCutout({slotId,placeholder,imageUrl,style,shape='rect',outline='none',rotate=0}){
+  /* outline: 'none' | 'ink' | 'accent' — a thin scribbled border behind the image */
+  const showOutline = outline !== 'none';
+  const outlineColor = outline === 'accent' ? 'var(--accent)' : 'var(--ink)';
+  return (
+    <div style={{position:'relative',transform:rotate?`rotate(${rotate}deg)`:'none',...style}}>
+      {showOutline && (
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{position:'absolute',inset:'-4% -4% -2% -2%',width:'108%',height:'106%',zIndex:1,pointerEvents:'none'}} aria-hidden>
+          {shape==='blob'?
+            <path d={SHAPES.blob} fill="none" stroke={outlineColor} strokeWidth="1" strokeDasharray="3 2"/> :
+            shape==='rect'?
+            <path d={SHAPES.rect} fill="none" stroke={outlineColor} strokeWidth="1"/> :
+            <rect x="2" y="2" width="96" height="96" rx="2" fill="none" stroke={outlineColor} strokeWidth="1"/>
+          }
+        </svg>
+      )}
+      <div className="halftone" style={{position:'relative',zIndex:2,width:'100%',height:'100%',background:'var(--paper-deep)',overflow:'hidden'}}>
+        {imageUrl?(
+          <img src={imageUrl} alt={placeholder||''} loading="lazy" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+        ):(
+          <div style={{width:'100%',height:'100%',background:'var(--paper-deep)',display:'flex',alignItems:'center',justifyContent:'center',padding:'12px',textAlign:'center',fontFamily:'var(--font-mono)',fontSize:'10px',letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)',backgroundImage:'repeating-linear-gradient(135deg,transparent 0 14px,rgba(14,14,12,0.04) 14px 15px)'}}>{placeholder}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* Big year display like Vogue's "2023" with year list */
+function BigYear({current=2026,years}){
+  const list = years || [2022,2023,2024,2025,2026,2027,2028];
+  return (
+    <div style={{display:'inline-flex',alignItems:'flex-end',gap:32}}>
+      <div style={{display:'flex',flexDirection:'column',gap:2,lineHeight:1,paddingBottom:24}}>
+        {list.map(y=>(
+          <div key={y} style={{fontFamily:'var(--font-didone)',fontSize:14,letterSpacing:0,color:y===current?'var(--accent)':'var(--ink-4)',fontWeight:y===current?700:400,fontStyle:y===current?'normal':'italic'}}>{y}</div>
+        ))}
+      </div>
+      <div style={{fontFamily:'var(--font-didone)',fontWeight:700,fontSize:'clamp(80px,14vw,260px)',lineHeight:0.78,letterSpacing:'-0.05em',color:'var(--ink)',fontStyle:'italic'}}>
+        {current}
+      </div>
+    </div>
+  );
+}
+
+/* ── READING PROGRESS ── */
+function ReadingProgress(){
+  const[p,setP]=useState(0);
+  useEffect(()=>{const f=()=>{const h=document.documentElement,m=h.scrollHeight-h.clientHeight;setP(m>0?Math.min(1,h.scrollTop/m):0);};window.addEventListener('scroll',f);f();return()=>window.removeEventListener('scroll',f);},[]);
+  return <div className="progress" style={{transform:`scaleX(${p})`}}/>;
+}
+
+/* ── HEADER ── */
+function Header({route,setRoute,settings}){
+  const links=[['home','Front'],['archive','Archive'],['news','Notes'],['about','About'],['submit','Pitch']];
+  const[scrolled,setScrolled]=useState(false);
+  const[menuOpen,setMenuOpen]=useState(false);
+  useEffect(()=>{const f=()=>setScrolled(window.scrollY>8);window.addEventListener('scroll',f);f();return()=>window.removeEventListener('scroll',f);},[]);
+  useEffect(()=>{if(menuOpen)document.body.style.overflow='hidden';else document.body.style.overflow='';},[menuOpen]);
+  return (
+    <header style={{position:'sticky',top:0,zIndex:50,background:scrolled?'rgba(250,246,236,0.94)':'var(--paper)',backdropFilter:scrolled?'saturate(140%) blur(14px)':'none',WebkitBackdropFilter:scrolled?'saturate(140%) blur(14px)':'none',borderBottom:scrolled?'1px solid var(--paper-edge)':'1px solid transparent',transition:'all 200ms'}}>
+      <div style={{maxWidth:1440,margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'16px clamp(16px,3vw,48px)',gap:24}}>
+        <button onClick={()=>{setRoute('home');setMenuOpen(false);}}><FVWordmark size={20}/></button>
+        <nav style={{display:'flex',alignItems:'center',gap:2}} className="hide-md">
+          {links.map(([k,label])=>(
+            <button key={k} onClick={()=>setRoute(k)} style={{padding:'10px 14px',fontFamily:'var(--font-sans)',fontSize:12,fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:route===k?'var(--ink)':'var(--ink-3)',position:'relative',transition:'color 140ms'}} onMouseEnter={e=>e.currentTarget.style.color='var(--accent)'} onMouseLeave={e=>e.currentTarget.style.color=route===k?'var(--ink)':'var(--ink-3)'}>
+              {label}
+              {route===k&&<span style={{position:'absolute',left:'50%',bottom:3,transform:'translateX(-50%)',width:20,height:3,background:'var(--accent)'}}/>}
+            </button>
+          ))}
+        </nav>
+        <div style={{display:'flex',alignItems:'center',gap:12}}>
+          <span className="mono hide-md" style={{fontSize:10.5}}>Issue №{String(settings?.issueNumber||1).padStart(2,'0')} · Spring '26</span>
+          <button className="btn hide-md" style={{padding:'10px 16px',fontSize:10.5}} onClick={()=>document.getElementById('fv-newsletter')?.scrollIntoView({behavior:'smooth'})}>
+            Subscribe <span className="arrow">→</span>
+          </button>
+          {/* Mobile hamburger */}
+          <button onClick={()=>setMenuOpen(o=>!o)} style={{display:'none',flexDirection:'column',gap:5,padding:'8px',background:'transparent',border:0,cursor:'pointer'}} className="show-mobile" aria-label="Menu">
+            <span style={{display:'block',width:22,height:2,background:'var(--ink)',transition:'all 200ms',transform:menuOpen?'rotate(45deg) translate(5px,5px)':'none'}}/>
+            <span style={{display:'block',width:22,height:2,background:'var(--ink)',transition:'all 200ms',opacity:menuOpen?0:1}}/>
+            <span style={{display:'block',width:22,height:2,background:'var(--ink)',transition:'all 200ms',transform:menuOpen?'rotate(-45deg) translate(5px,-5px)':'none'}}/>
+          </button>
+        </div>
+      </div>
+      {/* Mobile menu overlay */}
+      {menuOpen&&(
+        <div style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'var(--paper)',zIndex:49,display:'flex',flexDirection:'column',padding:'80px 24px 40px',gap:0}}>
+          <button onClick={()=>setMenuOpen(false)} style={{position:'absolute',top:20,right:20,fontFamily:'var(--font-mono)',fontSize:20,color:'var(--ink-3)',background:'none',border:0,cursor:'pointer'}}>×</button>
+          {links.map(([k,label])=>(
+            <button key={k} onClick={()=>{setRoute(k);setMenuOpen(false);}} style={{padding:'20px 0',fontFamily:'var(--font-display)',fontSize:'clamp(32px,8vw,52px)',fontWeight:600,letterSpacing:'-0.025em',color:route===k?'var(--accent)':'var(--ink)',textAlign:'left',borderBottom:'1px solid var(--paper-edge)',background:'none',border:0,borderBottom:'1px solid var(--paper-edge)',cursor:'pointer',display:'block',width:'100%'}}>
+              {label}
+            </button>
+          ))}
+          <button className="btn btn-red" style={{marginTop:32,alignSelf:'flex-start'}} onClick={()=>{setMenuOpen(false);document.getElementById('fv-newsletter')?.scrollIntoView({behavior:'smooth'});}}>
+            Subscribe <span className="arrow">→</span>
+          </button>
+        </div>
+      )}
+    </header>
+  );
+}
+
+/* ── HERO — VOGUE-STYLE EDITORIAL COLLAGE ───────────────────────────── */
+function Hero({featured,settings,setRoute,setCurrentArticle}){
+  const num=settings?.issueNumber||14;
+  const theme=settings?.issueTheme||'The Argument';
+  const f=featured||SAMPLE_ARTICLES[0];
+  const annotations = f.annotations || [
+    {n:1,label:'the question'},
+    {n:2,label:'the count'},
+    {n:3,label:'the framing'},
+  ];
+
+  return (
+    <section id="fv-sec-hero" style={{padding:'0 0 80px',background:'var(--paper)',position:'relative',overflow:'hidden'}}>
+      {/* Top thin metadata bar */}
+      <div style={{borderTop:'1px solid var(--paper-edge)',borderBottom:'1px solid var(--paper-edge)'}}>
+        <div className="wrap" style={{padding:'12px clamp(16px,3vw,48px)',display:'flex',justifyContent:'space-between',alignItems:'center',gap:16,flexWrap:'wrap'}}>
+          <div style={{display:'flex',alignItems:'center',gap:14}}>
+            <span style={{width:7,height:7,borderRadius:'50%',background:'var(--accent)',animation:'pulse 2.4s ease-in-out infinite'}}/>
+            <span className="mono"><LiveCounter/></span>
+          </div>
+          <LiveClockStrip className="hide-md"/>
+          <div style={{display:'flex',alignItems:'center',gap:14}} className="hide-md">
+            <span className="mono">Filed {fmtDate(f.publishDate)}</span>
+            <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}/>
+            <span className="mono">⌘ K to jump</span>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION TITLE BAR — elegant serif + italic script mix (Helmut Newton ref) */}
+      <div className="wrap" style={{padding:'56px clamp(16px,3vw,48px) 0'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:16,flexWrap:'wrap'}}>
+          <div className="eyebrow">§ Cover Essay · Issue №{String(num).padStart(2,'0')}</div>
+          <div className="mono" style={{textAlign:'right'}}>
+            Filed · {fmtDate(f.publishDate)}<br/>
+            <span style={{color:'var(--accent)',fontWeight:600}}>{theme.toUpperCase()}</span>
+          </div>
+        </div>
+        {/* Helmut-Newton-style headline: serif caps + italic script inline */}
+        <h2 style={{fontFamily:'var(--font-display)',fontWeight:600,fontSize:'clamp(48px,8vw,148px)',margin:'24px 0 0',lineHeight:0.92,letterSpacing:'-0.03em',color:'var(--ink)',textTransform:'uppercase',textAlign:'center'}}>
+          The desire to <CyclingWord words={['frame','count','question','read']}/> the vote
+        </h2>
+      </div>
+
+      {/* MAIN COLLAGE STAGE — minimal, mostly white */}
+      <div className="wrap" style={{padding:'48px clamp(16px,3vw,48px) 0'}}>
+        <div style={{position:'relative',aspectRatio:'5/4',minHeight:'clamp(280px,60vw,520px)',maxWidth:880,margin:'0 auto'}}>
+
+          {/* Main halftone image — centered, no colored backdrop */}
+          <div className="halftone glitch" style={{position:'absolute',left:'14%',top:'2%',width:'72%',height:'96%',zIndex:3,background:'var(--paper-deep)',boxShadow:'0 18px 48px -28px rgba(14,14,12,0.35)',overflow:'hidden'}}>
+            {f.coverImageUrl?(
+              <img src={f.coverImageUrl} alt={f.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+            ):(
+              <div style={{width:'100%',height:'100%',background:'var(--paper-deep)',display:'flex',alignItems:'center',justifyContent:'center',padding:'12px',textAlign:'center',fontFamily:'var(--font-mono)',fontSize:'10px',letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)',backgroundImage:'repeating-linear-gradient(135deg,transparent 0 14px,rgba(14,14,12,0.04) 14px 15px)'}}>COVER · The subject of this issue — halftone B&W cutout</div>
+            )}
+          </div>
+
+          {/* Floating numbered annotations — magnetic + click to reveal quote */}
+          <div style={{position:'absolute',left:0,top:'12%',zIndex:4}}>
+            <NumLabel n={1} label={annotations[0]?.label||'the question'} quote="The ballot is the question; everything else is interpretation." alignCaption="left"/>
+            <ScribbleArrow length={70} angle={22} curve={12} style={{left:120,top:54}}/>
+          </div>
+
+          <div style={{position:'absolute',right:0,top:'8%',zIndex:4}}>
+            <NumLabel n={2} label={annotations[1]?.label||'the count'} quote="A count that needs a recount is two different elections." alignCaption="right" labelAngle={3} circleAngle={6}/>
+            <ScribbleArrow length={70} angle={158} curve={-12} style={{right:120,top:54}}/>
+          </div>
+
+          <div style={{position:'absolute',left:'2%',bottom:'18%',zIndex:4}}>
+            <NumLabel n={3} label={annotations[2]?.label||'the framing'} quote="How a result is framed in its first hour outlives the count itself." alignCaption="left" labelAngle={-4}/>
+            <ScribbleArrow length={70} angle={-26} curve={14} style={{left:120,top:40}}/>
+          </div>
+
+          {/* Stars sprinkled */}
+          <div style={{position:'absolute',right:'4%',bottom:'10%',zIndex:5}}><StarMark size={22} color="var(--accent)"/></div>
+          <div style={{position:'absolute',left:'-2%',top:'58%',zIndex:5}}><StarMark size={16} color="var(--ink)"/></div>
+
+          {/* Filed-from caption bottom-right — small italic editorial caption */}
+          <div style={{position:'absolute',right:'-4%',bottom:'-2%',zIndex:6,fontFamily:'var(--font-didone)',fontStyle:'italic',color:'var(--ink-3)',fontSize:17,lineHeight:1}}>
+            filed from Amsterdam
+          </div>
+
+          {/* Issue rosette top-left — ROTATING */}
+          <div style={{position:'absolute',left:'-2%',top:'-2%',zIndex:6,width:'clamp(70px,12vw,104px)',height:'clamp(70px,12vw,104px)',borderRadius:'50%',display:'grid',placeItems:'center'}}>
+            {/* Rotating ring of text */}
+            <svg viewBox="0 0 120 120" style={{position:'absolute',inset:0,width:'100%',height:'100%',animation:'spin 22s linear infinite'}} aria-hidden>
+              <defs>
+                <path id="fv-rosette-circle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/>
+              </defs>
+              <text style={{fontFamily:'var(--font-mono)',fontSize:9,letterSpacing:'0.32em',fill:'var(--ink)',textTransform:'uppercase'}}>
+                <textPath href="#fv-rosette-circle" startOffset="0">FRAMING VOTE · SINCE 2026 · ISSUE 01 · SPRING ·</textPath>
+              </text>
+            </svg>
+            {/* Static centre */}
+            <div style={{textAlign:'center',lineHeight:1,padding:0,background:'var(--paper)',width:64,height:64,borderRadius:'50%',display:'grid',placeItems:'center',border:'1px solid var(--ink)'}}>
+              <div>
+                <div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:32,lineHeight:1,color:'var(--accent)',fontWeight:700}}>{String(num).padStart(2,'0')}</div>
+                <div className="mono" style={{fontSize:8,letterSpacing:'0.18em',marginTop:2}}>2026</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* BIG MARKER HEADLINE under collage — like Vogue "WHAT'S INSIDE A BAG?" */}
+        <div style={{padding:'48px 0 0',position:'relative'}}>
+          <div style={{borderTop:'1px solid var(--paper-edge)',borderBottom:'1px solid var(--paper-edge)',padding:'40px 0',position:'relative'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:8,marginBottom:12}} className="hide-md">
+              <div className="mono">TYPECODED — {fmtDate(f.publishDate)?.slice(-4)||'2026'}</div>
+              <div className="mono">BY THE EDITOR</div>
+            </div>
+            <h1 style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontWeight:700,color:'var(--ink)',fontSize:'clamp(28px,7vw,108px)',margin:0,textAlign:'center',lineHeight:1.0,letterSpacing:'-0.025em'}}>
+              What we frame, <span style={{color:'var(--accent)',fontFamily:'var(--font-script)',fontWeight:600,fontStyle:'normal',fontSize:'0.62em',letterSpacing:0,display:'inline-block',transform:'rotate(-2deg) translateY(-0.12em)'}}>by</span> Framing Vote
+            </h1>
+            <div style={{fontFamily:'var(--font-script)',color:'var(--ink)',fontSize:'clamp(16px,2vw,28px)',textAlign:'center',marginTop:6,fontWeight:600}}>
+              Featuring · {f.title}
+            </div>
+          </div>
+        </div>
+
+        {/* Read-the-cover row */}
+        <div style={{padding:'48px 0',display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:24,flexWrap:'wrap'}}>
+          <div style={{maxWidth:680,flex:'1 1 280px'}}>
+            {f.kicker&&<div className="eyebrow eyebrow-accent" style={{marginBottom:14}}>{f.kicker}</div>}
+            <h2 className="display" style={{fontSize:'clamp(28px,4.6vw,64px)',margin:0,letterSpacing:'-0.025em'}}>
+              {f.title}
+            </h2>
+            {f.subtitle&&<p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:'clamp(16px,1.3vw,20px)',color:'var(--ink-2)',margin:'20px 0 0',lineHeight:1.5,maxWidth:560}}>{f.subtitle}</p>}
+            <div style={{marginTop:24,display:'flex',gap:12,flexWrap:'wrap'}}>
+              <button className="btn btn-red" onClick={()=>{setCurrentArticle(f);setRoute('article');}}>Read the essay <span className="arrow">→</span></button>
+              <button className="btn btn-ghost" onClick={()=>setRoute('archive')}>Issue {String(num).padStart(2,'0')}</button>
+            </div>
+          </div>
+          <div style={{textAlign:'right',lineHeight:1.5,paddingTop:6,flexShrink:0}} className="hide-md">
+            <div className="mono" style={{marginBottom:6}}>{f.country||'WORLDWIDE'}</div>
+            <div style={{fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.16em',textTransform:'uppercase',color:'var(--ink)'}}>By {f.author}</div>
+            <div className="mono">{fmtDateLong(f.publishDate)}</div>
+            <div className="mono">{f.readTime||12} min read</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── TICKER ── */
+function NotesTicker({news,setRoute,setCurrentNews}){
+  const items=(news&&news.length?news:SAMPLE_NEWS).slice(0,8);
+  const loop=[...items,...items,...items];
+  return (
+    <section id="fv-sec-ticker" style={{background:'var(--paper-deep)',color:'var(--ink)',borderTop:'1px solid var(--paper-edge)',borderBottom:'1px solid var(--paper-edge)'}}>
+      <div style={{display:'flex',alignItems:'center'}}>
+        <div style={{padding:'14px 24px',borderRight:'1px solid var(--paper-edge)',display:'flex',alignItems:'center',gap:10,flexShrink:0}}>
+          <span style={{width:8,height:8,borderRadius:'50%',background:'var(--accent)',animation:'pulse 2s ease-in-out infinite'}}/>
+          <span style={{fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.18em',textTransform:'uppercase',color:'var(--ink)'}}>From the desk</span>
+        </div>
+        <div className="ticker" style={{flex:1}}>
+          <div className="ticker-track">
+            {loop.map((n,i)=>(
+              <button key={i} onClick={()=>{setCurrentNews(n);setRoute('newsArticle');}} className="ticker-item" style={{color:'var(--ink)',gap:14}}>
+                <span style={{width:6,height:6,borderRadius:'50%',background:'var(--accent)',flexShrink:0}}/>
+                <span style={{fontFamily:'var(--font-mono)',fontSize:11,color:'var(--ink-3)',letterSpacing:'0.06em'}}>{fmtDate(n.publishDate)}</span>
+                <span style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:17,color:'var(--ink)'}}>{n.title}</span>
+                <span style={{fontFamily:'var(--font-sans)',fontSize:11,color:'var(--ink-3)',letterSpacing:'0.1em',textTransform:'uppercase'}}>— {n.author}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── NOTES PANEL — prominent dispatches display ── */
+function NotesPanel({news,setRoute,setCurrentNews,about}){
+  const list=(news&&news.length?news:SAMPLE_NEWS).slice(0,6);
+  const[active,setActive]=useState(0);
+  if(list.length===0)return null;
+  const featured=list[active];
+  return (
+    <section id="fv-sec-notes" style={{padding:'clamp(60px,8vw,120px) 0',background:'var(--paper-soft)',borderTop:'1px solid var(--paper-edge)',position:'relative'}}>
+      <div className="wrap">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',gap:16,flexWrap:'wrap',marginBottom:48,paddingBottom:20,borderBottom:'2px solid var(--ink)'}}>
+          <div>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:14,display:'inline-flex',alignItems:'center',gap:10}}>
+              <span style={{width:8,height:8,borderRadius:'50%',background:'var(--accent)',animation:'pulse 2s ease-in-out infinite'}}/>
+              Notes · from the desk
+            </div>
+            <h2 className="display" style={{fontSize:'clamp(40px,5.6vw,80px)',margin:0,maxWidth:900}}>
+              Dispatches, <em>filed between issues.</em>
+            </h2>
+          </div>
+          <button onClick={()=>setRoute('news')} className="btn btn-ghost">All notes <span className="arrow">→</span></button>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.4fr) minmax(0,1fr)',gap:56,alignItems:'flex-start'}} className="grid-responsive-2">
+          {/* Featured note */}
+          <div style={{display:'flex',flexDirection:'column',gap:24,minHeight:380}}>
+            <div style={{display:'flex',alignItems:'baseline',gap:14}}>
+              <span style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontWeight:700,fontSize:'clamp(72px,8vw,112px)',lineHeight:1,color:'var(--accent)',letterSpacing:'-0.03em'}}>{String(active+1).padStart(2,'0')}</span>
+              <div style={{display:'flex',flexDirection:'column',gap:6}}>
+                {featured.category&&<span className="chip">{featured.category}</span>}
+                <span className="mono">{fmtDateLong(featured.publishDate)}</span>
+              </div>
+            </div>
+            <button onClick={()=>{setCurrentNews(featured);setRoute('newsArticle');}} style={{textAlign:'left'}}>
+              <h3 style={{fontFamily:'var(--font-didone)',fontWeight:400,fontSize:'clamp(28px,3.4vw,52px)',lineHeight:1.1,letterSpacing:'-0.015em',color:'var(--ink)',margin:0,maxWidth:680,transition:'color 160ms'}} onMouseEnter={e=>e.currentTarget.style.color='var(--accent)'} onMouseLeave={e=>e.currentTarget.style.color='var(--ink)'}>
+                {featured.title}
+              </h3>
+            </button>
+            {featured.summary&&(
+              <p style={{fontFamily:'var(--font-serif)',fontSize:18,lineHeight:1.6,color:'var(--ink-2)',margin:0,maxWidth:640,textAlign:'justify',hyphens:'auto'}}>
+                {featured.summary}
+              </p>
+            )}
+            <div style={{marginTop:'auto',paddingTop:24,borderTop:'1px solid var(--paper-edge)',display:'flex',justifyContent:'space-between',alignItems:'center',gap:16}}>
+              <span style={{fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',color:'var(--ink-2)'}}>By {featured.author||about?.editorName||'The Editors'}</span>
+              <button onClick={()=>{setCurrentNews(featured);setRoute('newsArticle');}} className="mono" style={{color:'var(--accent)',fontWeight:700}}>Read the note <span className="arrow">→</span></button>
+            </div>
+          </div>
+
+          {/* Side list of all notes */}
+          <div style={{display:'flex',flexDirection:'column',gap:0,borderTop:'1px solid var(--paper-edge)'}}>
+            {list.map((n,i)=>{
+              const isActive=i===active;
+              return (
+                <button key={n.id} onMouseEnter={()=>setActive(i)} onClick={()=>{setCurrentNews(n);setRoute('newsArticle');}} style={{display:'grid',gridTemplateColumns:'42px 1fr auto',gap:14,padding:'16px 12px',borderBottom:'1px solid var(--paper-edge)',alignItems:'center',textAlign:'left',position:'relative',transition:'background 220ms'}}>
+                  {isActive&&<span style={{position:'absolute',left:0,top:0,bottom:0,width:3,background:'var(--accent)'}}/>}
+                  <span style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontWeight:700,fontSize:24,color:isActive?'var(--accent)':'var(--ink-4)',fontVariantNumeric:'tabular-nums',lineHeight:1,transition:'color 220ms'}}>{String(i+1).padStart(2,'0')}</span>
+                  <span style={{minWidth:0,display:'flex',flexDirection:'column',gap:3}}>
+                    {n.category&&<span className="mono" style={{color:'var(--accent)'}}>{n.category}</span>}
+                    <span style={{fontFamily:'var(--font-didone)',fontSize:17,lineHeight:1.2,color:isActive?'var(--accent)':'var(--ink)',letterSpacing:'-0.005em',transition:'color 220ms'}}>{n.title}</span>
+                  </span>
+                  <span className="mono" style={{whiteSpace:'nowrap'}}>{fmtDate(n.publishDate)}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── BIG YEAR SECTION ── */
+function YearSection({setRoute}){
+  return (
+    <section id="fv-sec-year" style={{padding:'clamp(60px,8vw,100px) 0',background:'var(--paper)',borderTop:'1px solid var(--paper-edge)',position:'relative',overflow:'hidden'}}>
+      <div className="wrap">
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',gap:32,flexWrap:'wrap'}}>
+          <div style={{flex:'1 1 280px'}}>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:16}}>The year · in essays</div>
+            <h2 style={{fontFamily:'var(--font-display)',fontWeight:600,fontSize:'clamp(28px,4.6vw,68px)',letterSpacing:'-0.02em',lineHeight:0.95,margin:0,maxWidth:720}}>
+              The election <em style={{fontFamily:'var(--font-didone)',fontStyle:'italic'}}>year</em> in <span className="script-underline">slow reading.</span>
+            </h2>
+            <p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:18,color:'var(--ink-3)',margin:'24px 0 0',maxWidth:480,lineHeight:1.5}}>
+              Five countries, one issue, one recount. Filed from Amsterdam. Indexed by hand.
+            </p>
+            <button className="btn btn-ghost" style={{marginTop:32}} onClick={()=>setRoute('archive')}>See the archive <span className="arrow">→</span></button>
+          </div>
+          <div style={{transform:'translateY(20px)',flexShrink:0}}>
+            <BigYear current={2026}/>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── COLLAGE GRID — magazine asymmetric layout with paint-stroke cards ── */
+function CollageGrid({articles,setRoute,setCurrentArticle}){
+  const items=(articles&&articles.length?articles:SAMPLE_ARTICLES).slice(1,5);
+  if(items.length===0)return null;
+  return (
+    <section id="fv-sec-grid" style={{padding:'40px 0 96px',position:'relative'}}>
+      <div className="wrap">
+        <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:56,paddingBottom:20,borderBottom:'1px solid var(--paper-edge)',gap:16,flexWrap:'wrap'}}>
+          <div>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:12}}>Continue · from the issue</div>
+            <h2 className="display" style={{fontSize:'clamp(36px,5vw,72px)',margin:0,maxWidth:900}}>
+              Four essays, <em>logged.</em>
+            </h2>
+          </div>
+          <button className="btn btn-ghost" onClick={()=>setRoute('archive')}>All essays <span className="arrow">→</span></button>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'repeat(12,1fr)',gap:40,rowGap:80}}>
+          {items.map((a,i)=>{
+            const placements=[
+              {colSpan:7,offset:0},
+              {colSpan:5,offset:56},
+              {colSpan:5,offset:-32},
+              {colSpan:7,offset:0},
+            ];
+            const p=placements[i]||placements[0];
+            return <CollageCard key={a.id} article={a} index={i+2} colSpan={p.colSpan} offset={p.offset} rotate={i%2===0?-1.5:1.5} setRoute={setRoute} setCurrentArticle={setCurrentArticle}/>;
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CollageCard({article,index,colSpan,offset,rotate=0,setRoute,setCurrentArticle}){
+  return (
+    <button onClick={()=>{setCurrentArticle(article);setRoute('article');}} className="lift" style={{gridColumn:`span ${colSpan}`,textAlign:'left',padding:0,position:'relative',transform:`translateY(${offset}px)`,display:'flex',flexDirection:'column',gap:20}}>
+      <div style={{position:'relative',aspectRatio:'5/4'}}>
+        <HalftoneCutout slotId={`fv-card-${article.id}`} placeholder={`№${String(index).padStart(2,'0')} — ${article.kicker||'editorial photo'}`} imageUrl={article.coverImageUrl} shape="rounded" rotate={rotate} style={{width:'100%',height:'100%'}}/>
+
+        {/* Numbered annotation top-left */}
+        <div style={{position:'absolute',left:-14,top:-14,zIndex:6}}>
+          <NumLabel n={index} size={36}/>
+        </div>
+        {/* Date chip bottom-right */}
+        <div style={{position:'absolute',right:8,bottom:8,zIndex:6,padding:'5px 10px',background:'var(--paper)',border:'1px solid var(--ink)'}}>
+          <span className="mono" style={{fontSize:10}}>{fmtDate(article.publishDate)}</span>
+        </div>
+        {/* Country tag top-right */}
+        <div style={{position:'absolute',right:8,top:8,zIndex:6,padding:'5px 10px',background:'var(--ink)',color:'var(--paper)'}}>
+          <span style={{fontFamily:'var(--font-mono)',fontSize:10,letterSpacing:'0.1em',textTransform:'uppercase'}}>{article.country||'·'}</span>
+        </div>
+      </div>
+
+      {article.kicker&&<div className="eyebrow eyebrow-accent">{article.kicker}</div>}
+      <h3 className="row-title" style={{fontFamily:'var(--font-didone)',fontWeight:400,fontSize:'clamp(22px,2vw,32px)',lineHeight:1.12,letterSpacing:'-0.015em',color:'var(--ink)',margin:0,maxWidth:560,transition:'color 140ms'}}>
+        {article.title}
+      </h3>
+      {article.subtitle&&<p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:15,lineHeight:1.5,color:'var(--ink-3)',margin:0,maxWidth:560}}>{article.subtitle.slice(0,140)}{article.subtitle.length>140?'…':''}</p>}
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',paddingTop:14,borderTop:'1px solid var(--paper-edge)',fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)',maxWidth:560}}>
+        <span>By {article.author}</span>
+        <span className="mono">{article.readTime||12} min</span>
+      </div>
+    </button>
+  );
+}
+
+/* ── MANIFESTO with halftone collage ── */
+function Manifesto(){
+  return (
+    <section id="fv-sec-manifesto" style={{padding:'clamp(60px,10vw,140px) 0',background:'var(--paper-soft)',color:'var(--ink)',position:'relative',overflow:'hidden',borderTop:'1px solid var(--paper-edge)'}}>
+
+      <div className="wrap" style={{position:'relative',zIndex:2}}>
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1.4fr)',gap:64,alignItems:'flex-start'}} className="grid-responsive-2">
+          <div>
+            <div style={{position:'relative',aspectRatio:'4/5',maxWidth:340}}>
+              <HalftoneCutout slotId="fv-manifesto-img" placeholder="Add photo via Contentful: About → profile field · Recommended: hands raised, B&W, portrait ratio 4:5" shape="blob" style={{width:'100%',height:'100%'}}/>
+              {/* Script tag */}
+              <div style={{position:'absolute',right:'-14%',bottom:'8%',zIndex:7,fontFamily:'var(--font-script)',color:'var(--accent)',fontSize:24,fontWeight:600,transform:'rotate(-6deg)',lineHeight:1,maxWidth:160}}>the vote,<br/><em style={{fontStyle:'italic'}}>asked twice</em></div>
+            </div>
+            <div style={{marginTop:40}}>
+              <div className="eyebrow eyebrow-accent">§ The position</div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="display" style={{fontSize:'clamp(44px,6.2vw,108px)',margin:0,maxWidth:920,color:'var(--ink)',fontWeight:400}}>
+              The vote is the <em style={{color:'var(--accent)'}}>question.</em><br/>
+              The framing <span style={{fontFamily:'var(--font-script)',color:'var(--accent)',fontSize:'0.7em',fontStyle:'normal',fontWeight:700,display:'inline-block',transform:'rotate(-3deg) translateY(-0.04em)'}}>is</span> the answer.
+            </h2>
+            <div style={{marginTop:64,display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:'clamp(20px,3vw,40px)'}}>
+              {[
+                ['№01','No models.','We don\u2019t run forecasts. We don\u2019t aggregate polls. We don\u2019t tell you what will happen.'],
+                ['№02','No takes.','One essay at a time, slowly written. Edited until it earns the reader.'],
+                ['№03','No paywall.','Free to read, by design. The dispatch is the only thing in your inbox.'],
+                ['№04','No spectacle.','Elections deserve seriousness. We write at the speed they actually deserve.'],
+              ].map(([n,h,b])=>(
+                <div key={n} style={{paddingTop:22,borderTop:'1px solid var(--ink)'}}>
+                  <div className="mono" style={{color:'var(--accent)',marginBottom:8}}>{n}</div>
+                  <div style={{fontFamily:'var(--font-didone)',fontSize:30,fontStyle:'italic',color:'var(--ink)',marginBottom:10,letterSpacing:'-0.01em',lineHeight:1.05}}>{h}</div>
+                  <p style={{fontFamily:'var(--font-serif)',fontSize:16,lineHeight:1.55,color:'var(--ink-2)',margin:0}}>{b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── REGISTER (table) ── */
+function Register({articles,setRoute,setCurrentArticle,about}){
+  const list=(articles&&articles.length?articles:SAMPLE_ARTICLES);
+  return (
+    <section id="fv-sec-register" style={{padding:'clamp(48px,6vw,96px) 0',background:'var(--paper)'}}>
+      <div className="wrap">
+        <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:32,paddingBottom:20,borderBottom:'2px solid var(--ink)',gap:16,flexWrap:'wrap'}}>
+          <div>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:14}}>The register</div>
+            <h2 className="display" style={{fontSize:'clamp(36px,5vw,72px)',margin:0}}>
+              {list.length} essays, <em>logged.</em>
+            </h2>
+          </div>
+          <div style={{textAlign:'right',lineHeight:1.7}}>
+            <div className="mono">Updated {new Date().toLocaleDateString('en-US',{day:'numeric',month:'short'})}</div>
+            <div className="mono" style={{color:'var(--accent)'}}>● Open to all</div>
+          </div>
+        </div>
+        <ArticleTable articles={list.slice(0,8)} about={about} setRoute={setRoute} setCurrentArticle={setCurrentArticle}/>
+        <div style={{display:'flex',justifyContent:'space-between',marginTop:24,fontFamily:'var(--font-sans)',fontSize:13,color:'var(--ink-3)'}}>
+          <span>Showing {Math.min(8,list.length)} of {list.length}</span>
+          <button onClick={()=>setRoute('archive')} style={{color:'var(--accent)',fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase',fontSize:11}}>Open full archive <span className="arrow">→</span></button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ArticleTable({articles,about,setRoute,setCurrentArticle}){
+  const[isMobile,setIsMobile]=useState(window.innerWidth<720);
+  useEffect(()=>{const f=()=>setIsMobile(window.innerWidth<720);window.addEventListener('resize',f);return()=>window.removeEventListener('resize',f);},[]);
+  const cols=isMobile?'40px minmax(0,1fr)':'56px minmax(0,1fr) 180px 110px 28px';
+  return (
+    <div>
+      <div style={{display:'grid',gridTemplateColumns:cols,gap:isMobile?12:24,padding:'12px 16px',fontFamily:'var(--font-sans)',fontSize:10.5,fontWeight:600,letterSpacing:'0.16em',textTransform:'uppercase',color:'var(--ink-3)'}}>
+        <div>№</div><div>Title</div>{!isMobile&&<><div>Author</div><div>Date</div><div/></>}
+      </div>
+      {articles.map((a,i)=>(
+        <button key={a.id} onClick={()=>{setCurrentArticle(a);setRoute('article');}} className="row-link" style={{display:'grid',gridTemplateColumns:cols,gap:isMobile?12:24,padding:isMobile?'20px 16px':'28px 16px',borderTop:'1px solid var(--paper-edge)',alignItems:'center',textAlign:'left',width:'100%',cursor:'pointer'}}>
+          <div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:isMobile?24:38,lineHeight:1,color:'var(--ink)',fontVariantNumeric:'tabular-nums',fontWeight:700}}>{String(i+1).padStart(2,'0')}</div>
+          <div style={{minWidth:0}}>
+            {a.kicker&&<div className="eyebrow eyebrow-accent" style={{marginBottom:6}}>{a.kicker}</div>}
+            <div className="row-title" style={{fontFamily:'var(--font-didone)',fontWeight:400,fontSize:isMobile?18:26,lineHeight:1.15,letterSpacing:'-0.01em',color:'var(--ink)',transition:'color 140ms'}}>{a.title}</div>
+            {a.subtitle&&<div style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:13,color:'var(--ink-3)',marginTop:6,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.subtitle}</div>}
+            {isMobile&&<div style={{fontFamily:'var(--font-sans)',fontSize:10,fontWeight:600,letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--ink-3)',marginTop:6}}>{a.author||about?.editorName} · {a.publishDate?fmtDate(a.publishDate):'–'}</div>}
+          </div>
+          {!isMobile&&<>
+            <div style={{fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-2)'}}>{a.author||about?.editorName}</div>
+            <div className="mono">{a.publishDate?fmtDate(a.publishDate):'–'}</div>
+            <div className="row-arrow mono" style={{fontSize:14,color:'var(--ink-3)',transition:'transform 200ms,color 200ms'}}>→</div>
+          </>}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ── NEWSLETTER — with the marker headline treatment ── */
+function Newsletter(){
+  const[email,setEmail]=useState('');
+  const[done,setDone]=useState(false);
+  return (
+    <section id="fv-newsletter" style={{background:'var(--paper)',color:'var(--ink)',padding:'clamp(60px,10vw,140px) 0',position:'relative',overflow:'hidden',borderTop:'1px solid var(--paper-edge)'}}>
+
+      <div className="wrap" style={{position:'relative',zIndex:2}}>
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.3fr) minmax(0,1fr)',gap:64,alignItems:'center'}} className="grid-responsive-2">
+          <div>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:16}}>The dispatch · Sundays</div>
+            <h2 style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontWeight:700,color:'var(--ink)',fontSize:'clamp(44px,7vw,112px)',margin:0,lineHeight:0.98,letterSpacing:'-0.025em'}}>
+              One letter, a week
+            </h2>
+            <h3 style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:'clamp(28px,3.4vw,52px)',margin:'12px 0 0',fontWeight:400,letterSpacing:'-0.01em',color:'var(--ink)'}}>
+              written by the editor. <span style={{fontFamily:'var(--font-script)',color:'var(--accent)',fontSize:'1em',fontWeight:600}}>no more.</span>
+            </h3>
+            <p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:18,lineHeight:1.6,color:'var(--ink-2)',margin:'24px 0 0',maxWidth:520}}>
+              What we are reading, commissioning, and the elections we will be watching. Free. No tracking, no sharing.
+            </p>
+          </div>
+          <div style={{padding:32,background:'var(--paper-soft)',border:'1.5px solid var(--ink)'}}>
+            {done?(
+              <div>
+                <div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:36,color:'var(--accent)'}}>Filed.</div>
+                <p style={{fontFamily:'var(--font-serif)',fontSize:16,color:'var(--ink-2)',margin:'8px 0 0'}}>Watch your inbox on Sunday.</p>
+              </div>
+            ):(
+              <form onSubmit={e=>{e.preventDefault();if(email)setDone(true);}} style={{display:'flex',flexDirection:'column',gap:12}}>
+                <label className="mono">Your email</label>
+                <input className="input" required type="email" placeholder="reader@example.org" value={email} onChange={e=>setEmail(e.target.value)}/>
+                <button type="submit" className="btn btn-red">Subscribe to the dispatch <span className="arrow">→</span></button>
+              </form>
+            )}
+            <p className="mono" style={{marginTop:14}}>Free · Unsubscribe with one click</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FOOTER ── */
+function Footer({setRoute,settings,about}){
+  const cols=[
+    {head:'Read',links:[['Front','home'],['Archive','archive'],['Notes','news']]},
+    {head:'Office',links:[['About','about'],['Pitch','submit'],['Email',null,about?.editorEmail?`mailto:${about.editorEmail}`:null]]},
+    {head:'Imprint',links:[['Privacy',null],['RSS',null,'#'],['Colophon','about']]},
+  ];
+  return (
+    <footer style={{background:'var(--ink)',color:'var(--paper)',borderTop:'2px solid var(--ink)'}}>
+      <div className="wrap" style={{padding:'clamp(40px,5vw,72px) clamp(16px,3vw,48px) 32px'}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'clamp(24px,3vw,48px)',paddingBottom:48,borderBottom:'1px solid rgba(250,246,236,0.18)'}}>
+          <div>
+            <FVWordmark size={26}/>
+            <p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:17,lineHeight:1.55,color:'rgba(250,246,236,0.75)',margin:'20px 0 0',maxWidth:380}}>
+              {settings?.tagline||'A journal on how the vote is asked, counted, and contested.'} Quarterly, plus the occasional recount.
+            </p>
+          </div>
+          {cols.map((col)=>(
+            <div key={col.head}>
+              <div className="eyebrow" style={{marginBottom:18,color:'var(--accent)'}}>{col.head}</div>
+              <ul style={{listStyle:'none',margin:0,padding:0,display:'flex',flexDirection:'column',gap:10}}>
+                {col.links.map(([label,dest,href])=>(
+                  <li key={label}>
+                    {href?
+                      <a href={href} style={{fontFamily:'var(--font-didone)',fontSize:22,color:'var(--paper)'}}>{label}</a>:
+                      <button onClick={()=>dest&&setRoute(dest)} style={{fontFamily:'var(--font-didone)',fontSize:22,color:'var(--paper)',cursor:dest?'pointer':'default'}}>{label}</button>
+                    }
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',paddingTop:24,fontFamily:'var(--font-mono)',fontSize:11,color:'rgba(250,246,236,0.55)',flexWrap:'wrap',gap:16}}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <span style={{width:6,height:6,borderRadius:'50%',background:'var(--accent)'}}/>
+            Framing Vote — Est. {settings?.foundingYear||'2026'}
+          </div>
+          <div>Issue №{String(settings?.issueNumber||14).padStart(2,'0')} · {settings?.issueSeason||''}</div>
+          <div>© {new Date().getFullYear()} · All rights reserved</div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── HOME ── */
+function HomeView(props){
+  const featured=props.articles&&props.articles.length>0?props.articles[0]:SAMPLE_ARTICLES[0];
+  return (<>
+    <Hero featured={featured} {...props}/>
+    <NotesTicker {...props}/>
+    <StatsRibbon articles={props.articles} news={props.news}/>
+    <EssayFilm {...props}/>
+    <NotesPanel {...props}/>
+    <YearSection setRoute={props.setRoute}/>
+    {props.issues&&props.issues.length>0&&<IssuesStrip issues={props.issues} articles={props.articles} assets={props.assets} setCurrentIssue={props.setCurrentIssue}/>}
+    <Manifesto/>
+    <Register {...props}/>
+  </>);
+}
+
+/* ── ARTICLE VIEW ── */
+function ArticleView({article,about,assets,setRoute,articles,setCurrentArticle}){
+  if(!article)return null;
+  const html=article.rawHtml||rt(article.body,assets);
+  const coverSrc=assetUrl(article.profile,assets,1600)||article.coverImageUrl;
+  const authorPortrait=assetUrl(about?.profile,assets,160);
+  const related=(articles||SAMPLE_ARTICLES).filter(a=>a.id!==article.id).slice(0,3);
+  return (
+    <article className="fade-in">
+      <ReadingProgress/>
+      <div style={{padding:'40px 0 0'}}>
+        <div className="read">
+          <button onClick={()=>setRoute('home')} className="back-btn">
+            <span className="arrow">←</span> Back
+          </button>
+        </div>
+      </div>
+      <header style={{padding:'40px 0 32px'}}>
+        <div className="read" style={{display:'flex',flexDirection:'column',gap:18}}>
+          {article.kicker&&<div className="eyebrow eyebrow-accent">{article.kicker}</div>}
+          <h1 className="display" style={{fontSize:'clamp(36px,5.4vw,72px)',margin:0}}>{article.title}</h1>
+          {article.subtitle&&<p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:22,lineHeight:1.45,color:'var(--ink-2)',margin:0}}>{article.subtitle}</p>}
+          <div style={{display:'flex',alignItems:'center',gap:14,marginTop:12,paddingTop:20,borderTop:'1px solid var(--paper-edge)'}}>
+            {authorPortrait
+              ?<img src={authorPortrait} alt={about?.editorName||''} style={{width:40,height:40,borderRadius:'50%',objectFit:'cover',objectPosition:'center top',flexShrink:0}}/>
+              :<div style={{width:40,height:40,background:'var(--accent)',color:'var(--paper)',display:'grid',placeItems:'center',fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:18,flexShrink:0,fontWeight:700}}>{(article.author||about?.editorName||'E')[0]}</div>}
+            <div style={{lineHeight:1.3}}>
+              <div style={{fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.16em',textTransform:'uppercase',color:'var(--ink)'}}>By {article.author||about?.editorName}</div>
+              <div className="mono" style={{marginTop:4}}>{article.publishDate?fmtDateLong(article.publishDate):''}{article.publishDate?' · ':''}{article.readTime||12} min read</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Cover */}
+      <div style={{padding:'0 0 56px'}}>
+        <div className="wrap">
+          <div style={{position:'relative',aspectRatio:'16/8',minHeight:300}}>
+            <HalftoneCutout slotId={`fv-art-cover-${article.id}`} placeholder={`Cover · ${article.kicker||'Editorial'}`} imageUrl={coverSrc} shape="rounded" style={{width:'100%',height:'100%'}}/>
+            <div style={{position:'absolute',right:'-3%',top:'-3%',zIndex:7,width:96,height:96,borderRadius:'50%',background:'var(--paper)',border:'1.5px solid var(--ink)',display:'grid',placeItems:'center',transform:'rotate(-8deg)'}}>
+              <span style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:40,color:'var(--accent)',lineHeight:1,fontWeight:700}}>{article.glyph||'§'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ScriptedHTML html={html||`<p>${article.subtitle||''}</p><p>This essay is filed but not yet visible here. The full text will appear shortly.</p>`} className="read post-body dropcap" style={{paddingBottom:64}}/>
+
+      <div style={{padding:'32px 0',borderTop:'1px solid var(--paper-edge)'}}>
+        <div className="read" style={{display:'flex',gap:18,alignItems:'flex-start'}}>
+          {authorPortrait
+            ?<img src={authorPortrait} alt={about?.editorName||''} style={{width:56,height:56,borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
+            :<div style={{width:56,height:56,background:'var(--paper-deep)',color:'var(--ink)',display:'grid',placeItems:'center',fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:24,flexShrink:0,fontWeight:700}}>{(article.author||about?.editorName||'E')[0]}</div>}
+          <div>
+            <div className="eyebrow" style={{marginBottom:6}}>About the author</div>
+            <div style={{fontFamily:'var(--font-didone)',fontSize:24,letterSpacing:'-0.01em',color:'var(--ink)'}}>{article.author||about?.editorName}</div>
+            <p style={{fontFamily:'var(--font-serif)',fontSize:15,lineHeight:1.55,color:'var(--ink-2)',margin:'8px 0 0',maxWidth:540}}>{about?.editorTitle||'Writes on the framing of the vote.'}.</p>
+          </div>
+        </div>
+      </div>
+
+      {related.length>0&&(
+        <div style={{padding:'72px 0',background:'var(--paper-deep)'}}>
+          <div className="wrap">
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:24}}>Read next</div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:32,rowGap:60}}>
+              {related.map((a,i)=>(
+                <CollageCard key={a.id} article={a} index={i+1} colSpan={1} offset={0} rotate={i%2===0?-1.5:1.5} setRoute={(r)=>{setRoute(r);window.scrollTo(0,0);}} setCurrentArticle={setCurrentArticle}/>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+/* ── ARCHIVE ── */
+function ArchiveView({articles,settings,about,setRoute,setCurrentArticle}){
+  const list=articles&&articles.length?articles:SAMPLE_ARTICLES;
+  const[q,setQ]=useState('');
+  const filtered=useMemo(()=>{const t=q.trim().toLowerCase();if(!t)return list;return list.filter(a=>(a.title||'').toLowerCase().includes(t)||(a.subtitle||'').toLowerCase().includes(t)||(a.kicker||'').toLowerCase().includes(t)||(a.author||'').toLowerCase().includes(t));},[q,list]);
+  return (
+    <section className="fade-in" style={{padding:'56px 0 96px'}}>
+      <div className="wrap">
+        <div style={{paddingBottom:32,borderBottom:'2px solid var(--ink)',display:'flex',justifyContent:'space-between',alignItems:'flex-end',flexWrap:'wrap',gap:24}}>
+          <div>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:14}}>The archive</div>
+            <h1 className="display" style={{fontSize:'clamp(40px,6vw,88px)',margin:0,maxWidth:900}}>
+              Every essay we've <em>published.</em>
+            </h1>
+          </div>
+          <div style={{minWidth:240,flex:'0 1 320px',width:'100%'}}>
+            <input className="input" placeholder="Search essays, authors, kickers…" value={q} onChange={e=>setQ(e.target.value)}/>
+          </div>
+        </div>
+        <div style={{paddingTop:32}}>
+          <ArticleTable articles={filtered} about={about} setRoute={setRoute} setCurrentArticle={setCurrentArticle}/>
+          {filtered.length===0&&<div style={{padding:'48px 0',textAlign:'center',fontFamily:'var(--font-serif)',fontStyle:'italic',color:'var(--ink-3)'}}>Nothing matches "{q}".</div>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── NEWS ── */
+function NewsView({news,assets,setRoute,setCurrentNews,about}){
+  const list=news&&news.length?news:SAMPLE_NEWS;
+  const[filter,setFilter]=useState('All');
+  const cats=['All',...Array.from(new Set(list.map(n=>n.category).filter(Boolean)))];
+  const filtered=filter==='All'?list:list.filter(n=>n.category===filter);
+  return (
+    <section className="fade-in" style={{padding:'56px 0 96px'}}>
+      <div className="wrap">
+        <div style={{paddingBottom:32,borderBottom:'2px solid var(--ink)'}}>
+          <div className="eyebrow eyebrow-accent" style={{marginBottom:14}}>Notes</div>
+          <h1 className="display" style={{fontSize:'clamp(40px,6vw,88px)',margin:0,maxWidth:900}}>
+            Shorter pieces. <em>Filed between issues.</em>
+          </h1>
+        </div>
+        {cats.length>1&&(
+          <div style={{display:'flex',gap:8,flexWrap:'wrap',padding:'24px 0'}}>
+            {cats.map(c=><button key={c} onClick={()=>setFilter(c)} className={`pill${filter===c?' active':''}`}>{c}</button>)}
+          </div>
+        )}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:1,background:'var(--paper-edge)',border:'1px solid var(--paper-edge)',overflow:'hidden',marginTop:24}}>
+          {filtered.map((n,i)=>{
+            const src=assetUrl(n.profile,assets,640)||n.coverImageUrl;
+            return(
+              <button key={n.id} onClick={()=>{setCurrentNews(n);setRoute('newsArticle');}} style={{textAlign:'left',background:'var(--paper)',display:'flex',flexDirection:'column',transition:'background 200ms',overflow:'hidden',cursor:'pointer'}} onMouseEnter={e=>e.currentTarget.style.background='var(--paper-deep)'} onMouseLeave={e=>e.currentTarget.style.background='var(--paper)'}>
+                {src&&<div style={{width:'100%',aspectRatio:'16/9',overflow:'hidden',background:'var(--paper-deep)',flexShrink:0}}><img src={src} alt={n.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/></div>}
+                <div style={{padding:28,display:'flex',flexDirection:'column',gap:10,flex:1}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                    {n.category&&<span className="chip">{n.category}</span>}
+                    <span className="mono">№{String(i+1).padStart(2,'0')}</span>
+                  </div>
+                  <div style={{fontFamily:'var(--font-didone)',fontWeight:400,fontSize:24,lineHeight:1.18,letterSpacing:'-0.015em',color:'var(--ink)'}}>{n.title}</div>
+                  {n.summary&&<p style={{fontFamily:'var(--font-serif)',fontSize:15,lineHeight:1.55,color:'var(--ink-2)',margin:0}}>{(n.summary||'').slice(0,160)}{(n.summary||'').length>160?'…':''}</p>}
+                  <div style={{display:'flex',justifyContent:'space-between',marginTop:'auto',paddingTop:16,borderTop:'1px solid var(--paper-edge)',fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)'}}>
+                    <span>{n.author||about?.editorName}</span>
+                    <span className="mono">{fmtDate(n.publishDate)}</span>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function NewsArticleView({item,about,assets,setRoute}){
+  if(!item)return null;
+  const html=item.rawHtml||rt(item.body,assets);
+  const coverSrc=assetUrl(item.profile,assets,1400)||item.coverImageUrl;
+  return (
+    <article className="fade-in">
+      <ReadingProgress/>
+      <div style={{padding:'40px 0 0'}}>
+        <div className="read">
+          <button onClick={()=>setRoute('news')} className="back-btn"><span className="arrow">←</span> All notes</button>
+        </div>
+      </div>
+      <header style={{padding:'32px 0'}}>
+        <div className="read" style={{display:'flex',flexDirection:'column',gap:16}}>
+          {item.category&&<span className="chip" style={{alignSelf:'flex-start'}}>{item.category}</span>}
+          <h1 className="display" style={{fontSize:'clamp(32px,4.6vw,56px)',margin:0}}>{item.title}</h1>
+          {item.summary&&<p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:20,lineHeight:1.45,color:'var(--ink-2)',margin:0}}>{item.summary}</p>}
+          <div style={{display:'flex',alignItems:'center',gap:14,paddingTop:16,borderTop:'1px solid var(--paper-edge)'}}>
+            <div style={{width:36,height:36,background:'var(--accent)',color:'var(--paper)',display:'grid',placeItems:'center',fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:16,fontWeight:700}}>{(item.author||about?.editorName||'E')[0]}</div>
+            <div>
+              <div style={{fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'0.14em',textTransform:'uppercase'}}>By {item.author||about?.editorName}</div>
+              {item.publishDate&&<div className="mono" style={{marginTop:4}}>{fmtDateLong(item.publishDate)}</div>}
+            </div>
+          </div>
+        </div>
+      </header>
+      {coverSrc&&<div style={{padding:'0 0 48px'}}><div className="wrap"><div style={{width:'100%',aspectRatio:'16/7',overflow:'hidden',background:'var(--paper-deep)',minHeight:200}}><img src={coverSrc} alt={item.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/></div></div></div>}
+      <ScriptedHTML html={html||`<p>${item.summary||''}</p>`} className="read post-body" style={{paddingBottom:80}}/>
+      <div style={{borderTop:'1px solid var(--paper-edge)',padding:'32px 0'}}>
+        <div className="read" style={{display:'flex',gap:10}}>
+          <button className="btn btn-ghost" onClick={()=>setRoute('news')}><span className="arrow">←</span> All notes</button>
+          <button className="btn btn-ghost" onClick={()=>setRoute('home')}>Homepage</button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ── ABOUT ── */
+function AboutView({about,assets,entryPool}){
+  if(!about)return<div style={{padding:'80px 32px',textAlign:'center',fontFamily:'var(--font-sans)',color:'var(--ink-3)'}}>Loading…</div>;
+  const bioHtml=about.editorBio?.nodeType?rt(about.editorBio,assets):`<p>${about.editorBio||''}</p>`;
+  const descHtml=about.journalDescription?.nodeType?rt(about.journalDescription,assets):`<p>${about.journalDescription||''}</p>`;
+  const prinHtml=about.publishingPrinciples?.nodeType?rt(about.publishingPrinciples,assets):about.publishingPrinciples?`<p>${about.publishingPrinciples}</p>`:null;
+  const portraitSrc=assetUrl(about.profile,assets,640);
+  const team=(about.correspondent||[]).map(ref=>resolveCorrespondent(ref,entryPool)).filter(Boolean);
+  return(
+    <section className="fade-in">
+      {/* Editor */}
+      <div style={{borderBottom:'1px solid var(--paper-edge)',background:'var(--paper)'}}>
+        <div className="wrap" style={{padding:'clamp(32px,5vw,64px) clamp(16px,3vw,48px) clamp(40px,5vw,72px)'}}>
+          <div className="eyebrow eyebrow-accent" style={{marginBottom:24}}>The editor</div>
+          <div style={{display:'flex',gap:32,alignItems:'flex-start',flexWrap:'wrap',marginBottom:40}}>
+            {portraitSrc&&(
+              <div style={{flexShrink:0,width:'clamp(120px,25vw,220px)',overflow:'hidden',background:'var(--paper-deep)'}}>
+                <img src={portraitSrc} alt={about.editorName||''} style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',objectPosition:'center top',display:'block'}}/>
+              </div>
+            )}
+            <div style={{flex:'1 1 280px'}}>
+              <h1 style={{fontFamily:'var(--font-display)',fontSize:'clamp(40px,6vw,88px)',fontWeight:600,letterSpacing:'-0.03em',lineHeight:0.92,color:'var(--ink)',margin:0}}>{about.editorName||'The editor'}</h1>
+              {about.editorTitle&&<div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:20,color:'var(--ink-3)',marginTop:12}}>{about.editorTitle}</div>}
+              {about.editorEmail&&<a href={`mailto:${about.editorEmail}`} style={{display:'inline-flex',alignItems:'center',gap:8,marginTop:20,fontFamily:'var(--font-mono)',fontSize:13,color:'var(--accent)'}}>{about.editorEmail}</a>}
+            </div>
+          </div>
+          <ScriptedHTML html={bioHtml} className="post-body" style={{maxWidth:640}}/>
+          <div style={{display:'flex',gap:10,marginTop:32,flexWrap:'wrap'}}>
+            <button className="btn btn-red" onClick={()=>{}}>Pitch an essay <span className="arrow">→</span></button>
+          </div>
+        </div>
+      </div>
+      {/* Journal description */}
+      {descHtml&&(
+        <div style={{background:'var(--paper-deep)',borderBottom:'1px solid var(--paper-edge)'}}>
+          <div className="wrap" style={{padding:'clamp(40px,5vw,72px) clamp(16px,3vw,48px)'}}>
+            <div style={{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1.6fr)',gap:80,alignItems:'flex-start',flexWrap:'wrap'}} className="grid-responsive-2">
+              <div style={{position:'sticky',top:100}}>
+                <FVWordmark size={28}/>
+                <div className="eyebrow eyebrow-accent" style={{marginTop:22,marginBottom:12}}>About the journal</div>
+                <p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:17,lineHeight:1.55,color:'var(--ink-3)',maxWidth:280,margin:0}}>A journal on how the vote is asked, counted, and contested.</p>
+              </div>
+              <div>
+                <h2 className="display" style={{fontSize:'clamp(32px,4vw,60px)',margin:'0 0 32px'}}>A journal on elections, <em>written to last.</em></h2>
+                <ScriptedHTML html={descHtml} className="post-body"/>
+                {prinHtml&&<><h3 style={{fontFamily:'var(--font-display)',fontSize:32,fontWeight:600,letterSpacing:'-0.02em',margin:'52px 0 8px',color:'var(--ink)'}}>Publishing principles</h3><ScriptedHTML html={prinHtml} className="post-body"/></>}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Correspondents */}
+      {team.length>0&&(
+        <div style={{background:'var(--paper)',borderBottom:'1px solid var(--paper-edge)'}}>
+          <div className="wrap" style={{padding:'clamp(40px,5vw,72px) clamp(16px,3vw,48px)'}}>
+            <div style={{paddingBottom:24,borderBottom:'1px solid var(--paper-edge)',marginBottom:0}}>
+              <div className="eyebrow eyebrow-accent" style={{marginBottom:10}}>Correspondents</div>
+              <h2 className="display" style={{fontSize:'clamp(24px,3.5vw,52px)',margin:0}}>
+                {team.length} {team.length===1?'correspondent':'correspondents'}, one <em>mission.</em>
+              </h2>
+            </div>
+            {team.map((member,i)=>{
+              const mPhoto=assetUrl(member.profile,assets,480);
+              const mBioHtml=member.editorBio?.nodeType?rt(member.editorBio,assets):member.editorBio?`<p>${member.editorBio}</p>`:'';
+              return(
+                <div key={member.id||i} style={{display:'flex',gap:'clamp(20px,3vw,48px)',alignItems:'flex-start',padding:'clamp(32px,4vw,56px) 0',borderTop:'1px solid var(--paper-edge)',flexWrap:'wrap'}}>
+                  <div style={{flexShrink:0,width:'clamp(100px,18vw,180px)'}}>
+                    {mPhoto
+                      ?<div style={{overflow:'hidden',background:'var(--paper-deep)'}}><img src={mPhoto} alt={member.editorName||''} style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',objectPosition:'top',display:'block'}}/></div>
+                      :<div style={{width:'100%',aspectRatio:'3/4',background:'var(--paper-deep)',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:8,padding:12,textAlign:'center',fontFamily:'var(--font-mono)',fontSize:'9px',letterSpacing:'0.1em',textTransform:'uppercase',color:'var(--ink-3)'}}><span style={{fontSize:32,opacity:0.15}}>{(member.editorName||'?')[0]}</span><span>Add photo in Contentful:<br/>Correspondent → profile field</span></div>}
+                  </div>
+                  <div style={{flex:'1 1 260px'}}>
+                    <div style={{fontFamily:'var(--font-display)',fontSize:'clamp(24px,3vw,42px)',fontWeight:600,letterSpacing:'-0.025em',lineHeight:1,color:'var(--ink)'}}>{member.editorName}</div>
+                    {member.editorTitle&&<div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:18,color:'var(--ink-3)',marginTop:8}}>{member.editorTitle}</div>}
+                    {member.editorEmail&&<a href={`mailto:${member.editorEmail}`} style={{display:'inline-block',marginTop:10,fontFamily:'var(--font-mono)',fontSize:12,color:'var(--accent)'}}>{member.editorEmail}</a>}
+                    {mBioHtml&&<ScriptedHTML html={mBioHtml} className="post-body" style={{marginTop:20}}/>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ── SUBMIT ── */
+function SubmitView({about}){
+  return (
+    <section className="fade-in" style={{padding:'56px 0 96px'}}>
+      <div className="wrap">
+        <div style={{paddingBottom:32,borderBottom:'2px solid var(--ink)'}}>
+          <div className="eyebrow eyebrow-accent" style={{marginBottom:14}}>Pitch</div>
+          <h1 className="display" style={{fontSize:'clamp(40px,5.6vw,80px)',margin:0,maxWidth:900}}>
+            Send us an <em>essay.</em>
+          </h1>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.4fr) minmax(0,1fr)',gap:64,paddingTop:48}} className="grid-responsive-2">
+          <div>
+            <p style={{fontFamily:'var(--font-serif)',fontSize:19,lineHeight:1.6,color:'var(--ink-2)',margin:0,maxWidth:560}}>
+              We commission long-form analysis, dispatches from the field, and reference essays on electoral systems. Pitches should run to two paragraphs — what the essay argues, and why now.
+            </p>
+            <ul style={{listStyle:'none',padding:0,marginTop:32,display:'flex',flexDirection:'column',gap:18}}>
+              {['1,500–3,500 words for long essays. Shorter notes welcome.','We reply to every pitch within ten days.','We pay on publication. Rates on request.','Bylines are real names. We do not publish anonymously.'].map((line,i)=>(
+                <li key={i} style={{display:'flex',gap:14,alignItems:'flex-start'}}>
+                  <NumLabel n={i+1} size={28}/>
+                  <span style={{fontFamily:'var(--font-serif)',fontSize:17,lineHeight:1.55,color:'var(--ink)'}}>{line}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div style={{padding:32,background:'var(--paper-soft)',border:'1.5px solid var(--ink)'}}>
+            <div className="eyebrow" style={{marginBottom:16}}>Where to write</div>
+            <div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:32,lineHeight:1.1,color:'var(--accent)',marginBottom:16,wordBreak:'break-all'}}>
+              {about?.editorEmail||'editor@framingvote.eu'}
+            </div>
+            <p style={{fontFamily:'var(--font-serif)',fontSize:15,lineHeight:1.5,color:'var(--ink-2)',margin:0}}>
+              Subject line: <span className="mono" style={{color:'var(--ink)'}}>Pitch — [country / topic]</span>. Attach drafts as PDF if you must.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── INLINE TWEAKS PANEL ── */
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#7A1F1F",
+  "paper": "#FFFFFF",
+  "showAnnotations": true,
+  "halftoneStrength": 0.3,
+  "customCursor": true
+}/*EDITMODE-END*/;
+
+function TweaksPanel({t,setTweak}){
+  const[open,setOpen]=useState(true);
+  const[available,setAvailable]=useState(false);
+  useEffect(()=>{
+    const handler=(e)=>{
+      if(e.data?.type==='__activate_edit_mode')setOpen(true);
+      if(e.data?.type==='__deactivate_edit_mode')setOpen(false);
+    };
+    window.addEventListener('message',handler);
+    window.parent.postMessage({type:'__edit_mode_available'},'*');
+    setAvailable(true);
+    return()=>window.removeEventListener('message',handler);
+  },[]);
+  if(!open)return null;
+  const accents=[
+    {name:'Crimson',value:'#E11F1C'},
+    {name:'Oxblood',value:'#7A1F1F'},
+    {name:'Blaze',value:'#FF4F1F'},
+    {name:'Forest',value:'#1F5F4A'},
+    {name:'Royal',value:'#2C4FE5'},
+    {name:'Saffron',value:'#F4A52A'},
+  ];
+  const papers=[
+    {name:'Pure white',value:'#FFFFFF'},
+    {name:'Snow',value:'#FCFBF7'},
+    {name:'Soft cream',value:'#FAF6EC'},
+    {name:'Light gray',value:'#F2F0E8'},
+  ];
+  return (
+    <div style={{position:'fixed',bottom:20,right:20,zIndex:200,width:280,background:'var(--paper-soft)',border:'1.5px solid var(--ink)',padding:18,fontFamily:'var(--font-sans)',fontSize:13,boxShadow:'0 12px 32px -16px rgba(14,14,12,0.4)'}}>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14,paddingBottom:10,borderBottom:'1px solid var(--paper-edge)'}}>
+        <div className="eyebrow">Tweaks</div>
+        <button onClick={()=>{setOpen(false);window.parent.postMessage({type:'__edit_mode_dismissed'},'*');}} style={{fontFamily:'var(--font-mono)',fontSize:14,color:'var(--ink-3)'}}>×</button>
+      </div>
+      <div style={{display:'flex',flexDirection:'column',gap:16}}>
+        <div>
+          <div className="mono" style={{marginBottom:8}}>Accent</div>
+          <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+            {accents.map(a=>(
+              <button key={a.value} onClick={()=>setTweak('accent',a.value)} title={a.name} style={{width:30,height:30,borderRadius:'50%',background:a.value,border:t.accent===a.value?'2px solid var(--ink)':'1px solid var(--paper-edge)',cursor:'pointer',padding:0}}/>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="mono" style={{marginBottom:8}}>Paper</div>
+          <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+            {papers.map(a=>(
+              <button key={a.value} onClick={()=>setTweak('paper',a.value)} title={a.name} style={{width:30,height:30,background:a.value,border:t.paper===a.value?'2px solid var(--ink)':'1px solid var(--paper-edge)',cursor:'pointer',padding:0}}/>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className="mono" style={{marginBottom:8}}>Halftone · {t.halftoneStrength.toFixed(1)}</div>
+          <input type="range" min={0} max={1.6} step={0.1} value={t.halftoneStrength} onChange={e=>setTweak('halftoneStrength',parseFloat(e.target.value))} style={{width:'100%',accentColor:'var(--accent)'}}/>
+        </div>
+        <label style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
+          <input type="checkbox" checked={t.showAnnotations} onChange={e=>setTweak('showAnnotations',e.target.checked)} style={{accentColor:'var(--accent)'}}/>
+          <span style={{fontSize:13}}>Show annotations</span>
+        </label>
+        <label style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}}>
+          <input type="checkbox" checked={t.customCursor!==false} onChange={e=>setTweak('customCursor',e.target.checked)} style={{accentColor:'var(--accent)'}}/>
+          <span style={{fontSize:13}}>Custom cursor</span>
+        </label>
+      </div>
+    </div>
+  );
+}
+
+/* ── SCRIPTED HTML (executes embedded scripts after render) ── */
+function ScriptedHTML({html,className,style}){
+  const ref=React.useRef(null);
+  React.useEffect(()=>{
+    if(!ref.current||!html)return;
+    ref.current.innerHTML=html;
+    ref.current.querySelectorAll('script').forEach(old=>{
+      const s=document.createElement('script');
+      if(old.src)s.src=old.src; else s.textContent=old.textContent;
+      document.body.appendChild(s);
+    });
+  },[html]);
+  return<div ref={ref} className={className} style={style}/>;
+}
+
+/* ── ISSUES STRIP (homepage) ── */
+function IssuesStrip({issues,articles,assets,setCurrentIssue}){
+  if(!issues||issues.length===0)return null;
+  const displayed=[...issues].sort((a,b)=>(b.number||0)-(a.number||0)).slice(0,4);
+  return(
+    <section style={{padding:'clamp(48px,6vw,96px) 0',background:'var(--paper-deep)',borderTop:'1px solid var(--paper-edge)',borderBottom:'1px solid var(--paper-edge)'}}>
+      <div className="wrap">
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',paddingBottom:20,borderBottom:'1px solid var(--paper-edge)',marginBottom:32,flexWrap:'wrap',gap:16}}>
+          <span className="eyebrow eyebrow-accent">Issues of the journal</span>
+          <button onClick={()=>setCurrentIssue('journal')} style={{fontFamily:'var(--font-mono)',fontSize:11,color:'var(--ink-3)',display:'inline-flex',alignItems:'center',gap:7,background:'none',border:0,cursor:'pointer'}} onMouseEnter={e=>e.currentTarget.style.color='var(--accent)'} onMouseLeave={e=>e.currentTarget.style.color='var(--ink-3)'}>All issues <span>→</span></button>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:1,background:'var(--paper-edge)',border:'1px solid var(--paper-edge)',overflow:'hidden'}}>
+          {displayed.map(issue=>{
+            const issueArticles=(articles||[]).filter(a=>articleBelongsToIssue(a,issue.id));
+            const cover=assetUrl(issue.coverImage||issue.profile,assets,800);
+            return(
+              <button key={issue.id} onClick={()=>setCurrentIssue(issue)} style={{background:'var(--paper-deep)',cursor:'pointer',padding:0,display:'flex',flexDirection:'column',position:'relative',overflow:'hidden',textAlign:'left',transition:'background 200ms'}} onMouseEnter={e=>e.currentTarget.style.background='var(--paper)'} onMouseLeave={e=>e.currentTarget.style.background='var(--paper-deep)'}>
+                <div style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:88,fontWeight:700,lineHeight:0.85,letterSpacing:'-0.04em',color:'var(--ink)',opacity:0.07,position:'absolute',right:16,top:12,pointerEvents:'none'}}>{String(issue.number||'').padStart(2,'0')}</div>
+                {cover&&<div style={{width:'100%',aspectRatio:'16/7',overflow:'hidden',background:'var(--paper-edge)',flexShrink:0}}><img src={cover} alt={issue.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/></div>}
+                <div style={{padding:'28px 32px 32px',display:'flex',flexDirection:'column',gap:8,flex:1}}>
+                  <div className="mono" style={{color:'var(--ink-3)'}}>Issue №{String(issue.number||'').padStart(2,'0')}{issue.season?' · '+issue.season:''}</div>
+                  <div style={{fontFamily:'var(--font-display)',fontSize:'clamp(20px,2.2vw,28px)',fontWeight:600,letterSpacing:'-0.02em',lineHeight:1.05,color:'var(--ink)'}}>{issue.title}</div>
+                  {issue.coverline&&<p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:15,lineHeight:1.4,color:'var(--ink-3)',margin:0}}>{issue.coverline}</p>}
+                  <div className="mono" style={{marginTop:8,color:'var(--ink-3)'}}>{issueArticles.length} {issueArticles.length===1?'essay':'essays'} <span style={{color:'var(--accent)'}}>→</span></div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── ISSUE LIST VIEW ── */
+function IssueView({issues,articles,assets,setCurrentIssue}){
+  const sorted=(issues||[]).slice().sort((a,b)=>(b.number||0)-(a.number||0));
+  return(
+    <section className="fade-in" style={{padding:'56px 0 96px'}}>
+      <div className="wrap">
+        <div style={{paddingBottom:32,borderBottom:'2px solid var(--ink)',display:'flex',justifyContent:'space-between',alignItems:'flex-end',flexWrap:'wrap',gap:24}}>
+          <div>
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:14}}>The journal</div>
+            <h1 className="display" style={{fontSize:'clamp(40px,6vw,88px)',margin:0,maxWidth:900}}>
+              {sorted.length===0?<>First issue <em>coming.</em></>:<>{sorted.length} {sorted.length===1?'issue':'issues'}, <em>in print.</em></>}
+            </h1>
+          </div>
+        </div>
+        {sorted.length===0?(
+          <div className="empty-state"><div className="empty-glyph">§</div><p className="empty-msg">The first issue is in preparation.</p></div>
+        ):(
+          <div style={{marginTop:40,display:'flex',flexDirection:'column',gap:0,border:'1px solid var(--paper-edge)',overflow:'hidden'}}>
+            {sorted.map((issue,idx)=>{
+              const issueArticles=(articles||[]).filter(a=>articleBelongsToIssue(a,issue.id));
+              const cover=assetUrl(issue.coverImage||issue.profile,assets,640);
+              return(
+                <button key={issue.id} onClick={()=>setCurrentIssue(issue)} style={{textAlign:'left',background:idx%2===0?'var(--paper)':'var(--paper-deep)',borderTop:idx>0?'1px solid var(--paper-edge)':'none',display:'grid',gridTemplateColumns:cover?'200px 1fr':'1fr',gap:0,transition:'background 200ms',overflow:'hidden'}} onMouseEnter={e=>e.currentTarget.style.background='var(--paper-soft)'} onMouseLeave={e=>e.currentTarget.style.background=idx%2===0?'var(--paper)':'var(--paper-deep)'}>
+                  {cover&&<div style={{aspectRatio:'4/3',overflow:'hidden',background:'var(--paper-deep)',flexShrink:0}}><img src={cover} alt={issue.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/></div>}
+                  <div style={{padding:'32px 40px',display:'flex',flexDirection:'column',gap:10,flex:1}}>
+                    <div className="mono" style={{color:'var(--ink-3)'}}>Issue №{String(issue.number||idx+1).padStart(2,'0')}{issue.season?' · '+issue.season:''}</div>
+                    <div style={{fontFamily:'var(--font-display)',fontSize:'clamp(24px,3vw,42px)',fontWeight:600,letterSpacing:'-0.025em',lineHeight:1.0,color:'var(--ink)'}}>{issue.title}</div>
+                    {issue.coverline&&<p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:17,lineHeight:1.4,color:'var(--ink-3)',margin:0}}>{issue.coverline}</p>}
+                    <div style={{marginTop:'auto',display:'flex',alignItems:'center',justifyContent:'space-between',paddingTop:16,borderTop:'1px solid var(--paper-edge)'}}>
+                      <span className="mono" style={{color:'var(--ink-3)'}}>{issueArticles.length} {issueArticles.length===1?'essay':'essays'}</span>
+                      <span className="mono" style={{color:'var(--accent)'}}>Read issue →</span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/* ── ISSUE DETAIL VIEW ── */
+function IssueDetailView({issue,issues,articles,about,assets,setCurrentArticle,setCurrentIssue}){
+  if(!issue)return null;
+  const issueArticles=(articles||[]).filter(a=>articleBelongsToIssue(a,issue.id));
+  const cover=assetUrl(issue.coverImage||issue.profile,assets,1400);
+  const otherIssues=(issues||[]).filter(i=>i.id!==issue.id).sort((a,b)=>(b.number||0)-(a.number||0)).slice(0,2);
+  return(
+    <section className="fade-in">
+      <div style={{position:'relative',overflow:'hidden',padding:'72px 0 64px',borderBottom:'1px solid var(--paper-edge)',background:'var(--paper)'}}>
+        {cover&&(
+          <div style={{position:'absolute',inset:0,zIndex:0}}>
+            <img src={cover} alt={issue.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',opacity:0.1}}/>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,var(--paper) 0%,rgba(252,251,247,0.6) 50%,var(--paper) 100%)'}}/>
+          </div>
+        )}
+        <div className="wrap" style={{position:'relative',zIndex:1}}>
+          <button className="issue-breadcrumb" onClick={()=>setCurrentIssue('list')}><span>←</span><span>All issues</span></button>
+          <div style={{display:'flex',alignItems:'flex-start',gap:40,flexWrap:'wrap'}}>
+            <div style={{flex:1}}>
+              <div className="mono" style={{color:'var(--ink-3)',marginBottom:16}}>Issue №{String(issue.number||'').padStart(2,'0')}{issue.season?' · '+issue.season:''}</div>
+              <h1 className="display" style={{fontSize:'clamp(48px,7.5vw,108px)',margin:0}}>{issue.title}</h1>
+              {issue.coverline&&<p style={{fontFamily:'var(--font-serif)',fontStyle:'italic',fontSize:'clamp(17px,2vw,24px)',lineHeight:1.4,color:'var(--ink-2)',marginTop:20,maxWidth:600}}>{issue.coverline}</p>}
+              <div style={{display:'flex',alignItems:'center',gap:24,marginTop:32,paddingTop:24,borderTop:'1px solid var(--paper-edge)',flexWrap:'wrap'}}>
+                <span className="mono" style={{color:'var(--ink-3)'}}>{issueArticles.length} {issueArticles.length===1?'essay':'essays'}</span>
+                {issue.publishDate&&<><span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)',display:'inline-block'}}/><span className="mono" style={{color:'var(--ink-3)'}}>{fmtDate(issue.publishDate)}</span></>}
+              </div>
+            </div>
+            {cover&&<div style={{flexShrink:0,width:'clamp(160px,20vw,280px)',overflow:'hidden',boxShadow:'0 8px 32px rgba(14,14,12,0.18)'}}><img src={cover} alt={issue.title||''} style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',display:'block'}}/></div>}
+          </div>
+        </div>
+      </div>
+      <div style={{padding:'64px 0 80px',background:'var(--paper)'}}>
+        <div className="wrap">
+          {issueArticles.length===0?(
+            <div className="empty-state"><div className="empty-glyph">§</div><p className="empty-msg">Essays coming soon.</p></div>
+          ):(
+            <>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',paddingBottom:20,borderBottom:'1px solid var(--paper-edge)',marginBottom:0}}>
+                <span className="eyebrow eyebrow-accent">Essays in this issue</span>
+                <span className="mono" style={{color:'var(--ink-3)'}}>{issueArticles.length} pieces</span>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:1,background:'var(--paper-edge)',border:'1px solid var(--paper-edge)',borderTop:'none',overflow:'hidden'}}>
+                {issueArticles.map((a,i)=>{
+                  const thumb=assetUrl(a.profile,assets,640)||a.coverImageUrl;
+                  return(
+                    <button key={a.id} onClick={()=>setCurrentArticle(a)} style={{textAlign:'left',background:'var(--paper)',display:'flex',flexDirection:'column',transition:'background 200ms',overflow:'hidden',cursor:'pointer'}} onMouseEnter={e=>e.currentTarget.style.background='var(--paper-deep)'} onMouseLeave={e=>e.currentTarget.style.background='var(--paper)'}>
+                      {thumb
+                        ?<div style={{width:'100%',aspectRatio:'16/9',overflow:'hidden',background:'var(--paper-deep)',flexShrink:0}}><img src={thumb} alt={a.title||''} style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/></div>
+                        :<div style={{width:'100%',aspectRatio:'16/9',background:'var(--paper-deep)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><span style={{fontFamily:'var(--font-didone)',fontStyle:'italic',fontSize:56,color:'var(--ink)',opacity:0.08}}>{a.glyph||'§'}</span></div>}
+                      <div style={{padding:'24px 28px 28px',display:'flex',flexDirection:'column',gap:8,flex:1}}>
+                        {a.kicker&&<div className="eyebrow eyebrow-accent">{a.kicker}</div>}
+                        <div style={{fontFamily:'var(--font-didone)',fontSize:22,fontWeight:400,letterSpacing:'-0.01em',lineHeight:1.1,color:'var(--ink)'}}>{a.title}</div>
+                        {a.subtitle&&<p style={{fontFamily:'var(--font-serif)',fontSize:14,lineHeight:1.5,color:'var(--ink-3)',margin:0}}>{a.subtitle}</p>}
+                        <div style={{marginTop:'auto',paddingTop:14,borderTop:'1px solid var(--paper-edge)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                          <span className="mono" style={{color:'var(--ink-3)'}}>{a.author||about?.editorName}</span>
+                          <span className="mono" style={{color:'var(--accent)'}}>Read →</span>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      {otherIssues.length>0&&(
+        <div style={{padding:'56px 0 80px',background:'var(--paper-deep)',borderTop:'1px solid var(--paper-edge)'}}>
+          <div className="wrap">
+            <div className="eyebrow eyebrow-accent" style={{marginBottom:20}}>Other issues</div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:1,background:'var(--paper-edge)',border:'1px solid var(--paper-edge)',overflow:'hidden'}}>
+              {otherIssues.map(oi=>{
+                const oCover=assetUrl(oi.coverImage||oi.profile,assets,400)||oi.coverImageUrl;
+                const oArts=(articles||[]).filter(a=>articleBelongsToIssue(a,oi.id));
+                return(
+                  <button key={oi.id} style={{textAlign:'left',background:'var(--paper-deep)',display:'flex',gap:20,padding:28,transition:'background 200ms',alignItems:'flex-start',cursor:'pointer'}} onClick={()=>setCurrentIssue(oi)} onMouseEnter={e=>e.currentTarget.style.background='var(--paper)'} onMouseLeave={e=>e.currentTarget.style.background='var(--paper-deep)'}>
+                    {oCover&&<div style={{width:64,flexShrink:0,overflow:'hidden'}}><img src={oCover} alt={oi.title||''} style={{width:'100%',aspectRatio:'2/3',objectFit:'cover',display:'block'}}/></div>}
+                    <div>
+                      <div className="mono" style={{color:'var(--ink-3)',marginBottom:8}}>Issue №{String(oi.number||'').padStart(2,'0')}{oi.season?' · '+oi.season:''}</div>
+                      <div style={{fontFamily:'var(--font-display)',fontSize:20,fontWeight:600,letterSpacing:'-0.01em',lineHeight:1.1,color:'var(--ink)'}}>{oi.title}</div>
+                      <div className="mono" style={{color:'var(--ink-3)',marginTop:8}}>{oArts.length} {oArts.length===1?'essay':'essays'}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ── APP ── */
+function App(){
+  const[route,setRoute]=useState('home');
+  const[articles,setArticles]=useState([]);
+  const[news,setNews]=useState([]);
+  const[issues,setIssues]=useState([]);
+  const[settings,setSettings]=useState(null);
+  const[about,setAbout]=useState(null);
+  const[assets,setAssets]=useState([]);
+  const[entryPool,setEntryPool]=useState([]);
+  const[currentArticle,setCurrentArticle]=useState(null);
+  const[currentNews,setCurrentNews]=useState(null);
+  const[currentIssue,setCurrentIssue]=useState(null);
+  const[loading,setLoading]=useState(true);
+
+  useEffect(()=>{window.scrollTo(0,0);},[route]);
+
+  useEffect(()=>{
+    let cancelled=false;
+
+    /* Build flat asset pool from all response includes */
+    const buildAssetPool=(...responses)=>{
+      const seen=new Set();const pool=[];
+      responses.forEach(r=>{(r?.includes?.Asset||[]).forEach(a=>{if(!seen.has(a.sys.id)){seen.add(a.sys.id);pool.push(a);}});});
+      return pool;
+    };
+
+    /* Enrich item: resolve coverImageUrl from included assets */
+    const enrichItem=(item,pool)=>{
+      const f={...item.fields};
+      const tryFields=['profile','coverImage','image','featuredImage','heroImage','photo','mainImage','cover','thumbnail','media'];
+      for(const k of tryFields){
+        const url=assetUrl(f[k],pool);
+        if(url){f.coverImageUrl=url;break;}
+      }
+      return{id:item.sys.id,...f};
+    };
+
+    async function load(){
+      try{
+        const[aR,sR,abR,nR,iR]=await Promise.all([
+          getEntries('articlePost','&order=-fields.publishDate&include=10').catch(()=>({items:[],includes:{}})),
+          getEntries('settings').catch(()=>({items:[]})),
+          getEntries('about','&include=2').catch(()=>({items:[],includes:{}})),
+          getEntries('news','&order=-fields.publishDate&include=10').catch(()=>({items:[],includes:{}})),
+          getEntries('issue','&order=-fields.number&include=2').catch(()=>({items:[],includes:{}})),
+        ]);
+        if(cancelled)return;
+
+        const allAssets=buildAssetPool(aR,abR,nR,iR);
+        setAssets(allAssets);
+        window.__fvAssets=allAssets;
+
+        const seenE=new Set();
+        const allEntries=[...(aR.includes?.Entry||[]),...(abR.includes?.Entry||[]),...(iR.includes?.Entry||[])].filter(e=>{if(seenE.has(e.sys.id))return false;seenE.add(e.sys.id);return true;});
+        setEntryPool(allEntries);
+
+        const arts=(aR.items||[]).map(i=>enrichItem(i,allAssets));
+        const newsItems=(nR.items||[]).map(i=>enrichItem(i,allAssets));
+        const issueItems=(iR.items||[]).map(i=>enrichItem(i,allAssets));
+
+        setArticles(arts.length?arts:SAMPLE_ARTICLES);
+        setNews(newsItems.length?newsItems:SAMPLE_NEWS);
+        setIssues(issueItems);
+        setSettings(sR.items?.length?{...sR.items[0].fields}:SAMPLE_SETTINGS);
+        setAbout(abR.items?.length?enrichItem(abR.items[0],allAssets):SAMPLE_ABOUT);
+      }catch(e){
+        if(cancelled)return;
+        console.warn('CF unreachable, using sample data',e);
+        setArticles(SAMPLE_ARTICLES);setNews(SAMPLE_NEWS);
+        setSettings(SAMPLE_SETTINGS);setAbout(SAMPLE_ABOUT);
+      }finally{if(!cancelled)setLoading(false);}
+    }
+    const timer=setTimeout(()=>{
+      if(cancelled)return;
+      setArticles(prev=>prev.length?prev:SAMPLE_ARTICLES);
+      setNews(prev=>prev.length?prev:SAMPLE_NEWS);
+      setSettings(prev=>prev||SAMPLE_SETTINGS);
+      setAbout(prev=>prev||SAMPLE_ABOUT);
+      setLoading(false);
+    },2500);
+    load();
+    return()=>{cancelled=true;clearTimeout(timer);};
+  },[]);
+
+  if(loading)return(
+    <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh',background:'var(--paper)'}}>
+      <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:16}}>
+        <FVWordmark size={36}/>
+        <div className="mono" style={{color:'var(--accent)'}}>● Loading</div>
+      </div>
+    </div>
+  );
+
+  const openArticle=(a)=>{setCurrentArticle(a);setRoute('article');};
+  const openNews=(n)=>{setCurrentNews(n);setRoute('newsArticle');};
+  const openIssue=(i)=>{
+    if(i==='list'){setRoute('journal');return;}
+    if(i==='journal'){setRoute('journal');return;}
+    setCurrentIssue(i);setRoute('journalDetail');
+  };
+
+  const props={articles,news,issues,settings,about,assets,entryPool,route,setRoute,
+    setCurrentArticle:openArticle,setCurrentNews:openNews,setCurrentIssue:openIssue,currentIssue};
+
+  return(
+    <div className="page" data-screen-label={`Framing Vote · ${route}`}>
+      <Header route={route} setRoute={setRoute} settings={settings}/>
+      <main style={{flex:1}}>
+        {route==='home'         ?<HomeView {...props}/>:null}
+        {route==='article'      ?<ArticleView article={currentArticle} about={about} assets={assets} setRoute={setRoute} articles={articles} setCurrentArticle={openArticle}/>:null}
+        {route==='archive'      ?<ArchiveView {...props}/>:null}
+        {route==='news'         ?<NewsView {...props}/>:null}
+        {route==='newsArticle'  ?<NewsArticleView item={currentNews} about={about} assets={assets} setRoute={setRoute}/>:null}
+        {route==='about'        ?<AboutView about={about} assets={assets} entryPool={entryPool}/>:null}
+        {route==='submit'       ?<SubmitView about={about}/>:null}
+        {route==='journal'      ?<IssueView issues={issues} articles={articles} assets={assets} setCurrentIssue={openIssue}/>:null}
+        {route==='journalDetail'?<IssueDetailView issue={currentIssue} issues={issues} articles={articles} about={about} assets={assets} setCurrentArticle={openArticle} setCurrentIssue={openIssue}/>:null}
+      </main>
+      <Newsletter/>
+      <Footer setRoute={setRoute} settings={settings} about={about}/>
+      <PageNav/>
+      <CommandPalette articles={articles} news={news} setRoute={setRoute} setCurrentArticle={openArticle} setCurrentNews={openNews}/>
+      <AskTheEditor/>
+      <CustomCursor enabled={true}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+
+</script>
+</body>
+</html>
