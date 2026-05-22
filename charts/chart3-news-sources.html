@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 03 — Where Under-30s Get News</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .card { background:white; border:1.5px solid var(--line); padding:36px 40px; max-width:700px; width:100%; position:relative; }
+  .card::before { content:''; position:absolute; top:7px; left:7px; right:-7px; bottom:-7px; border:1.5px solid var(--ink); z-index:-1; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:32px; line-height:1.2; }
+  .chart-wrap { display:flex; align-items:center; gap:40px; flex-wrap:wrap; }
+  svg { flex-shrink:0; }
+  .legend { flex:1; min-width:200px; }
+  .legend-item { display:flex; align-items:center; gap:12px; margin-bottom:14px; cursor:default; }
+  .legend-item:hover .bar-row { opacity:0.8; }
+  .swatch { width:16px; height:16px; border-radius:2px; flex-shrink:0; }
+  .l-label { font-size:13px; flex:1; }
+  .l-pct { font-family:'DM Mono',monospace; font-size:15px; font-weight:500; }
+  .bar-row { height:6px; background:var(--line); border-radius:3px; margin-top:4px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:3px; width:0; transition:width 1.4s cubic-bezier(.4,0,.2,1); }
+  .headline-stat { text-align:center; margin-bottom:24px; }
+  .big-num { font-family:'Playfair Display',serif; font-size:72px; font-weight:900; color:var(--ink); line-height:1; }
+  .big-sub { font-size:13px; color:var(--muted); margin-top:4px; }
+  .note { font-size:11px; color:var(--muted); line-height:1.5; margin-top:20px; border-top:1px solid var(--line); padding-top:14px; }
+  .two-stats { display:flex; gap:32px; margin-bottom:28px; flex-wrap:wrap; }
+  .stat-pill { flex:1; min-width:120px; border:1.5px solid var(--line); padding:16px; text-align:center; }
+  .pill-num { font-family:'Playfair Display',serif; font-size:36px; font-weight:900; line-height:1; }
+  .pill-sub { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.4; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 03 — Pew Research Center / NBC News</div>
+  <h2>Where Adults Under 30 Get Political News</h2>
+
+  <div class="two-stats">
+    <div class="stat-pill">
+      <div class="pill-num" style="color:var(--ink)">26%</div>
+      <div class="pill-sub">of adults under 30 now get news on TikTok</div>
+    </div>
+    <div class="stat-pill">
+      <div class="pill-num" style="color:#c13584">40%</div>
+      <div class="pill-sub">of Gen Z (18–24) prefer TikTok/Instagram over Google as a search engine</div>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="note">These are not marginal numbers. They represent a fundamental restructuring of how political information flows in America — and a direct challenge to every campaign still primarily allocating budget to television and digital display advertising.</div>
+</div>
+<script>
+  const data = [
+    { label: 'TikTok news', pct: 26, color: '#000000' },
+    { label: 'Facebook news', pct: 18, color: '#1877f2' },
+    { label: 'Instagram news', pct: 14, color: '#c13584' },
+    { label: 'YouTube news', pct: 10, color: '#ff0000' },
+    { label: 'X / Twitter news', pct: 8, color: '#1d9bf0' },
+    { label: 'TV / print / radio', pct: 15, color: '#7a7060' },
+    { label: 'Other / none', pct: 9, color: '#d8d0c0' },
+  ];
+
+  const legend = document.getElementById('legend');
+  data.forEach((d, i) => {
+    legend.innerHTML += `
+      <div class="legend-item">
+        <div class="swatch" style="background:${d.color}"></div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <span class="l-label">${d.label}</span>
+            <span class="l-pct">${d.pct}%</span>
+          </div>
+          <div class="bar-row"><div class="bar-fill" id="bf${i}" style="background:${d.color}"></div></div>
+        </div>
+      </div>`;
+  });
+
+  setTimeout(() => {
+    data.forEach((d, i) => {
+      setTimeout(() => {
+        document.getElementById(`bf${i}`).style.width = (d.pct / 30 * 100) + '%';
+      }, i * 100);
+    });
+  }, 300);
+</script>
+</body>
+</html>

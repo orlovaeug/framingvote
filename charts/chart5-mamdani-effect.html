@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 05 — The Mamdani Effect</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .card { background:white; border:1.5px solid var(--line); padding:36px 40px; max-width:720px; width:100%; position:relative; }
+  .card::before { content:''; position:absolute; top:7px; left:7px; right:-7px; bottom:-7px; border:1.5px solid var(--ink); z-index:-1; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:8px; line-height:1.2; }
+  .subtitle { font-size:13px; color:var(--muted); margin-bottom:28px; }
+  .comparison-block { margin-bottom:24px; }
+  .comp-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  .versus { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:16px; }
+  .vs-side { }
+  .vs-name { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+  .vs-bar-wrap { display:flex; align-items:center; gap:8px; }
+  .vs-bar-track { flex:1; height:20px; background:var(--line); border-radius:2px; overflow:hidden; }
+  .vs-bar-fill { height:100%; border-radius:2px; width:0; transition:width 1.4s cubic-bezier(.4,0,.2,1); }
+  .vs-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; white-space:nowrap; min-width:70px; }
+  .vs-center { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:var(--muted); }
+  .right .vs-bar-track { }
+  .right .vs-bar-fill { margin-left:auto; }
+  .right .vs-bar-wrap { flex-direction:row-reverse; }
+  .right .vs-val { text-align:right; }
+  .divider { border:none; border-top:1px solid var(--line); margin:20px 0; }
+  .callout-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+  .callout { padding:20px; text-align:center; }
+  .callout.highlight { background:var(--ink); color:white; }
+  .callout.highlight .c-num { color:var(--accent); }
+  .callout.muted-box { border:1.5px solid var(--line); }
+  .c-num { font-family:'Playfair Display',serif; font-size:40px; font-weight:900; line-height:1; display:block; margin-bottom:6px; }
+  .c-desc { font-size:11px; line-height:1.4; }
+  .callout.highlight .c-desc { color:#aaa; }
+  .callout.muted-box .c-num { color:var(--blue); }
+  .callout.muted-box .c-desc { color:var(--muted); }
+  .note { font-size:11px; color:var(--muted); line-height:1.5; margin-top:20px; border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 05 — NYC 2025 → 2026 Benchmark</div>
+  <h2>The Mamdani Effect</h2>
+  <div class="subtitle">Digital dominance without spending dominance — the model for 2026 midterm campaigns</div>
+
+  <div class="comparison-block">
+    <div class="comp-label">Social Media Conversation Volume (Mamdani vs. Cuomo)</div>
+    <div class="versus">
+      <div class="vs-side">
+        <div class="vs-name">Mamdani</div>
+        <div class="vs-bar-wrap">
+          <div class="vs-bar-track"><div class="vs-bar-fill" id="b1a" style="background:var(--blue)"></div></div>
+          <span class="vs-val" style="color:var(--blue)">30× lead</span>
+        </div>
+      </div>
+      <div class="vs-center">vs</div>
+      <div class="vs-side right">
+        <div class="vs-name" style="text-align:right">Cuomo</div>
+        <div class="vs-bar-wrap">
+          <div class="vs-bar-track"><div class="vs-bar-fill" id="b1b" style="background:var(--muted)"></div></div>
+          <span class="vs-val" style="color:var(--muted)">baseline</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-block">
+    <div class="comp-label">Instagram Engagement Rate</div>
+    <div class="versus">
+      <div class="vs-side">
+        <div class="vs-name">Mamdani</div>
+        <div class="vs-bar-wrap">
+          <div class="vs-bar-track"><div class="vs-bar-fill" id="b2a" style="background:var(--blue)"></div></div>
+          <span class="vs-val" style="color:var(--blue)">14× higher</span>
+        </div>
+      </div>
+      <div class="vs-center">vs</div>
+      <div class="vs-side right">
+        <div class="vs-name" style="text-align:right">Cuomo</div>
+        <div class="vs-bar-wrap">
+          <div class="vs-bar-track"><div class="vs-bar-fill" id="b2b" style="background:var(--muted)"></div></div>
+          <span class="vs-val" style="color:var(--muted)">baseline</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-block">
+    <div class="comp-label">@SubwayTakes Ep. 407 — TikTok Response Video (Mamdani vs. Cuomo's Static Instagram Graphic)</div>
+    <div class="versus">
+      <div class="vs-side">
+        <div class="vs-name">Mamdani TikTok</div>
+        <div class="vs-bar-wrap">
+          <div class="vs-bar-track"><div class="vs-bar-fill" id="b3a" style="background:var(--accent)"></div></div>
+          <span class="vs-val" style="color:var(--accent)">872,800 ❤</span>
+        </div>
+      </div>
+      <div class="vs-center">vs</div>
+      <div class="vs-side right">
+        <div class="vs-name" style="text-align:right">Cuomo Instagram</div>
+        <div class="vs-bar-wrap">
+          <div class="vs-bar-track"><div class="vs-bar-fill" id="b3b" style="background:var(--line); width:0.1%"></div></div>
+          <span class="vs-val" style="color:var(--muted)">5 ❤</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="callout-row">
+    <div class="callout highlight">
+      <span class="c-num">77.3M</span>
+      <div class="c-desc">Combined follower reach of 70+ creators at Mamdani's private influencer briefing, 1 week before Election Day</div>
+    </div>
+    <div class="callout muted-box">
+      <span class="c-num">7M+</span>
+      <div class="c-desc">Total followers Mamdani built across all platforms — without a large ad spend — through disciplined content strategy</div>
+    </div>
+  </div>
+
+  <div class="note">Sources: CounterPunch, NBC News, ISEMEDIA Agency analysis, Fox News / Mamdani campaign data (2025). The Mamdani model is now the primary digital benchmark heading into the 2026 midterm cycle.</div>
+</div>
+<script>
+  setTimeout(() => {
+    document.getElementById('b1a').style.width = '97%';
+    document.getElementById('b1b').style.width = '3.3%';
+    document.getElementById('b2a').style.width = '93%';
+    document.getElementById('b2b').style.width = '6.7%';
+    document.getElementById('b3a').style.width = '100%';
+    document.getElementById('b3b').style.width = '0.1%';
+  }, 300);
+</script>
+</body>
+</html>

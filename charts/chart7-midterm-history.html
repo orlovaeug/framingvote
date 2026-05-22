@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 07 — Historical Midterm Seat Losses</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .card { background:white; border:1.5px solid var(--line); padding:36px 40px; max-width:760px; width:100%; position:relative; }
+  .card::before { content:''; position:absolute; top:7px; left:7px; right:-7px; bottom:-7px; border:1.5px solid var(--ink); z-index:-1; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:8px; line-height:1.2; }
+  .subtitle { font-size:13px; color:var(--muted); margin-bottom:32px; }
+  .chart-area { position:relative; }
+  .zero-line { border-top:2px solid var(--ink); margin-bottom:0; position:relative; }
+  .zero-label { position:absolute; right:0; top:-18px; font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); }
+  .bars-wrap { display:flex; gap:8px; align-items:flex-end; padding:0 0 8px; }
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .bar-upper { width:100%; display:flex; flex-direction:column; justify-content:flex-end; }
+  .bar-lower { width:100%; }
+  .bar-seg { width:100%; border-radius:2px 2px 0 0; transition:height 1.3s cubic-bezier(.4,0,.2,1); }
+  .bar-seg.gain { border-radius:0 0 2px 2px; }
+  .bar-year { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); text-align:center; margin-top:4px; }
+  .bar-val { font-family:'DM Mono',monospace; font-size:9px; font-weight:500; text-align:center; }
+  .bar-pres { font-size:9px; color:var(--muted); text-align:center; }
+  .legend-row { display:flex; gap:24px; margin-top:20px; flex-wrap:wrap; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); }
+  .l-dot { width:14px; height:14px; border-radius:2px; flex-shrink:0; }
+  .average-bar { height:2px; background:var(--accent); width:100%; margin:16px 0 4px; position:relative; }
+  .average-bar::after { content:'Avg. loss: 28 seats'; position:absolute; right:0; top:-14px; font-family:'DM Mono',monospace; font-size:9px; color:var(--accent); }
+  .note { font-size:11px; color:var(--muted); line-height:1.5; margin-top:16px; border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 07 — Historical Pattern, 1994–2022</div>
+  <h2>The Midterm Penalty</h2>
+  <div class="subtitle">House seat change for the president's party in midterm elections. Losses are the historical norm.</div>
+
+  <div class="chart-area">
+    <div id="chartWrap" style="display:flex;gap:6px;align-items:stretch;margin-bottom:0;"></div>
+    <div style="border-top:2px solid var(--ink);position:relative;">
+      <span style="position:absolute;right:0;top:2px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);">ZERO LINE</span>
+    </div>
+  </div>
+
+  <div class="legend-row">
+    <div class="legend-item"><div class="l-dot" style="background:var(--red)"></div>Republican president</div>
+    <div class="legend-item"><div class="l-dot" style="background:var(--blue)"></div>Democrat president</div>
+    <div class="legend-item"><div class="l-dot" style="background:#999"></div>Gain (exception)</div>
+  </div>
+
+  <div class="note">In only 3 of 15 midterm elections since 1934 has the president's party gained House seats. The 28-seat average loss reflects the structural disadvantage facing Republicans in 2026 — though redistricting, candidate quality, and the information environment all modulate that baseline.</div>
+</div>
+<script>
+  const data = [
+    { year:'1994', seats:-54, pres:'D', label:'Clinton' },
+    { year:'1998', seats:5,   pres:'D', label:'Clinton' },
+    { year:'2002', seats:8,   pres:'R', label:'Bush' },
+    { year:'2006', seats:-30, pres:'R', label:'Bush' },
+    { year:'2010', seats:-63, pres:'D', label:'Obama' },
+    { year:'2014', seats:-13, pres:'D', label:'Obama' },
+    { year:'2018', seats:-41, pres:'R', label:'Trump' },
+    { year:'2022', seats:-6,  pres:'D', label:'Biden' },
+    { year:'2026', seats:null, pres:'R', label:'Trump' },
+  ];
+
+  const maxVal = 70;
+  const chartH = 220;
+  const wrap = document.getElementById('chartWrap');
+
+  data.forEach((d, i) => {
+    const col = document.createElement('div');
+    col.style.cssText = `flex:1;display:flex;flex-direction:column;align-items:center;`;
+
+    const isLoss = d.seats !== null && d.seats < 0;
+    const isGain = d.seats !== null && d.seats > 0;
+    const isTBD = d.seats === null;
+
+    const lossH = isLoss ? Math.abs(d.seats) / maxVal * chartH : 0;
+    const gainH = isGain ? d.seats / maxVal * chartH : 0;
+    const color = isTBD ? '#ddd' : (d.seats >= 0 ? '#999' : (d.pres === 'R' ? 'var(--red)' : 'var(--blue)'));
+
+    // upper area (gains sit above zero line)
+    const upper = document.createElement('div');
+    upper.style.cssText = `width:100%;height:${chartH}px;display:flex;flex-direction:column;justify-content:flex-end;`;
+
+    if (isGain) {
+      const gainBar = document.createElement('div');
+      gainBar.style.cssText = `width:100%;height:0;background:#999;border-radius:2px 2px 0 0;transition:height 1.3s cubic-bezier(.4,0,.2,1);`;
+      upper.appendChild(gainBar);
+      setTimeout(() => { gainBar.style.height = gainH + 'px'; }, i * 80 + 400);
+
+      const gainLabel = document.createElement('div');
+      gainLabel.style.cssText = `font-family:'DM Mono',monospace;font-size:9px;color:#999;text-align:center;margin-bottom:2px;`;
+      gainLabel.textContent = '+' + d.seats;
+      upper.insertBefore(gainLabel, gainBar);
+    }
+
+    col.appendChild(upper);
+
+    // zero line spacer
+    const zeroSpacer = document.createElement('div');
+    zeroSpacer.style.cssText = 'width:100%;height:2px;background:transparent;';
+    col.appendChild(zeroSpacer);
+
+    // lower area (losses go downward)
+    const lower = document.createElement('div');
+    lower.style.cssText = `width:100%;`;
+
+    if (isLoss) {
+      const lossLabel = document.createElement('div');
+      lossLabel.style.cssText = `font-family:'DM Mono',monospace;font-size:9px;font-weight:500;text-align:center;margin-top:2px;color:${color};`;
+      lossLabel.textContent = d.seats;
+
+      const lossBar = document.createElement('div');
+      lossBar.style.cssText = `width:100%;height:0;background:${color};border-radius:0 0 2px 2px;transition:height 1.3s cubic-bezier(.4,0,.2,1);`;
+      lower.appendChild(lossLabel);
+      lower.appendChild(lossBar);
+      setTimeout(() => { lossBar.style.height = lossH + 'px'; }, i * 80 + 400);
+    }
+
+    if (isTBD) {
+      const tbdBox = document.createElement('div');
+      tbdBox.style.cssText = `width:100%;height:60px;background:repeating-linear-gradient(45deg,#f0ece4,#f0ece4 3px,#ddd 3px,#ddd 6px);border:1.5px dashed #bbb;border-radius:0 0 2px 2px;display:flex;align-items:center;justify-content:center;`;
+      tbdBox.innerHTML = `<span style="font-family:'DM Mono',monospace;font-size:8px;color:#aaa;writing-mode:vertical-rl;letter-spacing:1px">TBD</span>`;
+      lower.appendChild(tbdBox);
+    }
+
+    col.appendChild(lower);
+
+    const yearLabel = document.createElement('div');
+    yearLabel.style.cssText = `font-family:'DM Mono',monospace;font-size:9px;color:${isTBD?'var(--red)':'var(--muted)'};text-align:center;margin-top:5px;font-weight:${isTBD?'600':'400'};`;
+    yearLabel.textContent = d.year;
+    col.appendChild(yearLabel);
+
+    const presLabel = document.createElement('div');
+    presLabel.style.cssText = `font-size:8px;color:var(--muted);text-align:center;`;
+    presLabel.textContent = d.label;
+    col.appendChild(presLabel);
+
+    wrap.appendChild(col);
+  });
+</script>
+</body>
+</html>

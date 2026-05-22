@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 08 — Social Media URL Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--ink); font-family:'DM Sans',sans-serif; color:white; min-height:100vh; display:flex; align-items:flex-start; justify-content:center; padding:40px 24px; }
+  .card { max-width:760px; width:100%; padding:40px; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:8px; line-height:1.2; }
+  .intro { font-size:13px; color:#888; margin-bottom:32px; line-height:1.5; }
+  .filter-row { display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap; }
+  .filter-btn { padding:5px 14px; border:1.5px solid #333; background:transparent; color:#888; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; border-radius:2px; transition:all 0.2s; }
+  .filter-btn:hover, .filter-btn.active { border-color:var(--accent); color:var(--accent); }
+  .url-list { list-style:none; }
+  .url-item { border-bottom:1px solid #222; padding:18px 0; display:flex; gap:14px; align-items:flex-start; transition:opacity 0.3s; }
+  .url-item:last-child { border-bottom:none; }
+  .url-item.hidden { display:none; }
+  .type-badge { flex-shrink:0; padding:3px 9px; border-radius:2px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; font-weight:500; }
+  .type-badge.candidate { background:var(--blue); color:white; }
+  .type-badge.viral { background:var(--red); color:white; }
+  .type-badge.influencer { background:var(--accent); color:var(--ink); }
+  .url-body { flex:1; }
+  .url-title { font-size:14px; font-weight:500; color:white; margin-bottom:4px; line-height:1.4; }
+  .url-platform { font-family:'DM Mono',monospace; font-size:9px; color:#555; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+  .url-link { font-family:'DM Mono',monospace; font-size:10px; color:#555; word-break:break-all; text-decoration:none; display:block; margin-bottom:6px; transition:color 0.2s; }
+  .url-link:hover { color:var(--accent); }
+  .url-desc { font-size:12px; color:#666; line-height:1.5; }
+  .metric { display:inline-block; padding:2px 7px; background:#1a1a1a; border-radius:2px; font-family:'DM Mono',monospace; font-size:10px; color:var(--accent); margin-right:6px; margin-bottom:6px; }
+  .section-divider { border:none; border-top:1px solid #222; margin:8px 0; }
+  .count-bar { display:flex; justify-content:space-between; margin-bottom:16px; }
+  .count-pill { font-family:'DM Mono',monospace; font-size:10px; color:#555; padding:4px 10px; border:1px solid #222; border-radius:2px; }
+  .count-pill span { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 08 — Primary Sources</div>
+  <h2>Social Media URL Reference</h2>
+  <div class="intro">Candidate TikTok/Instagram examples, viral political content, and influencer campaign cases referenced in the article. All URLs verified as of May 2026.</div>
+
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filter('all', this)">All (7)</button>
+    <button class="filter-btn" onclick="filter('candidate', this)">Candidate</button>
+    <button class="filter-btn" onclick="filter('viral', this)">Viral</button>
+    <button class="filter-btn" onclick="filter('influencer', this)">Influencer</button>
+  </div>
+
+  <ul class="url-list" id="urlList">
+
+    <li class="url-item" data-type="candidate">
+      <span class="type-badge candidate">Candidate</span>
+      <div class="url-body">
+        <div class="url-platform">TikTok · @zohran_k_mamdani</div>
+        <div class="url-title">Zohran Mamdani — "Today we make history together" — NYC Election Night 2025</div>
+        <a class="url-link" href="https://www.tiktok.com/@zohran_k_mamdani/video/7519454344698236191" target="_blank">tiktok.com/@zohran_k_mamdani/video/7519454344698236191</a>
+        <span class="metric">589K likes</span><span class="metric">17.5K comments</span>
+        <div class="url-desc">The defining viral moment of the 2025 NYC mayoral digital campaign. Now the primary benchmark for candidate TikTok strategy entering 2026. Represents what a winning short-form political video looks like: authentic, emotional, low-production.</div>
+      </div>
+    </li>
+
+    <li class="url-item" data-type="candidate">
+      <span class="type-badge candidate">Candidate</span>
+      <div class="url-body">
+        <div class="url-platform">TikTok · @zohran_k_mamdani</div>
+        <div class="url-title">Mamdani — "This city belongs to you" — Post-victory message</div>
+        <a class="url-link" href="https://www.tiktok.com/@zohran_k_mamdani/video/7570015990398979359" target="_blank">tiktok.com/@zohran_k_mamdani/video/7570015990398979359</a>
+        <span class="metric">70.9K likes</span><span class="metric">3.2K comments</span>
+        <div class="url-desc">Example of consistent post-election brand maintenance through short-form video. Demonstrates how the digital campaign infrastructure built during the race is sustained into governance — an increasingly critical model for incumbent Democrats in 2026.</div>
+      </div>
+    </li>
+
+    <li class="url-item" data-type="viral">
+      <span class="type-badge viral">Viral</span>
+      <div class="url-body">
+        <div class="url-platform">TikTok · @SubwayTakes (featuring Mamdani)</div>
+        <div class="url-title">@SubwayTakes Ep. 407 — Mamdani dismantles Cuomo mailers with prop comedy</div>
+        <a class="url-link" href="https://www.counterpunch.org/2025/09/19/how-zohran-mamdanis-video-team-reinvented-the-visual-art-of-political-conversation-and-storytelling/" target="_blank">counterpunch.org — Full analysis of the video strategy</a>
+        <span class="metric">872,800 likes</span><span class="metric">vs Cuomo: 5 likes</span>
+        <div class="url-desc">The defining viral political response video of 2025. Mamdani used physical mailers as props to dismantle opponent attack claims in real time. Unplanned, authentic, and devastating in contrast to Cuomo's static Instagram graphic. The quintessential case study in short-form rapid response.</div>
+      </div>
+    </li>
+
+    <li class="url-item" data-type="viral">
+      <span class="type-badge viral">Viral</span>
+      <div class="url-body">
+        <div class="url-platform">TikTok · Live tag feed</div>
+        <div class="url-title">#midterms2026 — Active TikTok hashtag monitoring feed</div>
+        <a class="url-link" href="https://www.tiktok.com/tag/midterms2026" target="_blank">tiktok.com/tag/midterms2026</a>
+        <span class="metric">6,374+ posts</span><span class="metric">Updated real-time</span>
+        <div class="url-desc">Active hashtag aggregating gerrymandering explainers, candidate breakdowns, immigration policy threads, and voter-mobilization content from independent creators. Critical real-time monitoring point for tracking how narratives form organically around the 2026 cycle.</div>
+      </div>
+    </li>
+
+    <li class="url-item" data-type="influencer">
+      <span class="type-badge influencer">Influencer</span>
+      <div class="url-body">
+        <div class="url-platform">TikTok · Archived 2024 presidential benchmark</div>
+        <div class="url-title">KamalaHQ — Democratic presidential campaign TikTok account</div>
+        <a class="url-link" href="https://www.tiktok.com/@kamalahq" target="_blank">tiktok.com/@kamalahq</a>
+        <span class="metric">1.5B views</span><span class="metric">5M followers</span>
+        <div class="url-desc">Demonstrated that cultural fluency and speed outperform raw follower count. Harris's team of young staffers rapid-responded to trends in real time, generating 1.5 billion views despite having a smaller following than Trump's 12M-follower account. The speed-and-culture model that 2026 campaigns are benchmarking against.</div>
+      </div>
+    </li>
+
+    <li class="url-item" data-type="influencer">
+      <span class="type-badge influencer">Influencer</span>
+      <div class="url-body">
+        <div class="url-platform">TikTok / Instagram · DCCC 2022 partnership</div>
+        <div class="url-title">Olivia Ponton — "Voting is HOT" GOTV content (2022 DCCC influencer cohort)</div>
+        <a class="url-link" href="https://time.com/6227149/democrats-tiktok-influencers-midterms-2022/" target="_blank">time.com — Full TIME investigation into the DCCC influencer program</a>
+        <span class="metric">8M TikTok followers</span><span class="metric">DCCC first foray</span>
+        <div class="url-desc">Part of the first formal DCCC influencer partnership cohort — creators invited to Washington to meet Biden and Obama, then deployed on GOTV messaging. The originating model for the party-influencer infrastructure now being scaled and refined for 2026. Marks the beginning of institutional political investment in creator networks.</div>
+      </div>
+    </li>
+
+    <li class="url-item" data-type="viral">
+      <span class="type-badge viral">Viral</span>
+      <div class="url-body">
+        <div class="url-platform">Political Ad · AI-Generated · March 11, 2026</div>
+        <div class="url-title">NRSC Deepfake Ad — James Talarico (TX-Sen) — First minute-long political deepfake</div>
+        <a class="url-link" href="https://truescreen.io/articles/deepfakes-2026-elections-certified-proof/" target="_blank">truescreen.io — Certified proof analysis of the Talarico deepfake ad</a>
+        <a class="url-link" href="https://www.fakeout.io/blog/deepfake-political-ads-2026-midterms" target="_blank">fakeout.io — Full breakdown of all 2026 deepfake political ads</a>
+        <span class="metric">First 60+ sec deepfake</span><span class="metric">NRSC-produced</span>
+        <div class="url-desc">Watershed moment in AI disinformation: candidate appears to "read" old tweets he never filmed. CNN described it as a qualitative leap in deepfake technology deployment. The "AI Generated" disclaimer appears in small font in the lower corner. Three such ads now confirmed in active circulation from national Republican committees.</div>
+      </div>
+    </li>
+
+  </ul>
+</div>
+
+<script>
+  function filter(type, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.url-item').forEach(item => {
+      if (type === 'all' || item.dataset.type === type) {
+        item.classList.remove('hidden');
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+  }
+</script>
+</body>
+</html>

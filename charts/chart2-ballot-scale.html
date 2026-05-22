@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 02 — Scale of the 2026 Cycle</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .card { background:white; border:1.5px solid var(--line); padding:36px 40px; max-width:680px; width:100%; position:relative; }
+  .card::before { content:''; position:absolute; top:7px; left:7px; right:-7px; bottom:-7px; border:1.5px solid var(--ink); z-index:-1; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:32px; line-height:1.2; }
+  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .stat-box { border:1.5px solid var(--line); padding:24px 20px; text-align:center; position:relative; overflow:hidden; }
+  .stat-box::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; }
+  .stat-box.red::after { background:var(--red); }
+  .stat-box.blue::after { background:var(--blue); }
+  .stat-box.gold::after { background:var(--accent); }
+  .stat-box.dark::after { background:var(--ink); }
+  .stat-num { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; line-height:1; display:block; margin-bottom:8px; }
+  .stat-num.red { color:var(--red); }
+  .stat-num.blue { color:var(--blue); }
+  .stat-num.gold { color:var(--accent); }
+  .stat-num.dark { color:var(--ink); }
+  .stat-desc { font-size:12px; color:var(--muted); line-height:1.5; }
+  .counter { display:inline-block; }
+  .note { font-size:11px; color:var(--muted); line-height:1.5; margin-top:20px; border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 02 — November 3, 2026</div>
+  <h2>What's Actually on the Ballot</h2>
+  <div class="stats-grid">
+    <div class="stat-box red">
+      <span class="stat-num red" id="n1">0</span>
+      <div class="stat-desc">Total seats on the ballot including state &amp; local races</div>
+    </div>
+    <div class="stat-box blue">
+      <span class="stat-num blue" id="n2">0</span>
+      <div class="stat-desc">All House seats contested — full chamber turnover possible</div>
+    </div>
+    <div class="stat-box gold">
+      <span class="stat-num gold" id="n3">0</span>
+      <div class="stat-desc">House retirements — 2nd most in a single cycle since 1992</div>
+    </div>
+    <div class="stat-box dark">
+      <span class="stat-num dark" id="n4">0</span>
+      <div class="stat-desc">Governor's races on the ballot across the country</div>
+    </div>
+  </div>
+  <div class="note">Open seats created by retirements are historically the most competitive races — and the most expensive. With 56 open House seats, the 2026 cycle is shaping up to be the most fluid congressional map in decades.</div>
+</div>
+<script>
+  function animateCount(id, target, suffix, duration) {
+    const el = document.getElementById(id);
+    const start = performance.now();
+    function update(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(eased * target).toLocaleString() + (suffix || '');
+      if (t < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+  setTimeout(() => {
+    animateCount('n1', 40000, '+', 1800);
+    animateCount('n2', 435, '', 1200);
+    animateCount('n3', 56, '', 1000);
+    animateCount('n4', 30, '+', 900);
+  }, 300);
+</script>
+</body>
+</html>

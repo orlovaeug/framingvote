@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 06 — Deepfake Escalation Timeline</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .card { background:white; border:1.5px solid var(--line); padding:36px 40px; max-width:720px; width:100%; position:relative; }
+  .card::before { content:''; position:absolute; top:7px; left:7px; right:-7px; bottom:-7px; border:1.5px solid var(--ink); z-index:-1; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:32px; line-height:1.2; }
+  .timeline { position:relative; padding-left:32px; }
+  .timeline::before { content:''; position:absolute; left:10px; top:10px; bottom:10px; width:2px; background: linear-gradient(to bottom, var(--line), var(--ink) 30%, var(--red) 60%, var(--red)); }
+  .tl-item { position:relative; margin-bottom:28px; opacity:0; transform:translateX(-10px); transition:opacity 0.5s, transform 0.5s; }
+  .tl-item.show { opacity:1; transform:translateX(0); }
+  .tl-dot { position:absolute; left:-26px; top:5px; width:12px; height:12px; border-radius:50%; background:white; border:2.5px solid var(--muted); z-index:1; }
+  .tl-item.critical .tl-dot { background:var(--red); border-color:var(--red); box-shadow:0 0 0 3px rgba(192,57,43,0.2); }
+  .tl-item.warning .tl-dot { background:var(--accent); border-color:var(--accent); }
+  .tl-date { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--muted); margin-bottom:4px; }
+  .tl-title { font-size:14px; font-weight:600; line-height:1.3; margin-bottom:4px; }
+  .tl-item.critical .tl-title { color:var(--red); }
+  .tl-body { font-size:12px; color:var(--muted); line-height:1.5; }
+  .tl-tag { display:inline-block; padding:2px 8px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1px; text-transform:uppercase; border-radius:2px; margin-bottom:6px; }
+  .tl-tag.danger { background:var(--red); color:white; }
+  .tl-tag.neutral { background:var(--line); color:var(--muted); }
+  .tl-tag.warn { background:var(--accent); color:var(--ink); }
+  .bottom-stat { background:var(--ink); color:white; padding:20px 24px; margin-top:8px; display:flex; align-items:center; gap:20px; }
+  .bs-num { font-family:'Playfair Display',serif; font-size:40px; font-weight:900; color:var(--accent); line-height:1; flex-shrink:0; }
+  .bs-text { font-size:12px; color:#aaa; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 06 — AI Disinformation Watch</div>
+  <h2>Deepfake Escalation Timeline, 2026 Midterms</h2>
+
+  <div class="timeline">
+    <div class="tl-item" data-delay="100">
+      <div class="tl-dot"></div>
+      <div class="tl-tag neutral">Platform Policy</div>
+      <div class="tl-date">JAN 2026</div>
+      <div class="tl-title">Meta & X drop professional fact-checking</div>
+      <div class="tl-body">Both platforms shift to user-generated Community Notes, removing institutional content verification. Political ads enter a lower-accountability environment heading into a high-stakes election year.</div>
+    </div>
+    <div class="tl-item" data-delay="200">
+      <div class="tl-dot"></div>
+      <div class="tl-tag neutral">Research</div>
+      <div class="tl-date">FEB 2026</div>
+      <div class="tl-title">CDT report warns of volatile information environment</div>
+      <div class="tl-body">Center for Democracy & Technology flags reduced transparency, expanded speech latitude, and evolving creator monetization frameworks as compounding risk factors for election integrity.</div>
+    </div>
+    <div class="tl-item critical" data-delay="350">
+      <div class="tl-dot"></div>
+      <div class="tl-tag danger">⚠ First Incident</div>
+      <div class="tl-date">MAR 11, 2026</div>
+      <div class="tl-title">NRSC publishes first minute-long candidate deepfake</div>
+      <div class="tl-body">AI-generated video of Texas Senate candidate James Talarico appears to "read" old tweets he never filmed. CNN describes it as the first political deepfake where a candidate speaks realistically for over a minute. Disclaimer: "AI Generated" in small corner font.</div>
+    </div>
+    <div class="tl-item critical" data-delay="460">
+      <div class="tl-dot"></div>
+      <div class="tl-tag danger">⚠ Escalation</div>
+      <div class="tl-date">MAR 2026</div>
+      <div class="tl-title">Second & third deepfake ads confirmed by Reuters review</div>
+      <div class="tl-body">Rep. Mike Collins (GA) campaign publishes AI video of Sen. Jon Ossoff saying words he never said. Reuters confirms at least 3 national Republican deepfake ads in active circulation. Democrats have not yet responded in kind.</div>
+    </div>
+    <div class="tl-item warning" data-delay="560">
+      <div class="tl-dot"></div>
+      <div class="tl-tag warn">Legal</div>
+      <div class="tl-date">APR 2026</div>
+      <div class="tl-title">No federal regulation exists — state laws largely untested</div>
+      <div class="tl-body">California's 2024 deepfake ban struck down as First Amendment violation. FEC has issued no binding rules. C2PA certification standard has limited adoption. Any campaign can now deploy AI video tools for a modest production budget.</div>
+    </div>
+    <div class="tl-item" data-delay="660">
+      <div class="tl-dot"></div>
+      <div class="tl-tag neutral">Election Day</div>
+      <div class="tl-date">NOV 3, 2026</div>
+      <div class="tl-title">Regulatory vacuum persists through Election Day</div>
+      <div class="tl-body">Voters in contested Senate races — Texas, Georgia, Maine, Michigan — will encounter AI-generated video content with no reliable mechanism to verify authenticity. The 2026 midterms are the first full-scale test of this threat vector.</div>
+    </div>
+  </div>
+
+  <div class="bottom-stat">
+    <div class="bs-num">0</div>
+    <div class="bs-text">Federal laws regulating AI-generated political ads entering Election Day 2026. The burden of verification has been transferred entirely to individual voters.</div>
+  </div>
+</div>
+<script>
+  const items = document.querySelectorAll('.tl-item');
+  items.forEach(item => {
+    const delay = parseInt(item.dataset.delay) || 0;
+    setTimeout(() => item.classList.add('show'), delay + 200);
+  });
+</script>
+</body>
+</html>

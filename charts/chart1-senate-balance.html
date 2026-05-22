@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 01 — Senate Balance of Power</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .card { background:white; border:1.5px solid var(--line); padding:36px 40px; max-width:680px; width:100%; position:relative; }
+  .card::before { content:''; position:absolute; top:7px; left:7px; right:-7px; bottom:-7px; border:1.5px solid var(--ink); z-index:-1; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:28px; line-height:1.2; }
+  .senate-seats { display:flex; gap:3px; flex-wrap:wrap; margin-bottom:28px; }
+  .seat { width:22px; height:22px; border-radius:3px; transition: transform 0.2s, opacity 0.6s; opacity:0; }
+  .seat.rep { background:var(--red); }
+  .seat.dem { background:var(--blue); }
+  .seat.ind { background:#555; }
+  .seat.show { opacity:1; }
+  .majority-marker { display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+  .maj-line { flex:1; height:2px; background:var(--ink); }
+  .maj-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); white-space:nowrap; }
+  .totals { display:flex; gap:24px; margin-bottom:20px; flex-wrap:wrap; }
+  .total-item { display:flex; align-items:center; gap:8px; }
+  .total-dot { width:14px; height:14px; border-radius:2px; flex-shrink:0; }
+  .total-label { font-size:13px; }
+  .total-count { font-family:'DM Mono',monospace; font-size:18px; font-weight:500; }
+  .note { font-size:11px; color:var(--muted); line-height:1.5; margin-top:16px; border-top:1px solid var(--line); padding-top:14px; }
+  .needs { background:var(--blue); color:white; display:inline-block; padding:6px 14px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:1px; margin-bottom:20px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 01 — Entering 2026</div>
+  <h2>Senate Balance of Power</h2>
+  <span class="needs">DEMOCRATS NEED +4 TO FLIP</span>
+  <div class="senate-seats" id="seats"></div>
+  <div class="totals">
+    <div class="total-item">
+      <div class="total-dot" style="background:var(--red)"></div>
+      <div>
+        <div class="total-label">Republican</div>
+        <div class="total-count" style="color:var(--red)">53</div>
+      </div>
+    </div>
+    <div class="total-item">
+      <div class="total-dot" style="background:#555"></div>
+      <div>
+        <div class="total-label">Independent</div>
+        <div class="total-count" style="color:#555">2</div>
+      </div>
+    </div>
+    <div class="total-item">
+      <div class="total-dot" style="background:var(--blue)"></div>
+      <div>
+        <div class="total-label">Democrat</div>
+        <div class="total-count" style="color:var(--blue)">45</div>
+      </div>
+    </div>
+  </div>
+  <div class="note">Republicans hold a comfortable 8-seat majority. Both Independents caucus with Democrats. A flip requires Democrats to hold all current seats and net 4 Republican-held seats — a high bar historically achieved only under severe presidential headwinds.</div>
+</div>
+<script>
+  const container = document.getElementById('seats');
+  const composition = [
+    ...Array(53).fill('rep'),
+    ...Array(2).fill('ind'),
+    ...Array(45).fill('dem')
+  ];
+  composition.forEach((type, i) => {
+    const seat = document.createElement('div');
+    seat.className = `seat ${type}`;
+    container.appendChild(seat);
+    setTimeout(() => seat.classList.add('show'), i * 18);
+  });
+</script>
+</body>
+</html>

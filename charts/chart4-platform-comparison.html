@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fig. 04 — TikTok vs Instagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  :root { --ink:#0f0e0c; --paper:#f5f0e8; --red:#c0392b; --blue:#1a3a6b; --accent:#d4a017; --muted:#7a7060; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 24px; }
+  .card { background:white; border:1.5px solid var(--line); padding:36px 40px; max-width:760px; width:100%; position:relative; }
+  .card::before { content:''; position:absolute; top:7px; left:7px; right:-7px; bottom:-7px; border:1.5px solid var(--ink); z-index:-1; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; margin-bottom:32px; line-height:1.2; }
+  .platform-headers { display:grid; grid-template-columns:200px 1fr 1fr; gap:0; margin-bottom:0; }
+  .ph { padding:12px 16px; font-family:'DM Mono',monospace; font-size:11px; font-weight:500; letter-spacing:1px; text-align:center; }
+  .ph.tiktok { background:#000; color:white; }
+  .ph.ig { background:#c13584; color:white; }
+  .ph.dim { background:var(--paper); color:var(--muted); text-align:left; font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+  .row { display:grid; grid-template-columns:200px 1fr 1fr; border-top:1px solid var(--line); }
+  .row:last-child { border-bottom:1px solid var(--line); }
+  .row.highlight { background:#fafaf8; }
+  .cell { padding:14px 16px; font-size:13px; line-height:1.5; }
+  .cell.dim { font-weight:500; font-size:12px; color:var(--muted); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; border-right:1px solid var(--line); display:flex; align-items:center; }
+  .cell.center { text-align:center; border-right:1px solid var(--line); }
+  .cell.center:last-child { border-right:none; }
+  .verdict { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+  .verdict-box { padding:16px; border:1.5px solid var(--line); }
+  .verdict-box.tk { border-top:3px solid #000; }
+  .verdict-box.ig { border-top:3px solid #c13584; }
+  .verdict-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+  .verdict-text { font-size:12px; color:var(--muted); line-height:1.5; }
+  .pill { display:inline-block; padding:2px 8px; border-radius:2px; font-size:10px; font-family:'DM Mono',monospace; margin:2px 0; }
+  .pill.good { background:#e8f4e8; color:#2d6a2d; }
+  .pill.warn { background:#fff3e0; color:#8a4a00; }
+  .note { font-size:11px; color:var(--muted); line-height:1.5; margin-top:16px; border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="eyebrow">Fig. 04 — Platform Architecture</div>
+  <h2>TikTok vs. Instagram: Structural Differences for Political Communication</h2>
+
+  <div class="platform-headers">
+    <div class="ph dim">Dimension</div>
+    <div class="ph tiktok">TikTok</div>
+    <div class="ph ig">Instagram Reels</div>
+  </div>
+
+  <div class="row">
+    <div class="cell dim">Feed Logic</div>
+    <div class="cell center">Algorithm-driven<br><em style="color:var(--muted);font-size:11px">Interest graph</em></div>
+    <div class="cell center">Network-driven<br><em style="color:var(--muted);font-size:11px">Social graph</em></div>
+  </div>
+  <div class="row highlight">
+    <div class="cell dim">Who Gets Amplified</div>
+    <div class="cell center"><span class="pill good">Individual creators</span><br><span class="pill good">Independent voices</span></div>
+    <div class="cell center"><span class="pill warn">Legacy media</span><br><span class="pill warn">Established accounts</span></div>
+  </div>
+  <div class="row">
+    <div class="cell dim">Political Reach</div>
+    <div class="cell center">New audiences<br>Non-political users</div>
+    <div class="cell center">Existing supporters<br>Already-engaged activists</div>
+  </div>
+  <div class="row highlight">
+    <div class="cell dim">Partisan Lean</div>
+    <div class="cell center"><span class="pill warn">Demotes right-leaning content</span></div>
+    <div class="cell center"><span class="pill good">More neutral amplification</span></div>
+  </div>
+  <div class="row">
+    <div class="cell dim">Content Style</div>
+    <div class="cell center">Raw, authentic, fast<br>Trend-responsive</div>
+    <div class="cell center">Polished, visual<br>Brand-consistent</div>
+  </div>
+  <div class="row highlight">
+    <div class="cell dim">Barrier to Entry</div>
+    <div class="cell center">Low — talent over following</div>
+    <div class="cell center">Medium — network size matters</div>
+  </div>
+  <div class="row">
+    <div class="cell dim">Best Political Use</div>
+    <div class="cell center">Voter expansion<br>Viral policy moments</div>
+    <div class="cell center">Donor base<br>Coalition solidarity</div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-box tk">
+      <div class="verdict-title">TikTok Strategy</div>
+      <div class="verdict-text">Invest in authentic creator relationships. Speed and cultural fluency outperform budget. The algorithm rewards novelty — a first-time candidate can outperform a 20-year incumbent with one viral video.</div>
+    </div>
+    <div class="verdict-box ig">
+      <div class="verdict-title">Instagram Strategy</div>
+      <div class="verdict-text">Build on existing networks. Use Reels to reinforce identity among known supporters. Instagram converts and consolidates; it rarely surprises. Best for fundraising calls and GOTV among the already-committed.</div>
+    </div>
+  </div>
+
+  <div class="note">Source: Research analysis of 800K+ Instagram posts and 1.1M+ TikTok posts from the 2024 presidential election cycle.</div>
+</div>
+</body>
+</html>
