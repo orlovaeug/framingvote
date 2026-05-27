@@ -1086,7 +1086,7 @@ function HalftoneCutout({slotId,placeholder,imageUrl,style,shape='rect',outline=
       )}
       <div className="halftone" style={{position:'relative',zIndex:2,width:'100%',height:'100%',background:'var(--paper-deep)',overflow:'hidden'}}>
         {imageUrl?(
-          <img src={imageUrl} alt={placeholder||''} loading="lazy" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}}/>
+          <img src={imageUrl} alt={placeholder||''} loading="lazy" style={{width:'100%',height:'100%',objectFit:'contain',transform:'scale(0.9)',display:'block'}}/>
         ):(
           <div style={{width:'100%',height:'100%',background:'var(--paper-deep)',display:'flex',alignItems:'center',justifyContent:'center',padding:'12px',textAlign:'center',fontFamily:'var(--font-mono)',fontSize:'10px',letterSpacing:'0.12em',textTransform:'uppercase',color:'var(--ink-3)',backgroundImage:'repeating-linear-gradient(135deg,transparent 0 14px,rgba(14,14,12,0.04) 14px 15px)'}}>{placeholder}</div>
         )}
